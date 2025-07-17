@@ -1,0 +1,893 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import DashboardLayout from '../../layouts/DashboardLayout.astro';
+import Card from '../../components/ui/Card.astro';
+import Button from '../../components/ui/Button.astro';
+---
+
+<BaseLayout title="Customer Communication - ComputerPOS Pro">
+  <DashboardLayout>
+    <main class="p-6 space-y-6">
+      <!-- Header -->
+      <div class="flex justify-between items-center">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">Customer Communication</h1>
+          <p class="text-gray-600 mt-1">Quản lý giao tiếp với khách hàng</p>
+        </div>
+        <div class="flex space-x-3">
+          <Button href="/customers" variant="secondary">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Quay lại Khách hàng
+          </Button>
+          <Button variant="primary" onclick="createNewCampaign()">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            Tạo chiến dịch mới
+          </Button>
+        </div>
+      </div>
+
+      <!-- Communication Stats -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Email đã gửi</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="emails-sent">0</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-green-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">SMS đã gửi</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="sms-sent">0</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-purple-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5zM9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Tỷ lệ mở email</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="email-open-rate">0%</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-orange-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Chiến dịch hoạt động</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="active-campaigns">0</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      <!-- Communication Tabs -->
+      <Card>
+        <div class="border-b border-gray-200">
+          <nav class="flex space-x-8 px-6">
+            <button class="communication-tab active py-4 px-1 border-b-2 border-blue-500 font-medium text-sm text-blue-600" data-tab="campaigns">
+              Chiến dịch
+            </button>
+            <button class="communication-tab py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700" data-tab="templates">
+              Mẫu tin nhắn
+            </button>
+            <button class="communication-tab py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700" data-tab="history">
+              Lịch sử gửi
+            </button>
+            <button class="communication-tab py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700" data-tab="automation">
+              Tự động hóa
+            </button>
+          </nav>
+        </div>
+
+        <div class="p-6">
+          <!-- Campaigns Tab -->
+          <div id="campaigns-tab" class="tab-content">
+            <div class="flex justify-between items-center mb-6">
+              <h2 class="text-lg font-medium text-gray-900">Chiến dịch marketing</h2>
+              <div class="flex space-x-3">
+                <select class="form-select w-40" id="campaign-filter">
+                  <option value="all">Tất cả</option>
+                  <option value="active">Đang hoạt động</option>
+                  <option value="completed">Đã hoàn thành</option>
+                  <option value="draft">Nháp</option>
+                </select>
+                <Button onclick="createNewCampaign()" variant="primary">Tạo chiến dịch</Button>
+              </div>
+            </div>
+
+            <div class="space-y-4" id="campaigns-list">
+              <!-- Campaigns will be populated here -->
+            </div>
+          </div>
+
+          <!-- Templates Tab -->
+          <div id="templates-tab" class="tab-content hidden">
+            <div class="flex justify-between items-center mb-6">
+              <h2 class="text-lg font-medium text-gray-900">Mẫu tin nhắn</h2>
+              <Button onclick="createNewTemplate()" variant="primary">Tạo mẫu mới</Button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="templates-grid">
+              <!-- Templates will be populated here -->
+            </div>
+          </div>
+
+          <!-- History Tab -->
+          <div id="history-tab" class="tab-content hidden">
+            <div class="flex justify-between items-center mb-6">
+              <h2 class="text-lg font-medium text-gray-900">Lịch sử gửi tin</h2>
+              <div class="flex space-x-3">
+                <input type="date" class="form-input w-40" id="history-date-filter">
+                <select class="form-select w-40" id="history-type-filter">
+                  <option value="all">Tất cả</option>
+                  <option value="email">Email</option>
+                  <option value="sms">SMS</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="space-y-4" id="history-list">
+              <!-- History will be populated here -->
+            </div>
+          </div>
+
+          <!-- Automation Tab -->
+          <div id="automation-tab" class="tab-content hidden">
+            <div class="flex justify-between items-center mb-6">
+              <h2 class="text-lg font-medium text-gray-900">Tự động hóa</h2>
+              <Button onclick="createNewAutomation()" variant="primary">Tạo tự động hóa</Button>
+            </div>
+
+            <div class="space-y-6" id="automation-list">
+              <!-- Automation rules will be populated here -->
+            </div>
+          </div>
+        </div>
+      </Card>
+    </main>
+
+    <!-- Create Campaign Modal -->
+    <div id="campaign-modal" class="modal-overlay hidden">
+      <div class="modal-content max-w-3xl">
+        <div class="modal-header">
+          <h3 class="modal-title">Tạo chiến dịch marketing</h3>
+          <button class="modal-close" onclick="closeModal('campaign-modal')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="form-label">Tên chiến dịch *</label>
+                <input type="text" class="form-input" id="campaign-name" placeholder="Khuyến mãi Black Friday">
+              </div>
+              <div>
+                <label class="form-label">Loại chiến dịch *</label>
+                <select class="form-select" id="campaign-type">
+                  <option value="email">Email</option>
+                  <option value="sms">SMS</option>
+                  <option value="both">Email + SMS</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label class="form-label">Đối tượng khách hàng *</label>
+              <select class="form-select" id="campaign-audience">
+                <option value="all">Tất cả khách hàng</option>
+                <option value="vip">Khách hàng VIP</option>
+                <option value="new">Khách hàng mới</option>
+                <option value="inactive">Khách hàng không hoạt động</option>
+                <option value="segment">Phân khúc tùy chỉnh</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="form-label">Tiêu đề *</label>
+              <input type="text" class="form-input" id="campaign-subject" placeholder="🔥 Giảm giá 50% - Chỉ hôm nay!">
+            </div>
+
+            <div>
+              <label class="form-label">Nội dung tin nhắn *</label>
+              <textarea class="form-textarea" id="campaign-content" rows="6" placeholder="Xin chào [TÊN KHÁCH HÀNG],
+
+Chúng tôi có tin tuyệt vời dành cho bạn! 
+
+🎉 GIẢM GIÁ LỚN 50% cho tất cả sản phẩm máy tính
+⏰ Chỉ áp dụng trong hôm nay
+🎁 Tặng kèm phụ kiện trị giá 500K
+
+Ghé ngay cửa hàng hoặc gọi hotline để được tư vấn!
+
+Trân trọng,
+ComputerPOS Pro"></textarea>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="form-label">Thời gian gửi</label>
+                <select class="form-select" id="campaign-schedule">
+                  <option value="now">Gửi ngay</option>
+                  <option value="scheduled">Lên lịch</option>
+                </select>
+              </div>
+              <div id="schedule-time-container" class="hidden">
+                <label class="form-label">Thời gian</label>
+                <input type="datetime-local" class="form-input" id="campaign-schedule-time">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('campaign-modal')">Hủy</button>
+          <button type="button" class="btn btn-primary" onclick="saveCampaign()">Tạo chiến dịch</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Create Template Modal -->
+    <div id="template-modal" class="modal-overlay hidden">
+      <div class="modal-content max-w-2xl">
+        <div class="modal-header">
+          <h3 class="modal-title">Tạo mẫu tin nhắn</h3>
+          <button class="modal-close" onclick="closeModal('template-modal')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="space-y-4">
+            <div>
+              <label class="form-label">Tên mẫu *</label>
+              <input type="text" class="form-input" id="template-name" placeholder="Chúc mừng sinh nhật">
+            </div>
+            <div>
+              <label class="form-label">Loại mẫu *</label>
+              <select class="form-select" id="template-type">
+                <option value="email">Email</option>
+                <option value="sms">SMS</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label">Tiêu đề</label>
+              <input type="text" class="form-input" id="template-subject" placeholder="🎂 Chúc mừng sinh nhật!">
+            </div>
+            <div>
+              <label class="form-label">Nội dung *</label>
+              <textarea class="form-textarea" id="template-content" rows="6" placeholder="Chúc mừng sinh nhật [TÊN KHÁCH HÀNG]! 🎉
+
+Nhân dịp sinh nhật của bạn, chúng tôi gửi tặng mã giảm giá 20%: BIRTHDAY2024
+
+Sử dụng ngay để mua sắm những sản phẩm công nghệ yêu thích!
+
+Chúc bạn sinh nhật vui vẻ!"></textarea>
+            </div>
+            <div>
+              <label class="form-label">Danh mục</label>
+              <select class="form-select" id="template-category">
+                <option value="birthday">Sinh nhật</option>
+                <option value="promotion">Khuyến mãi</option>
+                <option value="welcome">Chào mừng</option>
+                <option value="reminder">Nhắc nhở</option>
+                <option value="thank-you">Cảm ơn</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('template-modal')">Hủy</button>
+          <button type="button" class="btn btn-primary" onclick="saveTemplate()">Lưu mẫu</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Create Automation Modal -->
+    <div id="automation-modal" class="modal-overlay hidden">
+      <div class="modal-content max-w-3xl">
+        <div class="modal-header">
+          <h3 class="modal-title">Tạo tự động hóa</h3>
+          <button class="modal-close" onclick="closeModal('automation-modal')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="space-y-6">
+            <div>
+              <label class="form-label">Tên quy tắc *</label>
+              <input type="text" class="form-input" id="automation-name" placeholder="Chúc mừng sinh nhật tự động">
+            </div>
+
+            <div>
+              <label class="form-label">Điều kiện kích hoạt *</label>
+              <select class="form-select" id="automation-trigger">
+                <option value="birthday">Sinh nhật khách hàng</option>
+                <option value="new-customer">Khách hàng mới đăng ký</option>
+                <option value="purchase">Sau khi mua hàng</option>
+                <option value="inactive">Khách hàng không hoạt động</option>
+                <option value="vip-upgrade">Nâng cấp VIP</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="form-label">Thời gian gửi</label>
+              <select class="form-select" id="automation-timing">
+                <option value="immediate">Ngay lập tức</option>
+                <option value="1-hour">Sau 1 giờ</option>
+                <option value="1-day">Sau 1 ngày</option>
+                <option value="3-days">Sau 3 ngày</option>
+                <option value="1-week">Sau 1 tuần</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="form-label">Mẫu tin nhắn *</label>
+              <select class="form-select" id="automation-template">
+                <option value="">Chọn mẫu tin nhắn...</option>
+                <!-- Templates will be populated here -->
+              </select>
+            </div>
+
+            <div>
+              <label class="form-label">Trạng thái</label>
+              <select class="form-select" id="automation-status">
+                <option value="active">Hoạt động</option>
+                <option value="inactive">Tạm dừng</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('automation-modal')">Hủy</button>
+          <button type="button" class="btn btn-primary" onclick="saveAutomation()">Tạo tự động hóa</button>
+        </div>
+      </div>
+    </div>
+  </DashboardLayout>
+</BaseLayout>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  let campaigns = [];
+  let templates = [];
+  let automations = [];
+  let communicationHistory = [];
+
+  // Load data from localStorage
+  function loadData() {
+    campaigns = JSON.parse(localStorage.getItem('communicationCampaigns') || '[]');
+    templates = JSON.parse(localStorage.getItem('communicationTemplates') || '[]');
+    automations = JSON.parse(localStorage.getItem('communicationAutomations') || '[]');
+    communicationHistory = JSON.parse(localStorage.getItem('communicationHistory') || '[]');
+
+    // Initialize with sample data if empty
+    if (templates.length === 0) {
+      templates = [
+        {
+          id: 'tpl_1',
+          name: 'Chúc mừng sinh nhật',
+          type: 'email',
+          category: 'birthday',
+          subject: '🎂 Chúc mừng sinh nhật từ ComputerPOS Pro!',
+          content: 'Chúc mừng sinh nhật [TÊN KHÁCH HÀNG]! 🎉\n\nNhân dịp sinh nhật của bạn, chúng tôi gửi tặng mã giảm giá 20%: BIRTHDAY2024\n\nSử dụng ngay để mua sắm những sản phẩm công nghệ yêu thích!\n\nChúc bạn sinh nhật vui vẻ!',
+          createdAt: new Date().toISOString()
+        },
+        {
+          id: 'tpl_2',
+          name: 'Khuyến mãi cuối tuần',
+          type: 'sms',
+          category: 'promotion',
+          subject: '',
+          content: '🔥 KHUYẾN MÃI CUỐI TUẦN! Giảm 30% tất cả laptop gaming. Mã: WEEKEND30. Có hiệu lực đến 23:59 Chủ nhật. ComputerPOS Pro - 1900.xxxx',
+          createdAt: new Date().toISOString()
+        }
+      ];
+      saveData();
+    }
+  }
+
+  function saveData() {
+    localStorage.setItem('communicationCampaigns', JSON.stringify(campaigns));
+    localStorage.setItem('communicationTemplates', JSON.stringify(templates));
+    localStorage.setItem('communicationAutomations', JSON.stringify(automations));
+    localStorage.setItem('communicationHistory', JSON.stringify(communicationHistory));
+  }
+
+  // Tab switching
+  const tabs = document.querySelectorAll('.communication-tab');
+  const tabContents = document.querySelectorAll('.tab-content');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', function() {
+      const targetTab = this.getAttribute('data-tab');
+      
+      // Update tab styles
+      tabs.forEach(t => {
+        t.classList.remove('active', 'border-blue-500', 'text-blue-600');
+        t.classList.add('border-transparent', 'text-gray-500');
+      });
+      this.classList.add('active', 'border-blue-500', 'text-blue-600');
+      this.classList.remove('border-transparent', 'text-gray-500');
+      
+      // Show/hide content
+      tabContents.forEach(content => {
+        content.classList.add('hidden');
+      });
+      document.getElementById(targetTab + '-tab').classList.remove('hidden');
+      
+      // Load content based on tab
+      switch(targetTab) {
+        case 'campaigns':
+          renderCampaigns();
+          break;
+        case 'templates':
+          renderTemplates();
+          break;
+        case 'history':
+          renderHistory();
+          break;
+        case 'automation':
+          renderAutomation();
+          break;
+      }
+    });
+  });
+
+  function renderCampaigns() {
+    const container = document.getElementById('campaigns-list');
+    const filter = document.getElementById('campaign-filter').value;
+    
+    let filteredCampaigns = campaigns;
+    if (filter !== 'all') {
+      filteredCampaigns = campaigns.filter(c => c.status === filter);
+    }
+
+    if (filteredCampaigns.length === 0) {
+      container.innerHTML = `
+        <div class="text-center py-12">
+          <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+          <h3 class="mt-2 text-sm font-medium text-gray-900">Chưa có chiến dịch nào</h3>
+          <p class="mt-1 text-sm text-gray-500">Bắt đầu bằng cách tạo chiến dịch marketing đầu tiên.</p>
+          <div class="mt-6">
+            <button onclick="createNewCampaign()" class="btn btn-primary">Tạo chiến dịch</button>
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    let html = '';
+    filteredCampaigns.forEach(campaign => {
+      const statusColors = {
+        active: 'bg-green-100 text-green-800',
+        completed: 'bg-blue-100 text-blue-800',
+        draft: 'bg-gray-100 text-gray-800',
+        scheduled: 'bg-yellow-100 text-yellow-800'
+      };
+
+      const statusNames = {
+        active: 'Hoạt động',
+        completed: 'Hoàn thành',
+        draft: 'Nháp',
+        scheduled: 'Đã lên lịch'
+      };
+
+      html += `
+        <div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+          <div class="flex items-center justify-between">
+            <div class="flex-1">
+              <div class="flex items-center space-x-3">
+                <h3 class="text-lg font-medium text-gray-900">${campaign.name}</h3>
+                <span class="px-2 py-1 text-xs font-medium rounded-full ${statusColors[campaign.status]}">${statusNames[campaign.status]}</span>
+              </div>
+              <p class="text-sm text-gray-500 mt-1">${campaign.subject}</p>
+              <div class="flex items-center space-x-4 mt-3 text-sm text-gray-500">
+                <span>Loại: ${campaign.type.toUpperCase()}</span>
+                <span>Đối tượng: ${getAudienceName(campaign.audience)}</span>
+                <span>Tạo: ${new Date(campaign.createdAt).toLocaleDateString('vi-VN')}</span>
+              </div>
+            </div>
+            <div class="flex items-center space-x-2">
+              <button onclick="viewCampaignStats('${campaign.id}')" class="text-blue-600 hover:text-blue-800">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+              </button>
+              <button onclick="duplicateCampaign('${campaign.id}')" class="text-gray-400 hover:text-gray-600">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+              </button>
+              <button onclick="deleteCampaign('${campaign.id}')" class="text-red-400 hover:text-red-600">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    });
+
+    container.innerHTML = html;
+  }
+
+  function renderTemplates() {
+    const container = document.getElementById('templates-grid');
+
+    if (templates.length === 0) {
+      container.innerHTML = `
+        <div class="col-span-full text-center py-12">
+          <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          <h3 class="mt-2 text-sm font-medium text-gray-900">Chưa có mẫu tin nhắn nào</h3>
+          <p class="mt-1 text-sm text-gray-500">Tạo mẫu tin nhắn để sử dụng lại cho các chiến dịch.</p>
+          <div class="mt-6">
+            <button onclick="createNewTemplate()" class="btn btn-primary">Tạo mẫu mới</button>
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    let html = '';
+    templates.forEach(template => {
+      const typeColors = {
+        email: 'bg-blue-100 text-blue-800',
+        sms: 'bg-green-100 text-green-800'
+      };
+
+      html += `
+        <div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-medium text-gray-900">${template.name}</h3>
+            <span class="px-2 py-1 text-xs font-medium rounded-full ${typeColors[template.type]}">${template.type.toUpperCase()}</span>
+          </div>
+          ${template.subject ? `<p class="text-sm text-gray-600 mb-2">${template.subject}</p>` : ''}
+          <p class="text-sm text-gray-500 mb-4 line-clamp-3">${template.content.substring(0, 100)}...</p>
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-gray-400">${getCategoryName(template.category)}</span>
+            <div class="flex space-x-2">
+              <button onclick="useTemplate('${template.id}')" class="text-blue-600 hover:text-blue-800 text-sm">Sử dụng</button>
+              <button onclick="editTemplate('${template.id}')" class="text-gray-400 hover:text-gray-600 text-sm">Sửa</button>
+              <button onclick="deleteTemplate('${template.id}')" class="text-red-400 hover:text-red-600 text-sm">Xóa</button>
+            </div>
+          </div>
+        </div>
+      `;
+    });
+
+    container.innerHTML = html;
+  }
+
+  function renderHistory() {
+    const container = document.getElementById('history-list');
+    
+    if (communicationHistory.length === 0) {
+      container.innerHTML = `
+        <div class="text-center py-12">
+          <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <h3 class="mt-2 text-sm font-medium text-gray-900">Chưa có lịch sử gửi tin</h3>
+          <p class="mt-1 text-sm text-gray-500">Lịch sử các tin nhắn đã gửi sẽ hiển thị ở đây.</p>
+        </div>
+      `;
+      return;
+    }
+
+    // Render history items here
+  }
+
+  function renderAutomation() {
+    const container = document.getElementById('automation-list');
+    
+    if (automations.length === 0) {
+      container.innerHTML = `
+        <div class="text-center py-12">
+          <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+          </svg>
+          <h3 class="mt-2 text-sm font-medium text-gray-900">Chưa có quy tắc tự động hóa</h3>
+          <p class="mt-1 text-sm text-gray-500">Tạo quy tắc để tự động gửi tin nhắn cho khách hàng.</p>
+          <div class="mt-6">
+            <button onclick="createNewAutomation()" class="btn btn-primary">Tạo tự động hóa</button>
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    // Render automation rules here
+  }
+
+  function getAudienceName(audience) {
+    const names = {
+      all: 'Tất cả',
+      vip: 'VIP',
+      new: 'Khách mới',
+      inactive: 'Không hoạt động',
+      segment: 'Phân khúc'
+    };
+    return names[audience] || audience;
+  }
+
+  function getCategoryName(category) {
+    const names = {
+      birthday: 'Sinh nhật',
+      promotion: 'Khuyến mãi',
+      welcome: 'Chào mừng',
+      reminder: 'Nhắc nhở',
+      'thank-you': 'Cảm ơn'
+    };
+    return names[category] || category;
+  }
+
+  // Modal functions
+  window.createNewCampaign = function() {
+    document.getElementById('campaign-modal').classList.remove('hidden');
+  };
+
+  window.createNewTemplate = function() {
+    document.getElementById('template-modal').classList.remove('hidden');
+  };
+
+  window.createNewAutomation = function() {
+    populateAutomationTemplates();
+    document.getElementById('automation-modal').classList.remove('hidden');
+  };
+
+  function populateAutomationTemplates() {
+    const select = document.getElementById('automation-template');
+    select.innerHTML = '<option value="">Chọn mẫu tin nhắn...</option>';
+    
+    templates.forEach(template => {
+      const option = document.createElement('option');
+      option.value = template.id;
+      option.textContent = `${template.name} (${template.type.toUpperCase()})`;
+      select.appendChild(option);
+    });
+  }
+
+  window.saveCampaign = function() {
+    const name = document.getElementById('campaign-name').value;
+    const type = document.getElementById('campaign-type').value;
+    const audience = document.getElementById('campaign-audience').value;
+    const subject = document.getElementById('campaign-subject').value;
+    const content = document.getElementById('campaign-content').value;
+    const schedule = document.getElementById('campaign-schedule').value;
+    const scheduleTime = document.getElementById('campaign-schedule-time').value;
+
+    if (!name || !subject || !content) {
+      alert('Vui lòng điền đầy đủ thông tin bắt buộc!');
+      return;
+    }
+
+    const campaign = {
+      id: 'camp_' + Date.now(),
+      name,
+      type,
+      audience,
+      subject,
+      content,
+      schedule,
+      scheduleTime,
+      status: schedule === 'now' ? 'active' : 'scheduled',
+      createdAt: new Date().toISOString(),
+      stats: {
+        sent: 0,
+        delivered: 0,
+        opened: 0,
+        clicked: 0
+      }
+    };
+
+    campaigns.push(campaign);
+    saveData();
+    closeModal('campaign-modal');
+    renderCampaigns();
+    updateStats();
+    alert('Đã tạo chiến dịch thành công!');
+  };
+
+  window.saveTemplate = function() {
+    const name = document.getElementById('template-name').value;
+    const type = document.getElementById('template-type').value;
+    const subject = document.getElementById('template-subject').value;
+    const content = document.getElementById('template-content').value;
+    const category = document.getElementById('template-category').value;
+
+    if (!name || !content) {
+      alert('Vui lòng điền đầy đủ thông tin bắt buộc!');
+      return;
+    }
+
+    const template = {
+      id: 'tpl_' + Date.now(),
+      name,
+      type,
+      subject,
+      content,
+      category,
+      createdAt: new Date().toISOString()
+    };
+
+    templates.push(template);
+    saveData();
+    closeModal('template-modal');
+    renderTemplates();
+    alert('Đã lưu mẫu tin nhắn thành công!');
+  };
+
+  window.saveAutomation = function() {
+    const name = document.getElementById('automation-name').value;
+    const trigger = document.getElementById('automation-trigger').value;
+    const timing = document.getElementById('automation-timing').value;
+    const templateId = document.getElementById('automation-template').value;
+    const status = document.getElementById('automation-status').value;
+
+    if (!name || !templateId) {
+      alert('Vui lòng điền đầy đủ thông tin bắt buộc!');
+      return;
+    }
+
+    const automation = {
+      id: 'auto_' + Date.now(),
+      name,
+      trigger,
+      timing,
+      templateId,
+      status,
+      createdAt: new Date().toISOString(),
+      stats: {
+        triggered: 0,
+        sent: 0
+      }
+    };
+
+    automations.push(automation);
+    saveData();
+    closeModal('automation-modal');
+    renderAutomation();
+    alert('Đã tạo tự động hóa thành công!');
+  };
+
+  window.closeModal = function(modalId) {
+    document.getElementById(modalId).classList.add('hidden');
+  };
+
+  function updateStats() {
+    // Calculate stats from campaigns and history
+    const totalEmails = campaigns.filter(c => c.type === 'email' || c.type === 'both').length;
+    const totalSms = campaigns.filter(c => c.type === 'sms' || c.type === 'both').length;
+    const activeCampaigns = campaigns.filter(c => c.status === 'active').length;
+
+    document.getElementById('emails-sent').textContent = totalEmails * 100; // Simulated
+    document.getElementById('sms-sent').textContent = totalSms * 50; // Simulated
+    document.getElementById('email-open-rate').textContent = '24.5%'; // Simulated
+    document.getElementById('active-campaigns').textContent = activeCampaigns;
+  }
+
+  // Event listeners
+  document.getElementById('campaign-filter').addEventListener('change', renderCampaigns);
+  document.getElementById('campaign-schedule').addEventListener('change', function() {
+    const container = document.getElementById('schedule-time-container');
+    if (this.value === 'scheduled') {
+      container.classList.remove('hidden');
+    } else {
+      container.classList.add('hidden');
+    }
+  });
+
+  // Initialize
+  loadData();
+  renderCampaigns();
+  updateStats();
+});
+</script>
+
+<style>
+.form-input, .form-select, .form-textarea {
+  @apply px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full;
+}
+
+.modal-overlay {
+  @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50;
+}
+
+.modal-content {
+  @apply bg-white rounded-lg shadow-xl w-full mx-4 max-h-screen overflow-y-auto;
+}
+
+.modal-header {
+  @apply flex items-center justify-between p-6 border-b;
+}
+
+.modal-title {
+  @apply text-lg font-medium text-gray-900;
+}
+
+.modal-close {
+  @apply text-gray-400 hover:text-gray-600 text-2xl font-bold cursor-pointer;
+}
+
+.modal-body {
+  @apply p-6;
+}
+
+.modal-footer {
+  @apply flex items-center justify-end space-x-3 p-6 border-t bg-gray-50;
+}
+
+.btn {
+  @apply px-4 py-2 rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-offset-2;
+}
+
+.btn-primary {
+  @apply bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500;
+}
+
+.btn-secondary {
+  @apply bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500;
+}
+
+.form-label {
+  @apply block text-sm font-medium text-gray-700 mb-1;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+</style>

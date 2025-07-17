@@ -1,0 +1,1042 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import DashboardLayout from '../../layouts/DashboardLayout.astro';
+import Card from '../../components/ui/Card.astro';
+import Button from '../../components/ui/Button.astro';
+---
+
+<BaseLayout title="Stock Management - ComputerPOS Pro">
+  <DashboardLayout>
+    <main class="p-6 space-y-6">
+      <!-- Header -->
+      <div class="flex justify-between items-center">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">Stock Management</h1>
+          <p class="text-gray-600 mt-1">Quản lý tồn kho và theo dõi hàng hóa</p>
+        </div>
+        <div class="flex space-x-3">
+          <Button href="/inventory" variant="secondary">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Quay lại Kho hàng
+          </Button>
+          <Button variant="primary" onclick="refreshStock()">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            Làm mới
+          </Button>
+        </div>
+      </div>
+
+      <!-- Stock Overview Stats -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Tổng sản phẩm</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="total-products">0</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-green-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Có tồn kho</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="in-stock-products">0</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-red-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Hết hàng</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="out-of-stock-products">0</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-orange-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Tổng giá trị</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="total-stock-value">0₫</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      <!-- Stock Alerts -->
+      <Card>
+        <div class="p-6">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-medium text-gray-900">Cảnh báo tồn kho</h2>
+            <div class="flex space-x-2">
+              <Button onclick="markAllRead()" variant="secondary" class="text-sm">
+                Đánh dấu đã đọc
+              </Button>
+            </div>
+          </div>
+          <div id="stock-alerts" class="space-y-3">
+            <!-- Stock alerts will be populated here -->
+          </div>
+        </div>
+      </Card>
+
+      <!-- Filters and Search -->
+      <Card>
+        <div class="p-6">
+          <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+            <div>
+              <label class="form-label">Tìm kiếm</label>
+              <input type="text" class="form-input" id="search-input" placeholder="Tên sản phẩm, SKU...">
+            </div>
+            <div>
+              <label class="form-label">Danh mục</label>
+              <select class="form-select" id="category-filter">
+                <option value="all">Tất cả</option>
+                <option value="cpu">CPU</option>
+                <option value="gpu">GPU</option>
+                <option value="ram">RAM</option>
+                <option value="storage">Ổ cứng</option>
+                <option value="motherboard">Mainboard</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label">Tình trạng</label>
+              <select class="form-select" id="stock-filter">
+                <option value="all">Tất cả</option>
+                <option value="in-stock">Còn hàng</option>
+                <option value="low-stock">Sắp hết</option>
+                <option value="out-of-stock">Hết hàng</option>
+                <option value="excess-stock">Tồn dư</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label">Nhà cung cấp</label>
+              <select class="form-select" id="supplier-filter">
+                <option value="all">Tất cả</option>
+                <option value="asus">ASUS Vietnam</option>
+                <option value="msi">MSI Technology</option>
+                <option value="intel">Intel Vietnam</option>
+                <option value="samsung">Samsung Electronics</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label">Sắp xếp</label>
+              <select class="form-select" id="sort-by">
+                <option value="name">Theo tên</option>
+                <option value="stock-asc">Tồn kho tăng dần</option>
+                <option value="stock-desc">Tồn kho giảm dần</option>
+                <option value="value-desc">Giá trị cao nhất</option>
+                <option value="updated">Cập nhật gần nhất</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      <!-- Stock List -->
+      <Card>
+        <div class="p-6">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-lg font-medium text-gray-900">Danh sách tồn kho</h2>
+            <div class="flex space-x-3">
+              <Button onclick="exportStock()" variant="secondary">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Xuất báo cáo
+              </Button>
+              <Button onclick="quickStockCheck()" variant="primary">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                </svg>
+                Kiểm kê nhanh
+              </Button>
+            </div>
+          </div>
+
+          <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+            <table class="min-w-full divide-y divide-gray-300">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sản phẩm</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">SKU</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Danh mục</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tồn kho</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tối thiểu</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Giá vốn</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tổng giá trị</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cập nhật</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200" id="stock-tbody">
+                <!-- Stock items will be populated here -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination -->
+          <div class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
+            <div class="flex flex-1 justify-between sm:hidden">
+              <button class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                Trước
+              </button>
+              <button class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                Sau
+              </button>
+            </div>
+            <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+              <div>
+                <p class="text-sm text-gray-700">
+                  Hiển thị <span class="font-medium" id="from-item">1</span> đến <span class="font-medium" id="to-item">20</span> 
+                  trong tổng số <span class="font-medium" id="total-items">0</span> sản phẩm
+                </p>
+              </div>
+              <div>
+                <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" id="pagination">
+                  <!-- Pagination buttons will be populated here -->
+                </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Card>
+    </main>
+
+    <!-- Stock Detail Modal -->
+    <div id="stock-detail-modal" class="modal-overlay hidden">
+      <div class="modal-content max-w-4xl">
+        <div class="modal-header">
+          <h3 class="modal-title" id="stock-detail-title">Chi tiết tồn kho</h3>
+          <button class="modal-close" onclick="closeModal('stock-detail-modal')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div id="stock-detail-content">
+            <!-- Stock details will be populated here -->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('stock-detail-modal')">Đóng</button>
+          <button type="button" class="btn btn-primary" onclick="editStockLevel()">Điều chỉnh tồn kho</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Stock Check Modal -->
+    <div id="quick-check-modal" class="modal-overlay hidden">
+      <div class="modal-content max-w-3xl">
+        <div class="modal-header">
+          <h3 class="modal-title">Kiểm kê nhanh</h3>
+          <button class="modal-close" onclick="closeModal('quick-check-modal')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="space-y-4">
+            <div>
+              <label class="form-label">Chọn sản phẩm để kiểm kê</label>
+              <input type="text" class="form-input" id="quick-check-search" placeholder="Tìm sản phẩm...">
+              <div id="quick-check-suggestions" class="hidden mt-2 border border-gray-200 rounded-md max-h-40 overflow-y-auto">
+                <!-- Product suggestions will be populated here -->
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="form-label">Tồn kho hiện tại</label>
+                <input type="number" class="form-input" id="current-stock-check" readonly>
+              </div>
+              <div>
+                <label class="form-label">Số lượng thực tế</label>
+                <input type="number" class="form-input" id="actual-stock-check" placeholder="Nhập số lượng đếm được">
+              </div>
+            </div>
+            <div>
+              <label class="form-label">Ghi chú</label>
+              <textarea class="form-textarea" id="check-notes" rows="3" placeholder="Ghi chú về việc kiểm kê..."></textarea>
+            </div>
+            <input type="hidden" id="selected-product-check">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('quick-check-modal')">Hủy</button>
+          <button type="button" class="btn btn-primary" onclick="submitQuickCheck()">Lưu kiểm kê</button>
+        </div>
+      </div>
+    </div>
+  </DashboardLayout>
+</BaseLayout>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  let stockItems = [];
+  let filteredStock = [];
+  let currentPage = 1;
+  const itemsPerPage = 20;
+
+  // Load sample data
+  function loadSampleData() {
+    stockItems = JSON.parse(localStorage.getItem('stockItems') || '[]');
+
+    // Initialize with sample data if empty
+    if (stockItems.length === 0) {
+      stockItems = [
+        {
+          id: 'stock_1',
+          productName: 'Intel Core i5-13400F',
+          sku: 'CPU-I5-13400F',
+          category: 'cpu',
+          currentStock: 25,
+          minStock: 10,
+          maxStock: 50,
+          unitCost: 4500000,
+          totalValue: 112500000,
+          supplier: 'Intel Vietnam',
+          location: 'A1-001',
+          lastUpdated: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+          status: 'in-stock'
+        },
+        {
+          id: 'stock_2',
+          productName: 'RTX 4070 Super',
+          sku: 'GPU-RTX-4070S',
+          category: 'gpu',
+          currentStock: 5,
+          minStock: 8,
+          maxStock: 25,
+          unitCost: 18000000,
+          totalValue: 90000000,
+          supplier: 'MSI Technology',
+          location: 'B2-003',
+          lastUpdated: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+          status: 'low-stock'
+        },
+        {
+          id: 'stock_3',
+          productName: 'RAM DDR4 16GB Corsair',
+          sku: 'RAM-DDR4-16GB-COR',
+          category: 'ram',
+          currentStock: 32,
+          minStock: 15,
+          maxStock: 40,
+          unitCost: 1800000,
+          totalValue: 57600000,
+          supplier: 'Corsair Vietnam',
+          location: 'C1-015',
+          lastUpdated: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+          status: 'in-stock'
+        },
+        {
+          id: 'stock_4',
+          productName: 'SSD Samsung 980 Pro 1TB',
+          sku: 'SSD-SAM-980P-1TB',
+          category: 'storage',
+          currentStock: 0,
+          minStock: 5,
+          maxStock: 30,
+          unitCost: 3200000,
+          totalValue: 0,
+          supplier: 'Samsung Electronics',
+          location: 'D1-008',
+          lastUpdated: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
+          status: 'out-of-stock'
+        },
+        {
+          id: 'stock_5',
+          productName: 'Motherboard ASUS B550M',
+          sku: 'MB-ASUS-B550M',
+          category: 'motherboard',
+          currentStock: 65,
+          minStock: 12,
+          maxStock: 30,
+          unitCost: 2800000,
+          totalValue: 182000000,
+          supplier: 'ASUS Vietnam',
+          location: 'E1-022',
+          lastUpdated: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+          status: 'excess-stock'
+        },
+        {
+          id: 'stock_6',
+          productName: 'Power Supply Seasonic 750W',
+          sku: 'PSU-SEA-750W-GOLD',
+          category: 'psu',
+          currentStock: 18,
+          minStock: 8,
+          maxStock: 25,
+          unitCost: 2200000,
+          totalValue: 39600000,
+          supplier: 'Seasonic Vietnam',
+          location: 'F1-012',
+          lastUpdated: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString(),
+          status: 'in-stock'
+        }
+      ];
+
+      saveData();
+    }
+  }
+
+  function saveData() {
+    localStorage.setItem('stockItems', JSON.stringify(stockItems));
+  }
+
+  function renderStock() {
+    const tbody = document.getElementById('stock-tbody');
+    const searchTerm = document.getElementById('search-input').value.toLowerCase();
+    const categoryFilter = document.getElementById('category-filter').value;
+    const stockFilter = document.getElementById('stock-filter').value;
+    const supplierFilter = document.getElementById('supplier-filter').value;
+    const sortBy = document.getElementById('sort-by').value;
+
+    filteredStock = stockItems.filter(item => {
+      const matchesSearch = item.productName.toLowerCase().includes(searchTerm) ||
+                           item.sku.toLowerCase().includes(searchTerm);
+      const matchesCategory = categoryFilter === 'all' || item.category === categoryFilter;
+      const matchesSupplier = supplierFilter === 'all' || item.supplier.includes(supplierFilter);
+      const matchesStock = stockFilter === 'all' || item.status === stockFilter;
+
+      return matchesSearch && matchesCategory && matchesSupplier && matchesStock;
+    });
+
+    // Sort filtered results
+    filteredStock.sort((a, b) => {
+      switch (sortBy) {
+        case 'name':
+          return a.productName.localeCompare(b.productName);
+        case 'stock-asc':
+          return a.currentStock - b.currentStock;
+        case 'stock-desc':
+          return b.currentStock - a.currentStock;
+        case 'value-desc':
+          return b.totalValue - a.totalValue;
+        case 'updated':
+          return new Date(b.lastUpdated) - new Date(a.lastUpdated);
+        default:
+          return 0;
+      }
+    });
+
+    renderPaginatedStock();
+    updateStats();
+    renderStockAlerts();
+  }
+
+  function renderPaginatedStock() {
+    const tbody = document.getElementById('stock-tbody');
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const pageItems = filteredStock.slice(startIndex, endIndex);
+
+    if (pageItems.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="9" class="px-6 py-12 text-center text-gray-500">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+            </svg>
+            <h3 class="mt-2 text-sm font-medium text-gray-900">Không tìm thấy sản phẩm nào</h3>
+            <p class="mt-1 text-sm text-gray-500">Thử thay đổi bộ lọc để xem thêm kết quả.</p>
+          </td>
+        </tr>
+      `;
+      updatePagination();
+      return;
+    }
+
+    let html = '';
+    pageItems.forEach(item => {
+      const statusColors = {
+        'in-stock': 'bg-green-100 text-green-800',
+        'low-stock': 'bg-yellow-100 text-yellow-800',
+        'out-of-stock': 'bg-red-100 text-red-800',
+        'excess-stock': 'bg-blue-100 text-blue-800'
+      };
+
+      const statusNames = {
+        'in-stock': 'Còn hàng',
+        'low-stock': 'Sắp hết',
+        'out-of-stock': 'Hết hàng',
+        'excess-stock': 'Tồn dư'
+      };
+
+      const categoryNames = {
+        cpu: 'CPU',
+        gpu: 'GPU',
+        ram: 'RAM',
+        storage: 'Ổ cứng',
+        motherboard: 'Mainboard',
+        psu: 'Nguồn'
+      };
+
+      html += `
+        <tr class="hover:bg-gray-50">
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm font-medium text-gray-900">${item.productName}</div>
+            <div class="text-sm text-gray-500">Vị trí: ${item.location}</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.sku}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${categoryNames[item.category] || item.category}</td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex items-center">
+              <span class="text-sm font-medium text-gray-900">${item.currentStock}</span>
+              <span class="ml-2 px-2 py-1 text-xs font-medium rounded-full ${statusColors[item.status]}">${statusNames[item.status]}</span>
+            </div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${item.minStock}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatVND(item.unitCost)}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${formatVND(item.totalValue)}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            ${new Date(item.lastUpdated).toLocaleDateString('vi-VN')}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+            <div class="flex space-x-2">
+              <button onclick="viewStockDetail('${item.id}')" class="text-blue-600 hover:text-blue-900">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+              </button>
+              <button onclick="quickAdjustStock('${item.id}')" class="text-green-600 hover:text-green-900">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+              </button>
+            </div>
+          </td>
+        </tr>
+      `;
+    });
+
+    tbody.innerHTML = html;
+    updatePagination();
+  }
+
+  function updatePagination() {
+    const totalPages = Math.ceil(filteredStock.length / itemsPerPage);
+    const startItem = (currentPage - 1) * itemsPerPage + 1;
+    const endItem = Math.min(currentPage * itemsPerPage, filteredStock.length);
+    
+    document.getElementById('from-item').textContent = filteredStock.length > 0 ? startItem : 0;
+    document.getElementById('to-item').textContent = endItem;
+    document.getElementById('total-items').textContent = filteredStock.length;
+
+    const pagination = document.getElementById('pagination');
+    let paginationHtml = '';
+
+    // Previous button
+    paginationHtml += `
+      <button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''} 
+              class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 ${currentPage === 1 ? 'cursor-not-allowed' : ''}">
+        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
+        </svg>
+      </button>
+    `;
+
+    // Page numbers
+    for (let i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) {
+      paginationHtml += `
+        <button onclick="changePage(${i})" 
+                class="relative inline-flex items-center px-4 py-2 text-sm font-semibold ${i === currentPage ? 'z-10 bg-blue-600 text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600' : 'text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0'}">
+          ${i}
+        </button>
+      `;
+    }
+
+    // Next button
+    paginationHtml += `
+      <button onclick="changePage(${currentPage + 1})" ${currentPage === totalPages || totalPages === 0 ? 'disabled' : ''} 
+              class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 ${currentPage === totalPages || totalPages === 0 ? 'cursor-not-allowed' : ''}">
+        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+        </svg>
+      </button>
+    `;
+
+    pagination.innerHTML = paginationHtml;
+  }
+
+  window.changePage = function(page) {
+    const totalPages = Math.ceil(filteredStock.length / itemsPerPage);
+    if (page >= 1 && page <= totalPages) {
+      currentPage = page;
+      renderPaginatedStock();
+    }
+  };
+
+  function updateStats() {
+    const totalProducts = stockItems.length;
+    const inStockProducts = stockItems.filter(item => item.currentStock > 0).length;
+    const outOfStockProducts = stockItems.filter(item => item.currentStock === 0).length;
+    const totalStockValue = stockItems.reduce((sum, item) => sum + item.totalValue, 0);
+
+    document.getElementById('total-products').textContent = totalProducts;
+    document.getElementById('in-stock-products').textContent = inStockProducts;
+    document.getElementById('out-of-stock-products').textContent = outOfStockProducts;
+    document.getElementById('total-stock-value').textContent = formatVND(totalStockValue);
+  }
+
+  function renderStockAlerts() {
+    const container = document.getElementById('stock-alerts');
+    const alertItems = stockItems.filter(item => 
+      item.currentStock <= item.minStock || item.currentStock >= item.maxStock
+    );
+
+    if (alertItems.length === 0) {
+      container.innerHTML = `
+        <div class="text-center py-4">
+          <svg class="mx-auto h-8 w-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+          <p class="mt-2 text-sm text-green-600">Không có cảnh báo tồn kho nào</p>
+        </div>
+      `;
+      return;
+    }
+
+    let html = '';
+    alertItems.forEach(item => {
+      const isLowStock = item.currentStock <= item.minStock;
+      const isExcessStock = item.currentStock >= item.maxStock;
+      
+      html += `
+        <div class="flex items-center justify-between p-4 rounded-lg border ${isLowStock ? 'bg-red-50 border-red-200' : 'bg-blue-50 border-blue-200'}">
+          <div class="flex items-center space-x-3">
+            <div class="flex-shrink-0">
+              <svg class="w-5 h-5 ${isLowStock ? 'text-red-400' : 'text-blue-400'}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm font-medium ${isLowStock ? 'text-red-800' : 'text-blue-800'}">${item.productName}</p>
+              <p class="text-sm ${isLowStock ? 'text-red-600' : 'text-blue-600'}">
+                ${isLowStock ? `Tồn kho thấp: ${item.currentStock}/${item.minStock}` : `Tồn kho dư: ${item.currentStock}/${item.maxStock}`}
+              </p>
+            </div>
+          </div>
+          <button onclick="viewStockDetail('${item.id}')" class="text-sm font-medium ${isLowStock ? 'text-red-600 hover:text-red-900' : 'text-blue-600 hover:text-blue-900'}">
+            Xem chi tiết →
+          </button>
+        </div>
+      `;
+    });
+
+    container.innerHTML = html;
+  }
+
+  window.viewStockDetail = function(stockId) {
+    const item = stockItems.find(s => s.id === stockId);
+    if (!item) return;
+
+    const categoryNames = {
+      cpu: 'CPU',
+      gpu: 'GPU',
+      ram: 'RAM',
+      storage: 'Ổ cứng',
+      motherboard: 'Mainboard',
+      psu: 'Nguồn'
+    };
+
+    const statusNames = {
+      'in-stock': 'Còn hàng',
+      'low-stock': 'Sắp hết',
+      'out-of-stock': 'Hết hàng',
+      'excess-stock': 'Tồn dư'
+    };
+
+    const html = `
+      <div class="space-y-6">
+        <div class="grid grid-cols-2 gap-6">
+          <div>
+            <h4 class="font-semibold text-gray-900 mb-3">Thông tin sản phẩm</h4>
+            <div class="space-y-2 text-sm">
+              <div><strong>Tên sản phẩm:</strong> ${item.productName}</div>
+              <div><strong>SKU:</strong> ${item.sku}</div>
+              <div><strong>Danh mục:</strong> ${categoryNames[item.category] || item.category}</div>
+              <div><strong>Nhà cung cấp:</strong> ${item.supplier}</div>
+              <div><strong>Vị trí kho:</strong> ${item.location}</div>
+            </div>
+          </div>
+          <div>
+            <h4 class="font-semibold text-gray-900 mb-3">Thông tin tồn kho</h4>
+            <div class="space-y-2 text-sm">
+              <div><strong>Tồn kho hiện tại:</strong> <span class="text-lg font-bold">${item.currentStock}</span></div>
+              <div><strong>Tồn kho tối thiểu:</strong> ${item.minStock}</div>
+              <div><strong>Tồn kho tối đa:</strong> ${item.maxStock}</div>
+              <div><strong>Trạng thái:</strong> <span class="px-2 py-1 text-xs rounded-full ${getStatusColor(item.status)}">${statusNames[item.status]}</span></div>
+              <div><strong>Cập nhật cuối:</strong> ${new Date(item.lastUpdated).toLocaleString('vi-VN')}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-6">
+          <div>
+            <h4 class="font-semibold text-gray-900 mb-3">Thông tin tài chính</h4>
+            <div class="space-y-2 text-sm">
+              <div><strong>Giá vốn đơn vị:</strong> ${formatVND(item.unitCost)}</div>
+              <div><strong>Tổng giá trị tồn kho:</strong> <span class="text-lg font-bold text-green-600">${formatVND(item.totalValue)}</span></div>
+            </div>
+          </div>
+          <div>
+            <h4 class="font-semibold text-gray-900 mb-3">Khuyến nghị</h4>
+            <div class="space-y-2 text-sm">
+              ${getStockRecommendation(item)}
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.getElementById('stock-detail-title').textContent = `Chi tiết tồn kho - ${item.productName}`;
+    document.getElementById('stock-detail-content').innerHTML = html;
+    document.getElementById('stock-detail-modal').classList.remove('hidden');
+  };
+
+  function getStockRecommendation(item) {
+    if (item.currentStock === 0) {
+      return '<div class="text-red-600">⚠️ Cần nhập hàng ngay lập tức</div>';
+    } else if (item.currentStock <= item.minStock) {
+      return '<div class="text-yellow-600">📦 Nên nhập thêm hàng sớm</div>';
+    } else if (item.currentStock >= item.maxStock) {
+      return '<div class="text-blue-600">📈 Xem xét giảm giá hoặc khuyến mãi</div>';
+    } else {
+      return '<div class="text-green-600">✅ Tồn kho ở mức tốt</div>';
+    }
+  }
+
+  function getStatusColor(status) {
+    const colors = {
+      'in-stock': 'bg-green-100 text-green-800',
+      'low-stock': 'bg-yellow-100 text-yellow-800',
+      'out-of-stock': 'bg-red-100 text-red-800',
+      'excess-stock': 'bg-blue-100 text-blue-800'
+    };
+    return colors[status] || '';
+  }
+
+  window.quickStockCheck = function() {
+    document.getElementById('quick-check-search').value = '';
+    document.getElementById('current-stock-check').value = '';
+    document.getElementById('actual-stock-check').value = '';
+    document.getElementById('check-notes').value = '';
+    document.getElementById('selected-product-check').value = '';
+    document.getElementById('quick-check-suggestions').classList.add('hidden');
+    document.getElementById('quick-check-modal').classList.remove('hidden');
+  };
+
+  // Quick check search functionality
+  document.getElementById('quick-check-search').addEventListener('input', function() {
+    const searchTerm = this.value.toLowerCase();
+    const suggestions = document.getElementById('quick-check-suggestions');
+    
+    if (searchTerm.length < 2) {
+      suggestions.classList.add('hidden');
+      return;
+    }
+
+    const filteredProducts = stockItems.filter(item => 
+      item.productName.toLowerCase().includes(searchTerm) ||
+      item.sku.toLowerCase().includes(searchTerm)
+    ).slice(0, 5);
+
+    if (filteredProducts.length > 0) {
+      let html = '';
+      filteredProducts.forEach(item => {
+        html += `
+          <div class="p-2 hover:bg-gray-100 cursor-pointer" onclick="selectProductForCheck('${item.id}', '${item.productName}', '${item.sku}', ${item.currentStock})">
+            <div class="font-medium">${item.productName}</div>
+            <div class="text-sm text-gray-500">${item.sku} - Tồn: ${item.currentStock}</div>
+          </div>
+        `;
+      });
+      suggestions.innerHTML = html;
+      suggestions.classList.remove('hidden');
+    } else {
+      suggestions.classList.add('hidden');
+    }
+  });
+
+  window.selectProductForCheck = function(id, name, sku, currentStock) {
+    document.getElementById('quick-check-search').value = `${name} (${sku})`;
+    document.getElementById('current-stock-check').value = currentStock;
+    document.getElementById('selected-product-check').value = id;
+    document.getElementById('quick-check-suggestions').classList.add('hidden');
+  };
+
+  window.submitQuickCheck = function() {
+    const productId = document.getElementById('selected-product-check').value;
+    const actualStock = parseInt(document.getElementById('actual-stock-check').value);
+    const notes = document.getElementById('check-notes').value;
+
+    if (!productId || isNaN(actualStock)) {
+      alert('Vui lòng chọn sản phẩm và nhập số lượng thực tế!');
+      return;
+    }
+
+    const item = stockItems.find(s => s.id === productId);
+    if (!item) return;
+
+    const difference = actualStock - item.currentStock;
+    
+    if (difference !== 0) {
+      if (confirm(`Phát hiện chênh lệch ${Math.abs(difference)} sản phẩm (${difference > 0 ? 'thừa' : 'thiếu'}). Bạn có muốn cập nhật tồn kho?`)) {
+        item.currentStock = actualStock;
+        item.totalValue = actualStock * item.unitCost;
+        item.lastUpdated = new Date().toISOString();
+        
+        // Update status based on new stock level
+        if (actualStock === 0) {
+          item.status = 'out-of-stock';
+        } else if (actualStock <= item.minStock) {
+          item.status = 'low-stock';
+        } else if (actualStock >= item.maxStock) {
+          item.status = 'excess-stock';
+        } else {
+          item.status = 'in-stock';
+        }
+
+        saveData();
+        renderStock();
+        alert('Đã cập nhật tồn kho thành công!');
+      }
+    } else {
+      alert('Tồn kho chính xác, không cần điều chỉnh.');
+    }
+
+    closeModal('quick-check-modal');
+  };
+
+  window.markAllRead = function() {
+    alert('Đã đánh dấu tất cả cảnh báo là đã đọc!');
+  };
+
+  window.exportStock = function() {
+    const csvContent = generateStockCSV(stockItems);
+    downloadCSV(csvContent, `stock-report-${new Date().toISOString().split('T')[0]}.csv`);
+  };
+
+  function generateStockCSV(data) {
+    const headers = ['Sản phẩm', 'SKU', 'Danh mục', 'Tồn kho', 'Tối thiểu', 'Tối đa', 'Giá vốn', 'Tổng giá trị', 'Trạng thái', 'Vị trí', 'Cập nhật cuối'];
+    
+    const categoryNames = {
+      cpu: 'CPU',
+      gpu: 'GPU',
+      ram: 'RAM',
+      storage: 'Ổ cứng',
+      motherboard: 'Mainboard',
+      psu: 'Nguồn'
+    };
+
+    const statusNames = {
+      'in-stock': 'Còn hàng',
+      'low-stock': 'Sắp hết',
+      'out-of-stock': 'Hết hàng',
+      'excess-stock': 'Tồn dư'
+    };
+    
+    const rows = data.map(item => [
+      item.productName,
+      item.sku,
+      categoryNames[item.category] || item.category,
+      item.currentStock,
+      item.minStock,
+      item.maxStock,
+      item.unitCost,
+      item.totalValue,
+      statusNames[item.status],
+      item.location,
+      new Date(item.lastUpdated).toLocaleDateString('vi-VN')
+    ]);
+
+    return [headers, ...rows].map(row => 
+      row.map(field => `"${field}"`).join(',')
+    ).join('\n');
+  }
+
+  function downloadCSV(content, filename) {
+    const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  window.refreshStock = function() {
+    currentPage = 1;
+    renderStock();
+    alert('Đã làm mới dữ liệu tồn kho!');
+  };
+
+  window.quickAdjustStock = function(stockId) {
+    const item = stockItems.find(s => s.id === stockId);
+    if (!item) return;
+
+    const newStock = prompt(`Nhập số lượng tồn kho mới cho ${item.productName}:`, item.currentStock);
+    if (newStock !== null && !isNaN(newStock) && parseInt(newStock) >= 0) {
+      const oldStock = item.currentStock;
+      item.currentStock = parseInt(newStock);
+      item.totalValue = item.currentStock * item.unitCost;
+      item.lastUpdated = new Date().toISOString();
+
+      // Update status
+      if (item.currentStock === 0) {
+        item.status = 'out-of-stock';
+      } else if (item.currentStock <= item.minStock) {
+        item.status = 'low-stock';
+      } else if (item.currentStock >= item.maxStock) {
+        item.status = 'excess-stock';
+      } else {
+        item.status = 'in-stock';
+      }
+
+      saveData();
+      renderStock();
+      alert(`Đã cập nhật tồn kho từ ${oldStock} thành ${item.currentStock}!`);
+    }
+  };
+
+  window.editStockLevel = function() {
+    // This would redirect to the adjustments page
+    alert('Chức năng này sẽ chuyển đến trang điều chỉnh tồn kho.');
+  };
+
+  window.closeModal = function(modalId) {
+    document.getElementById(modalId).classList.add('hidden');
+  };
+
+  function formatVND(amount) {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND'
+    }).format(amount);
+  }
+
+  // Event listeners
+  document.getElementById('search-input').addEventListener('input', () => {
+    currentPage = 1;
+    renderStock();
+  });
+  document.getElementById('category-filter').addEventListener('change', () => {
+    currentPage = 1;
+    renderStock();
+  });
+  document.getElementById('stock-filter').addEventListener('change', () => {
+    currentPage = 1;
+    renderStock();
+  });
+  document.getElementById('supplier-filter').addEventListener('change', () => {
+    currentPage = 1;
+    renderStock();
+  });
+  document.getElementById('sort-by').addEventListener('change', () => {
+    currentPage = 1;
+    renderStock();
+  });
+
+  // Initialize
+  loadSampleData();
+  renderStock();
+});
+</script>
+
+<style>
+.form-input, .form-select, .form-textarea {
+  @apply px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full;
+}
+
+.modal-overlay {
+  @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50;
+}
+
+.modal-content {
+  @apply bg-white rounded-lg shadow-xl w-full mx-4 max-h-screen overflow-y-auto;
+}
+
+.modal-header {
+  @apply flex items-center justify-between p-6 border-b;
+}
+
+.modal-title {
+  @apply text-lg font-medium text-gray-900;
+}
+
+.modal-close {
+  @apply text-gray-400 hover:text-gray-600 text-2xl font-bold cursor-pointer;
+}
+
+.modal-body {
+  @apply p-6;
+}
+
+.modal-footer {
+  @apply flex items-center justify-end space-x-3 p-6 border-t bg-gray-50;
+}
+
+.btn {
+  @apply px-4 py-2 rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-offset-2;
+}
+
+.btn-primary {
+  @apply bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500;
+}
+
+.btn-secondary {
+  @apply bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500;
+}
+
+.form-label {
+  @apply block text-sm font-medium text-gray-700 mb-1;
+}
+</style>

@@ -1,0 +1,56 @@
+BACKEND ONLY ZONES:
+✅ functions/api/      - Chỉ API Workers
+✅ functions/middleware/ - Chỉ middleware
+✅ functions/utils/    - Chỉ server utilities
+✅ schemas/           - Chỉ database schemas
+
+❌ KHÔNG BAO GIỜ import frontend components
+❌ KHÔNG BAO GIỜ access client-side state
+❌ KHÔNG BAO GIỜ sử dụng browser APIs
+
+FRONTEND ONLY ZONES:
+✅ src/components/     - Chỉ UI components
+✅ src/layouts/        - Chỉ page layouts  
+✅ src/pages/          - Chỉ Astro pages
+✅ src/styles/         - Chỉ CSS/styling
+✅ src/lib/store/      - Chỉ client state
+✅ src/lib/utils/      - Chỉ utility functions
+✅ src/lib/types/      - Chỉ TypeScript types
+
+❌ KHÔNG BAO GIỜ code backend logic trong src/
+❌ KHÔNG BAO GIỜ access database trực tiếp
+❌ KHÔNG BAO GIỜ tạo API endpoints trong src/pages/
+
+📝 DEVELOPMENT CHECKLIST
+Frontend Checklist
+
+ Component không gọi database trực tiếp
+ Tất cả API calls qua fetch()
+ TypeScript interfaces được define
+ Responsive design với Tailwind
+ Vietnamese text only
+ VND currency formatting
+ Error handling cho network requests
+ Loading states
+ Accessibility (a11y)
+
+Backend Checklist
+
+ CORS headers được set
+ Input validation đầy đủ
+ SQL parameters được bind
+ Error responses có status code đúng
+ Cache được implement
+ Authentication middleware
+ Rate limiting
+ Logging được implement
+
+Deployment Checklist
+
+ Environment variables được set
+ Database migrations chạy thành công
+ All workers deployed
+ Frontend build successful
+ API endpoints hoạt động
+ HTTPS redirects work
+ Domain pointing correctly

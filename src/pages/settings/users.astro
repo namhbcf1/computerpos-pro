@@ -1,0 +1,319 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import DashboardLayout from '../../layouts/DashboardLayout.astro';
+import Card from '../../components/ui/Card.astro';
+import Button from '../../components/ui/Button.astro';
+---
+
+<BaseLayout title="Quản lý người dùng - ComputerPOS Pro">
+  <DashboardLayout>
+    <main class="p-6 space-y-6">
+      <!-- Header -->
+      <div class="flex justify-between items-center">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">Quản lý người dùng</h1>
+          <p class="text-gray-600 mt-1">Quản lý tài khoản và quyền truy cập</p>
+        </div>
+        <div class="flex space-x-3">
+          <Button href="/settings" variant="secondary">Quay lại</Button>
+          <Button variant="primary" id="add-user">Thêm người dùng</Button>
+        </div>
+      </div>
+
+      <!-- User Statistics -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Tổng người dùng</dt>
+                  <dd class="text-lg font-medium text-gray-900">24</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Đang hoạt động</dt>
+                  <dd class="text-lg font-medium text-gray-900">18</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-yellow-500 rounded-lg flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Chờ duyệt</dt>
+                  <dd class="text-lg font-medium text-gray-900">3</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-red-500 rounded-lg flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L18.364 5.636M5.636 18.364l12.728-12.728" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Bị khóa</dt>
+                  <dd class="text-lg font-medium text-gray-900">3</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      <!-- Users Table -->
+      <Card>
+        <div class="overflow-hidden">
+          <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+            <h3 class="text-lg font-medium text-gray-900">Danh sách người dùng</h3>
+            <div class="flex space-x-2">
+              <input
+                type="text"
+                placeholder="Tìm kiếm người dùng..."
+                class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+              <select class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <option value="">Tất cả vai trò</option>
+                <option value="admin">Admin</option>
+                <option value="manager">Quản lý</option>
+                <option value="staff">Nhân viên</option>
+              </select>
+            </div>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Người dùng</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vai trò</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Trạng thái</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lần đăng nhập cuối</th>
+                  <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex items-center">
+                      <div class="flex-shrink-0 h-10 w-10">
+                        <div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
+                          <span class="text-blue-600 font-medium text-sm">AD</span>
+                        </div>
+                      </div>
+                      <div class="ml-4">
+                        <div class="text-sm font-medium text-gray-900">Admin</div>
+                        <div class="text-sm text-gray-500">admin@computerpos.com</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                      Super Admin
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      Hoạt động
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">15/12/2024 14:30</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <div class="flex justify-end space-x-2">
+                      <button class="text-indigo-600 hover:text-indigo-900">Sửa</button>
+                      <button class="text-red-600 hover:text-red-900">Khóa</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex items-center">
+                      <div class="flex-shrink-0 h-10 w-10">
+                        <div class="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
+                          <span class="text-green-600 font-medium text-sm">NV</span>
+                        </div>
+                      </div>
+                      <div class="ml-4">
+                        <div class="text-sm font-medium text-gray-900">Nguyễn Văn A</div>
+                        <div class="text-sm text-gray-500">nguyenvana@computerpos.com</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                      Quản lý
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      Hoạt động
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">15/12/2024 09:15</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <div class="flex justify-end space-x-2">
+                      <button class="text-indigo-600 hover:text-indigo-900">Sửa</button>
+                      <button class="text-red-600 hover:text-red-900">Khóa</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex items-center">
+                      <div class="flex-shrink-0 h-10 w-10">
+                        <div class="h-10 w-10 rounded-full bg-yellow-100 flex items-center justify-center">
+                          <span class="text-yellow-600 font-medium text-sm">TT</span>
+                        </div>
+                      </div>
+                      <div class="ml-4">
+                        <div class="text-sm font-medium text-gray-900">Trần Thị B</div>
+                        <div class="text-sm text-gray-500">tranthib@computerpos.com</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                      Nhân viên
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                      Chờ duyệt
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Chưa đăng nhập</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <div class="flex justify-end space-x-2">
+                      <button class="text-green-600 hover:text-green-900">Duyệt</button>
+                      <button class="text-red-600 hover:text-red-900">Từ chối</button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </Card>
+    </main>
+  </DashboardLayout>
+</BaseLayout>
+
+<script>
+  // Users management functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    // Add user
+    const addUserBtn = document.getElementById('add-user');
+    addUserBtn?.addEventListener('click', function() {
+      alert('Chức năng thêm người dùng sẽ được phát triển trong phiên bản tiếp theo');
+    });
+
+    // Table actions
+    document.addEventListener('click', function(e) {
+      const buttonText = e.target.textContent;
+      const row = e.target.closest('tr');
+
+      if (buttonText === 'Sửa') {
+        const userName = row.querySelector('.font-medium').textContent;
+        alert(`Sửa thông tin người dùng: ${userName}`);
+      }
+
+      if (buttonText === 'Khóa') {
+        const userName = row.querySelector('.font-medium').textContent;
+        if (confirm(`Khóa tài khoản: ${userName}?`)) {
+          const statusBadge = row.querySelector('.bg-green-100');
+          if (statusBadge) {
+            statusBadge.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800';
+            statusBadge.textContent = 'Bị khóa';
+          }
+          alert('Tài khoản đã được khóa!');
+        }
+      }
+
+      if (buttonText === 'Duyệt') {
+        const userName = row.querySelector('.font-medium').textContent;
+        if (confirm(`Duyệt tài khoản: ${userName}?`)) {
+          const statusBadge = row.querySelector('.bg-yellow-100');
+          statusBadge.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800';
+          statusBadge.textContent = 'Hoạt động';
+
+          const actionCell = row.querySelector('td:last-child .flex');
+          actionCell.innerHTML = `
+            <button class="text-indigo-600 hover:text-indigo-900">Sửa</button>
+            <button class="text-red-600 hover:text-red-900">Khóa</button>
+          `;
+
+          alert('Tài khoản đã được duyệt!');
+        }
+      }
+
+      if (buttonText === 'Từ chối') {
+        const userName = row.querySelector('.font-medium').textContent;
+        if (confirm(`Từ chối tài khoản: ${userName}?`)) {
+          row.remove();
+          alert('Tài khoản đã bị từ chối và xóa!');
+        }
+      }
+    });
+
+    // Search functionality
+    const searchInput = document.querySelector('input[placeholder*="Tìm kiếm"]');
+    if (searchInput) {
+      searchInput.addEventListener('input', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        const rows = document.querySelectorAll('tbody tr');
+
+        rows.forEach(row => {
+          const userName = row.querySelector('.font-medium').textContent.toLowerCase();
+          const email = row.querySelector('.text-gray-500').textContent.toLowerCase();
+
+          if (userName.includes(searchTerm) || email.includes(searchTerm)) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        });
+      });
+    }
+  });
+</script>

@@ -1,0 +1,138 @@
+---
+import '../styles/smart-ui.css';
+import '../styles/globals.css';
+
+export interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="ComputerPOS Pro - Phần Mềm Bán Máy Tính Để Bàn & Linh Kiện" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+  <meta name="generator" content={Astro.generator} />
+  <title>{title}</title>
+  
+  <!-- Vietnamese font support - Full weight range -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Offline font fallback -->
+  <link rel="stylesheet" href="/fonts/vietnamese-fonts.css">
+  
+  <!-- Force Vietnamese font rendering -->
+  <style>
+    * {
+      font-family: 'Be Vietnam Pro', 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif !important;
+    }
+    html, body {
+      font-family: 'Be Vietnam Pro', 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif !important;
+    }
+  </style>
+  
+  <!-- Smart UI Theme loaded via imports -->
+</head>
+<body>
+  <slot />
+  
+  <!-- JavaScript for interactive components -->
+  <script>
+    // Initialize tooltips, dropdowns, and other interactive elements
+    document.addEventListener('DOMContentLoaded', function() {
+      // Mobile menu toggle
+      const mobileMenuButton = document.querySelector('[data-mobile-menu-button]');
+      const mobileMenu = document.querySelector('[data-mobile-menu]');
+      
+      if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+          mobileMenu.classList.toggle('hidden');
+        });
+      }
+      
+      // Dropdown toggles
+      const dropdowns = document.querySelectorAll('[data-dropdown-toggle]');
+      dropdowns.forEach(dropdown => {
+        const button = dropdown.querySelector('[data-dropdown-button]');
+        const menu = dropdown.querySelector('[data-dropdown-menu]');
+        
+        if (button && menu) {
+          button.addEventListener('click', function(e) {
+            e.preventDefault();
+            menu.classList.toggle('hidden');
+          });
+          
+          // Close dropdown when clicking outside
+          document.addEventListener('click', function(e) {
+            if (!dropdown.contains(e.target)) {
+              menu.classList.add('hidden');
+            }
+          });
+        }
+      });
+      
+      // Modal controls
+      const modalTriggers = document.querySelectorAll('[data-modal-trigger]');
+      modalTriggers.forEach(trigger => {
+        trigger.addEventListener('click', function(e) {
+          e.preventDefault();
+          const modalId = this.getAttribute('data-modal-trigger');
+          const modal = document.querySelector(`[data-modal="${modalId}"]`);
+          if (modal) {
+            modal.classList.remove('hidden');
+          }
+        });
+      });
+      
+      const modalCloses = document.querySelectorAll('[data-modal-close]');
+      modalCloses.forEach(close => {
+        close.addEventListener('click', function(e) {
+          e.preventDefault();
+          const modal = this.closest('[data-modal]');
+          if (modal) {
+            modal.classList.add('hidden');
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
+
+<style is:global>
+  .font-inter {
+    font-family: 'Be Vietnam Pro', sans-serif;
+  }
+  
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+  }
+  
+  /* Print styles */
+  @media print {
+    .no-print {
+      display: none !important;
+    }
+  }
+</style>

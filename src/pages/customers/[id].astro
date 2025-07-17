@@ -1,0 +1,20 @@
+---
+export const prerender = false;
+
+// This is a dynamic route that will be handled by the server
+const { id } = Astro.params;
+---
+
+<script>
+// Redirect to customer detail page with proper ID handling
+if (typeof window !== 'undefined') {
+  const customerId = new URLSearchParams(window.location.search).get('id') || window.location.pathname.split('/').pop();
+  if (customerId && customerId !== '[id]') {
+    window.location.href = `/customers/index.html?id=${customerId}`;
+  } else {
+    window.location.href = '/customers/';
+  }
+}
+</script>
+
+<p>Redirecting to customer details...</p>

@@ -1,0 +1,67 @@
+---
+// Mock data for inventory chart
+const inventoryData = [
+  { category: 'CPU', count: 245, color: 'bg-blue-500' },
+  { category: 'VGA', count: 132, color: 'bg-green-500' },
+  { category: 'RAM', count: 356, color: 'bg-purple-500' },
+  { category: 'Mainboard', count: 189, color: 'bg-orange-500' },
+  { category: 'SSD', count: 298, color: 'bg-pink-500' },
+  { category: 'HDD', count: 167, color: 'bg-indigo-500' }
+];
+
+const totalCount = inventoryData.reduce((sum, item) => sum + item.count, 0);
+---
+
+<div class="w-full h-64">
+  <div class="grid grid-cols-2 gap-4 h-full">
+    <!-- Doughnut Chart Representation -->
+    <div class="flex items-center justify-center">
+      <div class="relative w-32 h-32">
+        <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+          <!-- Background circle -->
+          <circle cx="18" cy="18" r="16" fill="none" stroke="#e5e7eb" stroke-width="2"/>
+          
+          <!-- Data segments -->
+          {inventoryData.map((item, index) => {
+            const percentage = (item.count / totalCount) * 100;
+            const strokeDasharray = `${percentage} ${100 - percentage}`;
+            const strokeDashoffset = -inventoryData.slice(0, index).reduce((sum, prevItem) => sum + (prevItem.count / totalCount) * 100, 0);
+            
+            return (
+              <circle
+                cx="18"
+                cy="18"
+                r="16"
+                fill="none"
+                stroke={item.color.replace('bg-', '#')}
+                stroke-width="2"
+                stroke-dasharray={strokeDasharray}
+                stroke-dashoffset={strokeDashoffset}
+                class="transition-all duration-500 hover:stroke-width-3"
+              />
+            );
+          })}
+        </svg>
+        
+        <!-- Center text -->
+        <div class="absolute inset-0 flex items-center justify-center">
+          <div class="text-center">
+            <div class="text-lg font-bold text-gray-900">{totalCount}</div>
+            <div class="text-xs text-gray-500">Tổng</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Legend -->
+    <div class="flex flex-col justify-center space-y-2">
+      {inventoryData.map((item) => (
+        <div class="flex items-center space-x-2">
+          <div class={`w-3 h-3 rounded-full ${item.color}`}></div>
+          <span class="text-sm text-gray-700 flex-1">{item.category}</span>
+          <span class="text-sm font-medium text-gray-900">{item.count}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+</div>

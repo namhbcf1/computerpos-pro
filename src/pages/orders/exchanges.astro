@@ -1,0 +1,1168 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import DashboardLayout from '../../layouts/DashboardLayout.astro';
+import Card from '../../components/ui/Card.astro';
+import Button from '../../components/ui/Button.astro';
+---
+
+<BaseLayout title="Order Exchanges - ComputerPOS Pro">
+  <DashboardLayout>
+    <main class="p-6 space-y-6">
+      <!-- Header -->
+      <div class="flex justify-between items-center">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">Order Exchanges</h1>
+          <p class="text-gray-600 mt-1">Quản lý đổi hàng và xử lý yêu cầu đổi từ khách hàng</p>
+        </div>
+        <div class="flex space-x-3">
+          <Button href="/orders" variant="secondary">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Quay lại Đơn hàng
+          </Button>
+          <Button variant="primary" onclick="createNewExchange()">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            Tạo yêu cầu đổi hàng
+          </Button>
+        </div>
+      </div>
+
+      <!-- Exchange Stats -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Tổng yêu cầu đổi</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="total-exchanges">0</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-yellow-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Chờ xử lý</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="pending-exchanges">0</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-green-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Hoàn thành</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="completed-exchanges">0</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-purple-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Giá trị chênh lệch</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="total-difference">0₫</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      <!-- Filters and Search -->
+      <Card>
+        <div class="p-6">
+          <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+            <div>
+              <label class="form-label">Tìm kiếm</label>
+              <input type="text" class="form-input" id="search-input" placeholder="Mã đơn hàng, khách hàng...">
+            </div>
+            <div>
+              <label class="form-label">Trạng thái</label>
+              <select class="form-select" id="status-filter">
+                <option value="all">Tất cả</option>
+                <option value="pending">Chờ xử lý</option>
+                <option value="approved">Đã duyệt</option>
+                <option value="processing">Đang xử lý</option>
+                <option value="completed">Hoàn thành</option>
+                <option value="rejected">Từ chối</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label">Loại đổi hàng</label>
+              <select class="form-select" id="type-filter">
+                <option value="all">Tất cả</option>
+                <option value="defective">Lỗi sản phẩm</option>
+                <option value="wrong-item">Sai sản phẩm</option>
+                <option value="size-change">Đổi size/cấu hình</option>
+                <option value="upgrade">Nâng cấp</option>
+                <option value="customer-request">Yêu cầu khách hàng</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label">Khoảng thời gian</label>
+              <select class="form-select" id="date-filter">
+                <option value="7">7 ngày qua</option>
+                <option value="30">30 ngày qua</option>
+                <option value="90">3 tháng qua</option>
+                <option value="365">1 năm qua</option>
+                <option value="custom">Tùy chọn</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label">Sắp xếp</label>
+              <select class="form-select" id="sort-by">
+                <option value="newest">Mới nhất</option>
+                <option value="oldest">Cũ nhất</option>
+                <option value="value-desc">Giá trị cao nhất</option>
+                <option value="value-asc">Giá trị thấp nhất</option>
+              </select>
+            </div>
+          </div>
+          <div id="custom-date-range" class="hidden mt-4 grid grid-cols-2 gap-4">
+            <div>
+              <label class="form-label">Từ ngày</label>
+              <input type="date" class="form-input" id="start-date">
+            </div>
+            <div>
+              <label class="form-label">Đến ngày</label>
+              <input type="date" class="form-input" id="end-date">
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      <!-- Exchanges List -->
+      <Card>
+        <div class="p-6">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-lg font-medium text-gray-900">Danh sách yêu cầu đổi hàng</h2>
+            <div class="flex space-x-3">
+              <Button onclick="exportExchanges()" variant="secondary">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Xuất báo cáo
+              </Button>
+              <Button onclick="refreshExchanges()" variant="secondary">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                Làm mới
+              </Button>
+            </div>
+          </div>
+
+          <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+            <table class="min-w-full divide-y divide-gray-300">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mã đổi hàng</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Đơn hàng gốc</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Khách hàng</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sản phẩm cũ</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sản phẩm mới</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Chênh lệch</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Trạng thái</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ngày tạo</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200" id="exchanges-tbody">
+                <!-- Exchanges will be populated here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </Card>
+    </main>
+
+    <!-- Create Exchange Modal -->
+    <div id="exchange-modal" class="modal-overlay hidden">
+      <div class="modal-content max-w-5xl">
+        <div class="modal-header">
+          <h3 class="modal-title">Tạo yêu cầu đổi hàng mới</h3>
+          <button class="modal-close" onclick="closeModal('exchange-modal')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="space-y-6">
+            <!-- Basic Information -->
+            <div>
+              <h4 class="text-md font-medium text-gray-900 mb-4">Thông tin cơ bản</h4>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label class="form-label">Mã đổi hàng *</label>
+                  <input type="text" class="form-input" id="exchange-code" placeholder="EXC-001" readonly>
+                </div>
+                <div>
+                  <label class="form-label">Đơn hàng gốc *</label>
+                  <input type="text" class="form-input" id="original-order" placeholder="Nhập mã đơn hàng...">
+                </div>
+                <div>
+                  <label class="form-label">Loại đổi hàng *</label>
+                  <select class="form-select" id="exchange-type">
+                    <option value="defective">Lỗi sản phẩm</option>
+                    <option value="wrong-item">Sai sản phẩm</option>
+                    <option value="size-change">Đổi size/cấu hình</option>
+                    <option value="upgrade">Nâng cấp</option>
+                    <option value="customer-request">Yêu cầu khách hàng</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Customer Information -->
+            <div>
+              <h4 class="text-md font-medium text-gray-900 mb-4">Thông tin khách hàng</h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="form-label">Tên khách hàng *</label>
+                  <input type="text" class="form-input" id="customer-name" placeholder="Họ tên khách hàng...">
+                </div>
+                <div>
+                  <label class="form-label">Số điện thoại *</label>
+                  <input type="tel" class="form-input" id="customer-phone" placeholder="0123456789">
+                </div>
+                <div>
+                  <label class="form-label">Email</label>
+                  <input type="email" class="form-input" id="customer-email" placeholder="email@example.com">
+                </div>
+                <div>
+                  <label class="form-label">Địa chỉ</label>
+                  <input type="text" class="form-input" id="customer-address" placeholder="Địa chỉ khách hàng...">
+                </div>
+              </div>
+            </div>
+
+            <!-- Exchange Items -->
+            <div>
+              <h4 class="text-md font-medium text-gray-900 mb-4">Chi tiết sản phẩm đổi</h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Old Product -->
+                <div class="border border-gray-200 rounded-lg p-4">
+                  <h5 class="text-sm font-medium text-gray-900 mb-3">Sản phẩm cũ (trả lại)</h5>
+                  <div class="space-y-3">
+                    <div>
+                      <label class="form-label">Tên sản phẩm *</label>
+                      <input type="text" class="form-input" id="old-product-name" placeholder="Tìm sản phẩm...">
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                      <div>
+                        <label class="form-label">Số lượng *</label>
+                        <input type="number" class="form-input" id="old-product-quantity" value="1" min="1">
+                      </div>
+                      <div>
+                        <label class="form-label">Giá trị</label>
+                        <input type="number" class="form-input" id="old-product-value" placeholder="0" readonly>
+                      </div>
+                    </div>
+                    <div>
+                      <label class="form-label">Tình trạng sản phẩm</label>
+                      <select class="form-select" id="old-product-condition">
+                        <option value="like-new">Như mới</option>
+                        <option value="good">Tốt</option>
+                        <option value="fair">Khá</option>
+                        <option value="poor">Kém</option>
+                        <option value="defective">Lỗi</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- New Product -->
+                <div class="border border-gray-200 rounded-lg p-4">
+                  <h5 class="text-sm font-medium text-gray-900 mb-3">Sản phẩm mới (đổi sang)</h5>
+                  <div class="space-y-3">
+                    <div>
+                      <label class="form-label">Tên sản phẩm *</label>
+                      <input type="text" class="form-input" id="new-product-name" placeholder="Tìm sản phẩm...">
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                      <div>
+                        <label class="form-label">Số lượng *</label>
+                        <input type="number" class="form-input" id="new-product-quantity" value="1" min="1">
+                      </div>
+                      <div>
+                        <label class="form-label">Giá trị</label>
+                        <input type="number" class="form-input" id="new-product-value" placeholder="0" readonly>
+                      </div>
+                    </div>
+                    <div>
+                      <label class="form-label">Tình trạng có sẵn</label>
+                      <select class="form-select" id="new-product-availability">
+                        <option value="in-stock">Có sẵn</option>
+                        <option value="pre-order">Đặt trước</option>
+                        <option value="out-of-stock">Hết hàng</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Exchange Summary -->
+            <div>
+              <h4 class="text-md font-medium text-gray-900 mb-4">Tóm tắt đổi hàng</h4>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label class="form-label">Giá trị sản phẩm cũ</label>
+                  <input type="number" class="form-input" id="old-total-value" readonly>
+                </div>
+                <div>
+                  <label class="form-label">Giá trị sản phẩm mới</label>
+                  <input type="number" class="form-input" id="new-total-value" readonly>
+                </div>
+                <div>
+                  <label class="form-label">Chênh lệch cần thanh toán</label>
+                  <input type="number" class="form-input" id="difference-amount" readonly>
+                </div>
+              </div>
+            </div>
+
+            <!-- Exchange Reason -->
+            <div>
+              <h4 class="text-md font-medium text-gray-900 mb-4">Lý do đổi hàng</h4>
+              <div class="space-y-4">
+                <div>
+                  <label class="form-label">Mô tả chi tiết *</label>
+                  <textarea class="form-textarea" id="exchange-reason" rows="4" placeholder="Mô tả lý do đổi hàng..."></textarea>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label class="form-label">Mức độ ưu tiên</label>
+                    <select class="form-select" id="exchange-priority">
+                      <option value="normal">Bình thường</option>
+                      <option value="high">Cao</option>
+                      <option value="urgent">Khẩn cấp</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="form-label">Phương thức xử lý</label>
+                    <select class="form-select" id="processing-method">
+                      <option value="in-store">Tại cửa hàng</option>
+                      <option value="pickup">Lấy hàng tại nhà</option>
+                      <option value="shipping">Gửi qua vận chuyển</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <input type="hidden" id="exchange-id">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('exchange-modal')">Hủy</button>
+          <button type="button" class="btn btn-primary" onclick="saveExchange()">Tạo yêu cầu đổi hàng</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- View Exchange Detail Modal -->
+    <div id="exchange-detail-modal" class="modal-overlay hidden">
+      <div class="modal-content max-w-5xl">
+        <div class="modal-header">
+          <h3 class="modal-title" id="exchange-detail-title">Chi tiết yêu cầu đổi hàng</h3>
+          <button class="modal-close" onclick="closeModal('exchange-detail-modal')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div id="exchange-detail-content">
+            <!-- Exchange details will be populated here -->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('exchange-detail-modal')">Đóng</button>
+          <button type="button" class="btn btn-success" id="approve-exchange-btn">Duyệt đổi hàng</button>
+          <button type="button" class="btn btn-primary" id="process-exchange-btn">Xử lý đổi hàng</button>
+        </div>
+      </div>
+    </div>
+  </DashboardLayout>
+</BaseLayout>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  let exchanges = [];
+  let currentExchange = null;
+
+  // Load sample data
+  function loadSampleData() {
+    exchanges = JSON.parse(localStorage.getItem('orderExchanges') || '[]');
+
+    // Initialize with sample data if empty
+    if (exchanges.length === 0) {
+      exchanges = [
+        {
+          id: 'exc_1',
+          code: 'EXC-001',
+          originalOrderId: 'ORD-2024-001',
+          customerName: 'Nguyễn Văn An',
+          customerPhone: '0987654321',
+          customerEmail: 'an.nguyen@email.com',
+          customerAddress: '123 Đường ABC, Q1, TP.HCM',
+          oldProduct: {
+            name: 'Intel Core i5-13400F',
+            quantity: 1,
+            value: 4500000,
+            condition: 'defective'
+          },
+          newProduct: {
+            name: 'Intel Core i7-13700F',
+            quantity: 1,
+            value: 6800000,
+            availability: 'in-stock'
+          },
+          differenceAmount: 2300000,
+          type: 'defective',
+          reason: 'CPU bị lỗi, không khởi động được',
+          priority: 'high',
+          processingMethod: 'in-store',
+          status: 'pending',
+          createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+          createdBy: 'Admin User'
+        },
+        {
+          id: 'exc_2',
+          code: 'EXC-002',
+          originalOrderId: 'ORD-2024-002',
+          customerName: 'Trần Thị Bình',
+          customerPhone: '0912345678',
+          customerEmail: 'binh.tran@email.com',
+          customerAddress: '456 Đường XYZ, Q3, TP.HCM',
+          oldProduct: {
+            name: 'RTX 4060 8GB',
+            quantity: 1,
+            value: 12000000,
+            condition: 'like-new'
+          },
+          newProduct: {
+            name: 'RTX 4070 12GB',
+            quantity: 1,
+            value: 18000000,
+            availability: 'in-stock'
+          },
+          differenceAmount: 6000000,
+          type: 'upgrade',
+          reason: 'Khách hàng muốn nâng cấp VGA mạnh hơn',
+          priority: 'normal',
+          processingMethod: 'in-store',
+          status: 'approved',
+          createdAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
+          createdBy: 'Admin User',
+          approvedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+          approvedBy: 'Manager'
+        },
+        {
+          id: 'exc_3',
+          code: 'EXC-003',
+          originalOrderId: 'ORD-2024-003',
+          customerName: 'Lê Văn Cường',
+          customerPhone: '0923456789',
+          customerEmail: 'cuong.le@email.com',
+          customerAddress: '789 Đường DEF, Q7, TP.HCM',
+          oldProduct: {
+            name: 'RAM DDR4 16GB 3200MHz',
+            quantity: 2,
+            value: 3600000,
+            condition: 'good'
+          },
+          newProduct: {
+            name: 'RAM DDR5 16GB 5600MHz',
+            quantity: 2,
+            value: 5200000,
+            availability: 'pre-order'
+          },
+          differenceAmount: 1600000,
+          type: 'upgrade',
+          reason: 'Nâng cấp lên DDR5 cho hiệu năng tốt hơn',
+          priority: 'normal',
+          processingMethod: 'pickup',
+          status: 'completed',
+          createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+          createdBy: 'Staff User',
+          completedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+          completedBy: 'Admin User'
+        },
+        {
+          id: 'exc_4',
+          code: 'EXC-004',
+          originalOrderId: 'ORD-2024-004',
+          customerName: 'Phạm Thị Dung',
+          customerPhone: '0934567890',
+          customerEmail: 'dung.pham@email.com',
+          customerAddress: '321 Đường GHI, Q5, TP.HCM',
+          oldProduct: {
+            name: 'Motherboard ASUS B450M',
+            quantity: 1,
+            value: 2200000,
+            condition: 'wrong-item'
+          },
+          newProduct: {
+            name: 'Motherboard ASUS B550M',
+            quantity: 1,
+            value: 2800000,
+            availability: 'in-stock'
+          },
+          differenceAmount: 600000,
+          type: 'wrong-item',
+          reason: 'Giao sai mainboard, khách hàng đặt B550M nhưng nhận B450M',
+          priority: 'urgent',
+          processingMethod: 'shipping',
+          status: 'processing',
+          createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+          createdBy: 'Staff User',
+          startedAt: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(),
+          startedBy: 'Manager'
+        }
+      ];
+
+      saveData();
+    }
+  }
+
+  function saveData() {
+    localStorage.setItem('orderExchanges', JSON.stringify(exchanges));
+  }
+
+  function renderExchanges() {
+    const tbody = document.getElementById('exchanges-tbody');
+    const searchTerm = document.getElementById('search-input').value.toLowerCase();
+    const statusFilter = document.getElementById('status-filter').value;
+    const typeFilter = document.getElementById('type-filter').value;
+    const dateFilter = document.getElementById('date-filter').value;
+    const sortBy = document.getElementById('sort-by').value;
+
+    let filteredExchanges = exchanges.filter(exchange => {
+      const matchesSearch = exchange.code.toLowerCase().includes(searchTerm) ||
+                           exchange.originalOrderId.toLowerCase().includes(searchTerm) ||
+                           exchange.customerName.toLowerCase().includes(searchTerm) ||
+                           exchange.customerPhone.includes(searchTerm);
+      const matchesStatus = statusFilter === 'all' || exchange.status === statusFilter;
+      const matchesType = typeFilter === 'all' || exchange.type === typeFilter;
+      
+      let matchesDate = true;
+      if (dateFilter !== 'custom') {
+        const days = parseInt(dateFilter);
+        const cutoffDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+        matchesDate = new Date(exchange.createdAt) >= cutoffDate;
+      }
+
+      return matchesSearch && matchesStatus && matchesType && matchesDate;
+    });
+
+    // Sort filtered results
+    filteredExchanges.sort((a, b) => {
+      switch (sortBy) {
+        case 'newest':
+          return new Date(b.createdAt) - new Date(a.createdAt);
+        case 'oldest':
+          return new Date(a.createdAt) - new Date(b.createdAt);
+        case 'value-desc':
+          return b.differenceAmount - a.differenceAmount;
+        case 'value-asc':
+          return a.differenceAmount - b.differenceAmount;
+        default:
+          return 0;
+      }
+    });
+
+    if (filteredExchanges.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="9" class="px-6 py-12 text-center text-gray-500">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+            </svg>
+            <h3 class="mt-2 text-sm font-medium text-gray-900">Không tìm thấy yêu cầu đổi hàng nào</h3>
+            <p class="mt-1 text-sm text-gray-500">Thử thay đổi bộ lọc hoặc tạo yêu cầu mới.</p>
+          </td>
+        </tr>
+      `;
+      updateStats(filteredExchanges);
+      return;
+    }
+
+    let html = '';
+    filteredExchanges.forEach(exchange => {
+      const statusColors = {
+        pending: 'bg-yellow-100 text-yellow-800',
+        approved: 'bg-blue-100 text-blue-800',
+        processing: 'bg-orange-100 text-orange-800',
+        completed: 'bg-green-100 text-green-800',
+        rejected: 'bg-red-100 text-red-800'
+      };
+
+      const statusNames = {
+        pending: 'Chờ xử lý',
+        approved: 'Đã duyệt',
+        processing: 'Đang xử lý',
+        completed: 'Hoàn thành',
+        rejected: 'Từ chối'
+      };
+
+      html += `
+        <tr class="hover:bg-gray-50">
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${exchange.code}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${exchange.originalOrderId}</td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm font-medium text-gray-900">${exchange.customerName}</div>
+            <div class="text-sm text-gray-500">${exchange.customerPhone}</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm font-medium text-gray-900">${exchange.oldProduct.name}</div>
+            <div class="text-sm text-gray-500">${exchange.oldProduct.quantity} x ${formatVND(exchange.oldProduct.value)}</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm font-medium text-gray-900">${exchange.newProduct.name}</div>
+            <div class="text-sm text-gray-500">${exchange.newProduct.quantity} x ${formatVND(exchange.newProduct.value)}</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm font-medium ${exchange.differenceAmount >= 0 ? 'text-green-600' : 'text-red-600'}">
+              ${exchange.differenceAmount >= 0 ? '+' : ''}${formatVND(exchange.differenceAmount)}
+            </div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="px-2 py-1 text-xs font-medium rounded-full ${statusColors[exchange.status]}">${statusNames[exchange.status]}</span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            ${new Date(exchange.createdAt).toLocaleDateString('vi-VN')}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+            <div class="flex space-x-2">
+              <button onclick="viewExchange('${exchange.id}')" class="text-blue-600 hover:text-blue-900">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+              </button>
+              ${exchange.status === 'pending' || exchange.status === 'approved' ? `
+                <button onclick="processExchange('${exchange.id}')" class="text-green-600 hover:text-green-900">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                </button>
+              ` : ''}
+            </div>
+          </td>
+        </tr>
+      `;
+    });
+
+    tbody.innerHTML = html;
+    updateStats(filteredExchanges);
+  }
+
+  function updateStats(filtered = exchanges) {
+    const totalExchanges = filtered.length;
+    const pendingExchanges = filtered.filter(e => e.status === 'pending' || e.status === 'approved').length;
+    const completedExchanges = filtered.filter(e => e.status === 'completed').length;
+    const totalDifference = filtered.reduce((sum, e) => sum + e.differenceAmount, 0);
+
+    document.getElementById('total-exchanges').textContent = totalExchanges;
+    document.getElementById('pending-exchanges').textContent = pendingExchanges;
+    document.getElementById('completed-exchanges').textContent = completedExchanges;
+    document.getElementById('total-difference').textContent = formatVND(totalDifference);
+  }
+
+  window.createNewExchange = function() {
+    // Generate new exchange code
+    const exchangeCount = exchanges.length + 1;
+    document.getElementById('exchange-code').value = `EXC-${exchangeCount.toString().padStart(3, '0')}`;
+    
+    // Reset form
+    const form = document.getElementById('exchange-modal');
+    const inputs = form.querySelectorAll('input, select, textarea');
+    inputs.forEach(input => {
+      if (input.id !== 'exchange-code') {
+        input.value = '';
+      }
+    });
+    
+    document.getElementById('exchange-type').value = 'defective';
+    document.getElementById('exchange-priority').value = 'normal';
+    document.getElementById('processing-method').value = 'in-store';
+    document.getElementById('old-product-condition').value = 'like-new';
+    document.getElementById('new-product-availability').value = 'in-stock';
+    document.getElementById('old-product-quantity').value = 1;
+    document.getElementById('new-product-quantity').value = 1;
+    document.getElementById('exchange-id').value = '';
+    
+    document.getElementById('exchange-modal').classList.remove('hidden');
+  };
+
+  window.saveExchange = function() {
+    const code = document.getElementById('exchange-code').value;
+    const originalOrderId = document.getElementById('original-order').value;
+    const customerName = document.getElementById('customer-name').value;
+    const customerPhone = document.getElementById('customer-phone').value;
+    const customerEmail = document.getElementById('customer-email').value;
+    const customerAddress = document.getElementById('customer-address').value;
+    const exchangeType = document.getElementById('exchange-type').value;
+    const reason = document.getElementById('exchange-reason').value;
+    const priority = document.getElementById('exchange-priority').value;
+    const processingMethod = document.getElementById('processing-method').value;
+
+    // Old product info
+    const oldProductName = document.getElementById('old-product-name').value;
+    const oldProductQuantity = parseInt(document.getElementById('old-product-quantity').value) || 1;
+    const oldProductValue = parseFloat(document.getElementById('old-product-value').value) || 0;
+    const oldProductCondition = document.getElementById('old-product-condition').value;
+
+    // New product info
+    const newProductName = document.getElementById('new-product-name').value;
+    const newProductQuantity = parseInt(document.getElementById('new-product-quantity').value) || 1;
+    const newProductValue = parseFloat(document.getElementById('new-product-value').value) || 0;
+    const newProductAvailability = document.getElementById('new-product-availability').value;
+
+    if (!originalOrderId || !customerName || !customerPhone || !oldProductName || !newProductName || !reason) {
+      alert('Vui lòng điền đầy đủ thông tin bắt buộc!');
+      return;
+    }
+
+    // Phone validation
+    const phoneRegex = /^[0-9]{10,11}$/;
+    if (!phoneRegex.test(customerPhone.replace(/[\s-]/g, ''))) {
+      alert('Số điện thoại không hợp lệ!');
+      return;
+    }
+
+    const oldTotalValue = oldProductQuantity * oldProductValue;
+    const newTotalValue = newProductQuantity * newProductValue;
+    const differenceAmount = newTotalValue - oldTotalValue;
+
+    const exchange = {
+      id: 'exc_' + Date.now(),
+      code,
+      originalOrderId,
+      customerName,
+      customerPhone,
+      customerEmail,
+      customerAddress,
+      oldProduct: {
+        name: oldProductName,
+        quantity: oldProductQuantity,
+        value: oldProductValue,
+        condition: oldProductCondition
+      },
+      newProduct: {
+        name: newProductName,
+        quantity: newProductQuantity,
+        value: newProductValue,
+        availability: newProductAvailability
+      },
+      differenceAmount,
+      type: exchangeType,
+      reason,
+      priority,
+      processingMethod,
+      status: 'pending',
+      createdAt: new Date().toISOString(),
+      createdBy: 'Admin User'
+    };
+
+    exchanges.unshift(exchange);
+    saveData();
+    closeModal('exchange-modal');
+    renderExchanges();
+    alert('Đã tạo yêu cầu đổi hàng thành công!');
+  };
+
+  window.viewExchange = function(exchangeId) {
+    const exchange = exchanges.find(e => e.id === exchangeId);
+    if (!exchange) return;
+
+    currentExchange = exchange;
+
+    const typeNames = {
+      defective: 'Lỗi sản phẩm',
+      'wrong-item': 'Sai sản phẩm',
+      'size-change': 'Đổi size/cấu hình',
+      upgrade: 'Nâng cấp',
+      'customer-request': 'Yêu cầu khách hàng'
+    };
+
+    const statusNames = {
+      pending: 'Chờ xử lý',
+      approved: 'Đã duyệt',
+      processing: 'Đang xử lý',
+      completed: 'Hoàn thành',
+      rejected: 'Từ chối'
+    };
+
+    const priorityNames = {
+      normal: 'Bình thường',
+      high: 'Cao',
+      urgent: 'Khẩn cấp'
+    };
+
+    const html = `
+      <div class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <h4 class="font-semibold text-gray-900 mb-3">Thông tin đổi hàng</h4>
+            <div class="space-y-2 text-sm">
+              <div><strong>Mã đổi hàng:</strong> ${exchange.code}</div>
+              <div><strong>Đơn hàng gốc:</strong> ${exchange.originalOrderId}</div>
+              <div><strong>Loại đổi hàng:</strong> ${typeNames[exchange.type]}</div>
+              <div><strong>Mức độ ưu tiên:</strong> <span class="px-2 py-1 text-xs rounded-full ${getPriorityColor(exchange.priority)}">${priorityNames[exchange.priority]}</span></div>
+              <div><strong>Trạng thái:</strong> <span class="px-2 py-1 text-xs rounded-full ${getStatusColor(exchange.status)}">${statusNames[exchange.status]}</span></div>
+              <div><strong>Ngày tạo:</strong> ${new Date(exchange.createdAt).toLocaleString('vi-VN')}</div>
+            </div>
+          </div>
+          <div>
+            <h4 class="font-semibold text-gray-900 mb-3">Thông tin khách hàng</h4>
+            <div class="space-y-2 text-sm">
+              <div><strong>Tên khách hàng:</strong> ${exchange.customerName}</div>
+              <div><strong>Điện thoại:</strong> <a href="tel:${exchange.customerPhone}" class="text-blue-600">${exchange.customerPhone}</a></div>
+              ${exchange.customerEmail ? `<div><strong>Email:</strong> <a href="mailto:${exchange.customerEmail}" class="text-blue-600">${exchange.customerEmail}</a></div>` : ''}
+              ${exchange.customerAddress ? `<div><strong>Địa chỉ:</strong> ${exchange.customerAddress}</div>` : ''}
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="border border-gray-200 rounded-lg p-4">
+            <h4 class="font-semibold text-gray-900 mb-3">Sản phẩm cũ (trả lại)</h4>
+            <div class="space-y-2 text-sm">
+              <div><strong>Tên sản phẩm:</strong> ${exchange.oldProduct.name}</div>
+              <div><strong>Số lượng:</strong> ${exchange.oldProduct.quantity}</div>
+              <div><strong>Giá trị đơn vị:</strong> ${formatVND(exchange.oldProduct.value)}</div>
+              <div><strong>Tổng giá trị:</strong> ${formatVND(exchange.oldProduct.quantity * exchange.oldProduct.value)}</div>
+              <div><strong>Tình trạng:</strong> ${exchange.oldProduct.condition}</div>
+            </div>
+          </div>
+          <div class="border border-gray-200 rounded-lg p-4">
+            <h4 class="font-semibold text-gray-900 mb-3">Sản phẩm mới (đổi sang)</h4>
+            <div class="space-y-2 text-sm">
+              <div><strong>Tên sản phẩm:</strong> ${exchange.newProduct.name}</div>
+              <div><strong>Số lượng:</strong> ${exchange.newProduct.quantity}</div>
+              <div><strong>Giá trị đơn vị:</strong> ${formatVND(exchange.newProduct.value)}</div>
+              <div><strong>Tổng giá trị:</strong> ${formatVND(exchange.newProduct.quantity * exchange.newProduct.value)}</div>
+              <div><strong>Tình trạng có sẵn:</strong> ${exchange.newProduct.availability}</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="font-semibold text-gray-900 mb-2">Lý do đổi hàng</h4>
+          <p class="text-sm text-gray-600 bg-gray-50 p-3 rounded-md">${exchange.reason}</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <h4 class="font-semibold text-gray-900 mb-3">Tóm tắt tài chính</h4>
+            <div class="space-y-2 text-sm">
+              <div><strong>Giá trị sản phẩm cũ:</strong> ${formatVND(exchange.oldProduct.quantity * exchange.oldProduct.value)}</div>
+              <div><strong>Giá trị sản phẩm mới:</strong> ${formatVND(exchange.newProduct.quantity * exchange.newProduct.value)}</div>
+              <div><strong>Chênh lệch:</strong> <span class="${exchange.differenceAmount >= 0 ? 'text-green-600' : 'text-red-600'} font-semibold">${exchange.differenceAmount >= 0 ? '+' : ''}${formatVND(exchange.differenceAmount)}</span></div>
+            </div>
+          </div>
+          <div>
+            <h4 class="font-semibold text-gray-900 mb-3">Thông tin xử lý</h4>
+            <div class="space-y-2 text-sm">
+              <div><strong>Phương thức xử lý:</strong> ${exchange.processingMethod}</div>
+              <div><strong>Người tạo:</strong> ${exchange.createdBy}</div>
+              ${exchange.approvedBy ? `<div><strong>Người duyệt:</strong> ${exchange.approvedBy}</div>` : ''}
+              ${exchange.completedBy ? `<div><strong>Người hoàn thành:</strong> ${exchange.completedBy}</div>` : ''}
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.getElementById('exchange-detail-title').textContent = `Chi tiết đổi hàng ${exchange.code}`;
+    document.getElementById('exchange-detail-content').innerHTML = html;
+    
+    // Show/hide action buttons based on status
+    const approveBtn = document.getElementById('approve-exchange-btn');
+    const processBtn = document.getElementById('process-exchange-btn');
+    
+    if (exchange.status === 'pending') {
+      approveBtn.classList.remove('hidden');
+      processBtn.classList.add('hidden');
+    } else if (exchange.status === 'approved') {
+      approveBtn.classList.add('hidden');
+      processBtn.classList.remove('hidden');
+    } else {
+      approveBtn.classList.add('hidden');
+      processBtn.classList.add('hidden');
+    }
+
+    // Set up button events
+    approveBtn.onclick = () => approveExchange(exchange.id);
+    processBtn.onclick = () => processExchange(exchange.id);
+    
+    document.getElementById('exchange-detail-modal').classList.remove('hidden');
+  };
+
+  window.approveExchange = function(exchangeId) {
+    if (!confirm('Bạn có chắc chắn muốn duyệt yêu cầu đổi hàng này?')) return;
+
+    const exchange = exchanges.find(e => e.id === exchangeId);
+    if (exchange) {
+      exchange.status = 'approved';
+      exchange.approvedAt = new Date().toISOString();
+      exchange.approvedBy = 'Admin User';
+
+      saveData();
+      closeModal('exchange-detail-modal');
+      renderExchanges();
+      alert('Đã duyệt yêu cầu đổi hàng thành công!');
+    }
+  };
+
+  window.processExchange = function(exchangeId) {
+    const exchange = exchanges.find(e => e.id === exchangeId);
+    if (!exchange) return;
+
+    if (exchange.status === 'pending') {
+      // Auto-approve first
+      exchange.status = 'approved';
+      exchange.approvedAt = new Date().toISOString();
+      exchange.approvedBy = 'Admin User';
+    }
+
+    if (confirm(`Bắt đầu xử lý đổi hàng ${exchange.code}?`)) {
+      exchange.status = 'processing';
+      exchange.startedAt = new Date().toISOString();
+      exchange.startedBy = 'Admin User';
+
+      saveData();
+      renderExchanges();
+      alert('Đã bắt đầu xử lý đổi hàng!');
+
+      // Simulate completion after some time
+      setTimeout(() => {
+        if (confirm(`Hoàn thành đổi hàng ${exchange.code}?`)) {
+          exchange.status = 'completed';
+          exchange.completedAt = new Date().toISOString();
+          exchange.completedBy = 'Admin User';
+          
+          saveData();
+          renderExchanges();
+          alert('Đã hoàn thành đổi hàng!');
+        }
+      }, 2000);
+    }
+  };
+
+  function getStatusColor(status) {
+    const colors = {
+      pending: 'bg-yellow-100 text-yellow-800',
+      approved: 'bg-blue-100 text-blue-800',
+      processing: 'bg-orange-100 text-orange-800',
+      completed: 'bg-green-100 text-green-800',
+      rejected: 'bg-red-100 text-red-800'
+    };
+    return colors[status] || '';
+  }
+
+  function getPriorityColor(priority) {
+    const colors = {
+      normal: 'bg-gray-100 text-gray-800',
+      high: 'bg-orange-100 text-orange-800',
+      urgent: 'bg-red-100 text-red-800'
+    };
+    return colors[priority] || '';
+  }
+
+  window.exportExchanges = function() {
+    const csvContent = generateExchangeCSV(exchanges);
+    downloadCSV(csvContent, `exchange-requests-${new Date().toISOString().split('T')[0]}.csv`);
+  };
+
+  function generateExchangeCSV(data) {
+    const headers = ['Mã đổi hàng', 'Đơn gốc', 'Khách hàng', 'Điện thoại', 'Sản phẩm cũ', 'Sản phẩm mới', 'Chênh lệch', 'Trạng thái', 'Ngày tạo'];
+    
+    const statusNames = {
+      pending: 'Chờ xử lý',
+      approved: 'Đã duyệt',
+      processing: 'Đang xử lý',
+      completed: 'Hoàn thành',
+      rejected: 'Từ chối'
+    };
+    
+    const rows = data.map(exchange => [
+      exchange.code,
+      exchange.originalOrderId,
+      exchange.customerName,
+      exchange.customerPhone,
+      exchange.oldProduct.name,
+      exchange.newProduct.name,
+      exchange.differenceAmount,
+      statusNames[exchange.status],
+      new Date(exchange.createdAt).toLocaleDateString('vi-VN')
+    ]);
+
+    return [headers, ...rows].map(row => 
+      row.map(field => `"${field}"`).join(',')
+    ).join('\n');
+  }
+
+  function downloadCSV(content, filename) {
+    const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  window.refreshExchanges = function() {
+    renderExchanges();
+    alert('Đã làm mới danh sách yêu cầu đổi hàng!');
+  };
+
+  window.closeModal = function(modalId) {
+    document.getElementById(modalId).classList.add('hidden');
+  };
+
+  function formatVND(amount) {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND'
+    }).format(amount);
+  }
+
+  // Event listeners
+  document.getElementById('search-input').addEventListener('input', renderExchanges);
+  document.getElementById('status-filter').addEventListener('change', renderExchanges);
+  document.getElementById('type-filter').addEventListener('change', renderExchanges);
+  document.getElementById('date-filter').addEventListener('change', function() {
+    const customRange = document.getElementById('custom-date-range');
+    if (this.value === 'custom') {
+      customRange.classList.remove('hidden');
+    } else {
+      customRange.classList.add('hidden');
+      renderExchanges();
+    }
+  });
+  document.getElementById('sort-by').addEventListener('change', renderExchanges);
+
+  // Calculate total values when product values change
+  document.getElementById('old-product-value').addEventListener('input', calculateTotals);
+  document.getElementById('old-product-quantity').addEventListener('input', calculateTotals);
+  document.getElementById('new-product-value').addEventListener('input', calculateTotals);
+  document.getElementById('new-product-quantity').addEventListener('input', calculateTotals);
+
+  function calculateTotals() {
+    const oldQty = parseInt(document.getElementById('old-product-quantity').value) || 0;
+    const oldValue = parseFloat(document.getElementById('old-product-value').value) || 0;
+    const newQty = parseInt(document.getElementById('new-product-quantity').value) || 0;
+    const newValue = parseFloat(document.getElementById('new-product-value').value) || 0;
+
+    const oldTotal = oldQty * oldValue;
+    const newTotal = newQty * newValue;
+    const difference = newTotal - oldTotal;
+
+    document.getElementById('old-total-value').value = oldTotal;
+    document.getElementById('new-total-value').value = newTotal;
+    document.getElementById('difference-amount').value = difference;
+  }
+
+  // Initialize
+  loadSampleData();
+  renderExchanges();
+});
+</script>
+
+<style>
+.form-input, .form-select, .form-textarea {
+  @apply px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full;
+}
+
+.modal-overlay {
+  @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50;
+}
+
+.modal-content {
+  @apply bg-white rounded-lg shadow-xl w-full mx-4 max-h-screen overflow-y-auto;
+}
+
+.modal-header {
+  @apply flex items-center justify-between p-6 border-b;
+}
+
+.modal-title {
+  @apply text-lg font-medium text-gray-900;
+}
+
+.modal-close {
+  @apply text-gray-400 hover:text-gray-600 text-2xl font-bold cursor-pointer;
+}
+
+.modal-body {
+  @apply p-6;
+}
+
+.modal-footer {
+  @apply flex items-center justify-end space-x-3 p-6 border-t bg-gray-50;
+}
+
+.btn {
+  @apply px-4 py-2 rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-offset-2;
+}
+
+.btn-primary {
+  @apply bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500;
+}
+
+.btn-secondary {
+  @apply bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500;
+}
+
+.btn-success {
+  @apply bg-green-600 text-white hover:bg-green-700 focus:ring-green-500;
+}
+
+.form-label {
+  @apply block text-sm font-medium text-gray-700 mb-1;
+}
+</style>

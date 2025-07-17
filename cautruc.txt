@@ -1,0 +1,325 @@
+computerpos-pro/
+├── 📁 src/
+│   ├── 📁 components/           # Components tái sử dụng
+│   │   ├── 📁 ui/              # UI components cơ bản
+│   │   │   ├── Button.astro
+│   │   │   ├── Input.astro
+│   │   │   ├── Modal.astro
+│   │   │   ├── Card.astro
+│   │   │   ├── Table.astro
+│   │   │   ├── Toast.astro
+│   │   │   ├── Dropdown.astro
+│   │   │   ├── Spinner.astro
+│   │   │   └── Badge.astro
+│   │   │
+│   │   ├── 📁 layout/          # Layout components
+│   │   │   ├── Header.astro
+│   │   │   ├── Sidebar.astro
+│   │   │   ├── Footer.astro
+│   │   │   ├── Breadcrumb.astro
+│   │   │   └── Navigation.astro
+│   │   │
+│   │   ├── 📁 pos/             # POS components
+│   │   │   ├── POSInterface.astro
+│   │   │   ├── ProductGrid.astro
+│   │   │   ├── ShoppingCart.astro
+│   │   │   ├── PaymentModal.astro
+│   │   │   ├── CustomerDisplay.astro
+│   │   │   ├── BarcodeScanner.astro
+│   │   │   └── ReceiptPrint.astro
+│   │   │
+│   │   ├── 📁 products/        # Product components
+│   │   │   ├── ProductCard.astro
+│   │   │   ├── ProductList.astro
+│   │   │   ├── ProductSearch.astro
+│   │   │   ├── ProductFilter.astro
+│   │   │   ├── ProductSpecs.astro
+│   │   │   ├── ProductImages.astro
+│   │   │   ├── CompatibilityCheck.astro
+│   │   │   ├── PriceCompare.astro
+│   │   │   └── StockStatus.astro
+│   │   │
+│   │   ├── 📁 build/           # PC Build components
+│   │   │   ├── BuildConfigurator.astro
+│   │   │   ├── BuildCalculator.astro
+│   │   │   ├── ComponentSelector.astro
+│   │   │   ├── CompatibilityMatrix.astro
+│   │   │   ├── PerformanceEstimator.astro
+│   │   │   ├── PowerCalculator.astro
+│   │   │   ├── BuildSummary.astro
+│   │   │   └── QuotationPrint.astro
+│   │   │
+│   │   ├── 📁 inventory/       # Inventory components
+│   │   │   ├── InventoryList.astro
+│   │   │   ├── StockAdjustment.astro
+│   │   │   ├── LowStockAlert.astro
+│   │   │   ├── WarrantyTracker.astro
+│   │   │   ├── SerialTracker.astro
+│   │   │   ├── SupplierInfo.astro
+│   │   │   ├── PriceHistory.astro
+│   │   │   └── MovementLog.astro
+│   │   │
+│   │   ├── 📁 customers/       # Customer components
+│   │   │   ├── CustomerProfile.astro
+│   │   │   ├── CustomerList.astro
+│   │   │   ├── PurchaseHistory.astro
+│   │   │   ├── BuildHistory.astro
+│   │   │   ├── WarrantyClaims.astro
+│   │   │   ├── CustomerSegments.astro
+│   │   │   └── ContactManager.astro
+│   │   │
+│   │   ├── 📁 reports/         # Report components
+│   │   │   ├── SalesReport.astro
+│   │   │   ├── InventoryReport.astro
+│   │   │   ├── ProfitAnalysis.astro
+│   │   │   ├── TrendAnalysis.astro
+│   │   │   ├── BrandAnalysis.astro
+│   │   │   ├── CategoryReport.astro
+│   │   │   ├── CustomReport.astro
+│   │   │   └── ExportTools.astro
+│   │   │
+│   │   ├── 📁 forms/           # Form components
+│   │   │   ├── ProductForm.astro
+│   │   │   ├── CustomerForm.astro
+│   │   │   ├── OrderForm.astro
+│   │   │   ├── SupplierForm.astro
+│   │   │   ├── StaffForm.astro
+│   │   │   ├── SettingsForm.astro
+│   │   │   └── ValidationHelper.astro
+│   │   │
+│   │   └── 📁 charts/          # Chart components
+│   │       ├── SalesChart.astro
+│   │       ├── InventoryChart.astro
+│   │       ├── TrendChart.astro
+│   │       ├── PieChart.astro
+│   │       ├── BarChart.astro
+│   │       └── LineChart.astro
+│   │
+│   ├── 📁 layouts/             # Page layouts
+│   │   ├── BaseLayout.astro
+│   │   ├── DashboardLayout.astro
+│   │   ├── POSLayout.astro
+│   │   ├── AdminLayout.astro
+│   │   ├── AuthLayout.astro
+│   │   ├── PrintLayout.astro
+│   │   └── MobileLayout.astro
+│   │
+│   ├── 📁 pages/               # Astro pages (routing)
+│   │   ├── index.astro         # Dashboard
+│   │   ├── login.astro         # Đăng nhập
+│   │   │
+│   │   ├── 📁 pos/             # POS pages
+│   │   │   ├── index.astro     # POS interface
+│   │   │   ├── sales.astro     # Bán hàng
+│   │   │   ├── returns.astro   # Trả hàng
+│   │   │   └── holds.astro     # Đơn giữ
+│   │   │
+│   │   ├── 📁 products/        # Product pages
+│   │   │   ├── index.astro     # Danh sách sản phẩm
+│   │   │   ├── [id].astro      # Chi tiết sản phẩm
+│   │   │   ├── add.astro       # Thêm sản phẩm
+│   │   │   ├── edit/[id].astro # Sửa sản phẩm
+│   │   │   ├── categories.astro # Danh mục
+│   │   │   ├── specs.astro     # Thông số kỹ thuật
+│   │   │   └── compatibility.astro # Kiểm tra tương thích
+│   │   │
+│   │   ├── 📁 build/           # PC Build pages
+│   │   │   ├── index.astro     # Build configurator
+│   │   │   ├── templates.astro # Build templates
+│   │   │   ├── calculator.astro # Price calculator
+│   │   │   ├── compatibility.astro # Compatibility checker
+│   │   │   └── quotation.astro # Quotation generator
+│   │   │
+│   │   ├── 📁 inventory/       # Inventory pages
+│   │   │   ├── index.astro     # Kho hàng
+│   │   │   ├── stock.astro     # Tồn kho
+│   │   │   ├── adjustments.astro # Điều chỉnh
+│   │   │   ├── movements.astro # Xuất nhập kho
+│   │   │   ├── suppliers.astro # Nhà cung cấp
+│   │   │   ├── purchase-orders.astro # Đơn đặt hàng
+│   │   │   ├── receiving.astro # Nhận hàng
+│   │   │   ├── warranty.astro  # Bảo hành
+│   │   │   └── alerts.astro    # Cảnh báo
+│   │   │
+│   │   ├── 📁 customers/       # Customer pages
+│   │   │   ├── index.astro     # Danh sách khách hàng
+│   │   │   ├── [id].astro      # Hồ sơ khách hàng
+│   │   │   ├── add.astro       # Thêm khách hàng
+│   │   │   ├── segments.astro  # Phân khúc khách hàng
+│   │   │   ├── history.astro   # Lịch sử mua hàng
+│   │   │   └── communication.astro # Liên lạc
+│   │   │
+│   │   ├── 📁 orders/          # Order pages
+│   │   │   ├── index.astro     # Danh sách đơn hàng
+│   │   │   ├── [id].astro      # Chi tiết đơn hàng
+│   │   │   ├── returns.astro   # Trả hàng
+│   │   │   ├── exchanges.astro # Đổi hàng
+│   │   │   └── tracking.astro  # Theo dõi đơn hàng
+│   │   │
+│   │   ├── 📁 staff/           # Staff pages
+│   │   │   ├── index.astro     # Danh sách nhân viên
+│   │   │   ├── [id].astro      # Hồ sơ nhân viên
+│   │   │   ├── schedules.astro # Lịch làm việc
+│   │   │   ├── performance.astro # Hiệu suất
+│   │   │   ├── permissions.astro # Phân quyền
+│   │   │   └── training.astro  # Đào tạo
+│   │   │
+│   │   ├── 📁 reports/         # Report pages
+│   │   │   ├── index.astro     # Dashboard báo cáo
+│   │   │   ├── sales.astro     # Báo cáo bán hàng
+│   │   │   ├── inventory.astro # Báo cáo kho
+│   │   │   ├── financial.astro # Báo cáo tài chính
+│   │   │   ├── customers.astro # Báo cáo khách hàng
+│   │   │   ├── products.astro  # Báo cáo sản phẩm
+│   │   │   ├── brands.astro    # Báo cáo thương hiệu
+│   │   │   └── custom.astro    # Báo cáo tùy chỉnh
+│   │   │
+│   │   └── 📁 settings/        # Settings pages
+│   │       ├── index.astro     # Cài đặt chung
+│   │       ├── store.astro     # Thông tin cửa hàng
+│   │       ├── users.astro     # Người dùng
+│   │       ├── roles.astro     # Vai trò
+│   │       ├── payments.astro  # Thanh toán
+│   │       ├── taxes.astro     # Thuế
+│   │       ├── integrations.astro # Tích hợp
+│   │       ├── notifications.astro # Thông báo
+│   │       ├── backup.astro    # Sao lưu
+│   │       └── security.astro  # Bảo mật
+│   │
+│   ├── 📁 lib/                 # Utilities & helpers
+│   │   ├── 📁 utils/           # Utility functions
+│   │   │   ├── format.ts       # Format helpers
+│   │   │   ├── validation.ts   # Validation helpers
+│   │   │   ├── currency.ts     # VND currency helpers
+│   │   │   ├── date.ts         # Date helpers
+│   │   │   ├── slugify.ts      # URL slug helpers
+│   │   │   └── constants.ts    # App constants
+│   │   │
+│   │   ├── 📁 store/           # Client-side state (localStorage)
+│   │   │   ├── cart.ts         # Shopping cart state
+│   │   │   ├── user.ts         # User session state
+│   │   │   ├── settings.ts     # App settings state
+│   │   │   ├── products.ts     # Product filters state
+│   │   │   └── build.ts        # PC build state
+│   │   │
+│   │   ├── 📁 types/           # TypeScript types
+│   │   │   ├── product.ts      # Product types
+│   │   │   ├── customer.ts     # Customer types
+│   │   │   ├── order.ts        # Order types
+│   │   │   ├── inventory.ts    # Inventory types
+│   │   │   ├── build.ts        # PC build types
+│   │   │   ├── user.ts         # User types
+│   │   │   └── common.ts       # Common types
+│   │   │
+│   │   ├── 📁 data/            # Static data & mock data
+│   │   │   ├── products.json   # Sample products
+│   │   │   ├── compatibility.json # Compatibility matrix
+│   │   │   ├── categories.json # Product categories
+│   │   │   ├── brands.json     # Brand information
+│   │   │   ├── specs.json      # Product specifications
+│   │   │   ├── builds.json     # Sample PC builds
+│   │   │   └── mockData.ts     # Mock data generators
+│   │   │
+│   │   └── 📁 api/             # API client functions
+│   │       ├── products.ts     # Product API calls
+│   │       ├── customers.ts    # Customer API calls
+│   │       ├── orders.ts       # Order API calls
+│   │       ├── inventory.ts    # Inventory API calls
+│   │       ├── auth.ts         # Authentication API
+│   │       ├── reports.ts      # Reports API calls
+│   │       └── build.ts        # PC build API calls
+│   │
+│   └── 📁 styles/              # Global styles
+│       ├── globals.css         # Global CSS
+│       ├── components.css      # Component styles
+│       ├── utilities.css       # Utility classes
+│       ├── print.css          # Print styles
+│       └── mobile.css         # Mobile-specific styles
+│
+├── 📁 public/                  # Static assets
+│   ├── 📁 images/              # Image assets
+│   │   ├── 📁 products/        # Product images
+│   │   ├── 📁 brands/          # Brand logos
+│   │   ├── 📁 icons/           # App icons
+│   │   ├── favicon.ico
+│   │   └── logo.png
+│   │
+│   ├── 📁 fonts/              # Custom fonts
+│   └── 📁 docs/               # Documentation files
+│
+├── 📁 functions/              # Cloudflare Workers (Backend)
+│   ├── 📁 api/                # API Workers
+│   │   ├── auth.ts            # Authentication worker
+│   │   ├── products.ts        # Products worker  
+│   │   ├── customers.ts       # Customers worker
+│   │   ├── orders.ts          # Orders worker
+│   │   ├── inventory.ts       # Inventory worker
+│   │   ├── reports.ts         # Reports worker
+│   │   ├── build.ts           # PC build worker
+│   │   └── payments.ts        # Payments worker
+│   │
+│   ├── 📁 middleware/         # Middleware functions
+│   │   ├── auth.ts            # Auth middleware
+│   │   ├── cors.ts            # CORS middleware
+│   │   ├── validation.ts      # Input validation
+│   │   └── logging.ts         # Request logging
+│   │
+│   └── 📁 utils/              # Worker utilities
+│       ├── database.ts        # Database helpers (D1)
+│       ├── storage.ts         # File storage helpers (R2)
+│       ├── cache.ts           # Cache helpers (KV)
+│       ├── queue.ts           # Queue helpers
+│       └── constants.ts       # Worker constants
+│
+├── 📁 schemas/                # Database schemas & migrations
+│   ├── 📁 migrations/         # D1 database migrations
+│   │   ├── 001_initial.sql
+│   │   ├── 002_products.sql
+│   │   ├── 003_customers.sql
+│   │   ├── 004_orders.sql
+│   │   ├── 005_inventory.sql
+│   │   └── 006_build_configs.sql
+│   │
+│   └── schema.sql             # Complete database schema
+│
+├── 📁 docs/                   # Documentation
+│   ├── README.md              # Project overview
+│   ├── DEPLOYMENT.md          # Deployment guide
+│   ├── API.md                 # API documentation
+│   ├── CONTRIBUTING.md        # Contribution guide
+│   └── CHANGELOG.md           # Version history
+│
+├── 📄 astro.config.mjs        # Astro configuration
+├── 📄 wrangler.toml           # Cloudflare Workers config
+├── 📄 package.json            # Dependencies
+├── 📄 tsconfig.json           # TypeScript config
+├── 📄 tailwind.config.mjs     # Tailwind CSS config
+├── 📄 .gitignore              # Git ignore file
+├── 📄 .env.example            # Environment variables example
+└── 📄 README.md               # Project documentation
+
+# 🚀 CLOUDFLARE FREE TIER OPTIMIZATIONS
+
+## ✅ Tối Ưu Cho Cloudflare Free
+1. **Pages**: Static hosting cho Astro frontend
+2. **Workers**: API backend (100,000 requests/day)
+3. **D1**: SQLite database (5GB storage)
+4. **KV**: Cache storage (100,000 reads/day)
+5. **R2**: File storage (10GB/month)
+6. **Analytics**: Web analytics miễn phí
+
+## 📊 Resource Limits (Free Tier)
+- **Workers**: 100,000 requests/day
+- **D1 Database**: 5GB storage, 25M row reads/day
+- **KV Storage**: 100,000 reads, 1,000 writes/day
+- **R2 Storage**: 10GB storage, 1M Class A ops/month
+- **Pages**: Unlimited static requests
+- **Bandwidth**: 100GB/month
+
+## 🔧 Cost Optimization Strategies
+1. **Static-First**: Tối đa static pages với Astro
+2. **Edge Caching**: Sử dụng KV cho cache
+3. **Lazy Loading**: Chỉ load khi cần thiết
+4. **Image Optimization**: Tối ưu hình ảnh
+5. **Bundle Splitting**: Chia nhỏ JavaScript bundles
+6. **Progressive Enhancement**: Hoạt động tốt ngay cả khi JS disabled

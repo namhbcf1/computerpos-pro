@@ -1,0 +1,903 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import DashboardLayout from '../../layouts/DashboardLayout.astro';
+import Card from '../../components/ui/Card.astro';
+import Button from '../../components/ui/Button.astro';
+---
+
+<BaseLayout title="Inventory Movements - ComputerPOS Pro">
+  <DashboardLayout>
+    <main class="p-6 space-y-6">
+      <!-- Header -->
+      <div class="flex justify-between items-center">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">Inventory Movements</h1>
+          <p class="text-gray-600 mt-1">Theo dõi xuất nhập kho và biến động tồn kho</p>
+        </div>
+        <div class="flex space-x-3">
+          <Button href="/inventory" variant="secondary">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Quay lại Kho hàng
+          </Button>
+          <Button variant="primary" onclick="exportMovements()">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Xuất báo cáo
+          </Button>
+        </div>
+      </div>
+
+      <!-- Movement Stats -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Tổng giao dịch</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="total-movements">0</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-green-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Nhập kho</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="inbound-movements">0</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-red-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Xuất kho</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="outbound-movements">0</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-orange-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Giá trị di chuyển</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="movement-value">0₫</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      <!-- Movement Chart -->
+      <Card>
+        <div class="p-6">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-lg font-medium text-gray-900">Biểu đồ xuất nhập kho</h2>
+            <div class="flex space-x-3">
+              <select class="form-select w-40" id="chart-period">
+                <option value="7">7 ngày qua</option>
+                <option value="30">30 ngày qua</option>
+                <option value="90">3 tháng qua</option>
+                <option value="365">1 năm qua</option>
+              </select>
+              <select class="form-select w-40" id="chart-type">
+                <option value="quantity">Theo số lượng</option>
+                <option value="value">Theo giá trị</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2">
+              <canvas id="movement-chart" width="600" height="300"></canvas>
+            </div>
+            <div>
+              <h3 class="text-md font-medium text-gray-900 mb-4">Top sản phẩm di chuyển</h3>
+              <div class="space-y-3" id="top-products">
+                <!-- Top products will be populated here -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      <!-- Filters and Search -->
+      <Card>
+        <div class="p-6">
+          <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+            <div>
+              <label class="form-label">Tìm kiếm</label>
+              <input type="text" class="form-input" id="search-input" placeholder="Sản phẩm, mã giao dịch...">
+            </div>
+            <div>
+              <label class="form-label">Loại giao dịch</label>
+              <select class="form-select" id="type-filter">
+                <option value="all">Tất cả</option>
+                <option value="in">Nhập kho</option>
+                <option value="out">Xuất kho</option>
+                <option value="transfer">Chuyển kho</option>
+                <option value="return">Trả hàng</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label">Nguyên nhân</label>
+              <select class="form-select" id="reason-filter">
+                <option value="all">Tất cả</option>
+                <option value="purchase">Nhập mua</option>
+                <option value="sale">Bán hàng</option>
+                <option value="adjustment">Điều chỉnh</option>
+                <option value="return">Trả hàng</option>
+                <option value="transfer">Chuyển kho</option>
+                <option value="loss">Hao hụt</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label">Khoảng thời gian</label>
+              <select class="form-select" id="date-filter">
+                <option value="today">Hôm nay</option>
+                <option value="7">7 ngày qua</option>
+                <option value="30">30 ngày qua</option>
+                <option value="90">3 tháng qua</option>
+                <option value="custom">Tùy chọn</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label">Người thực hiện</label>
+              <select class="form-select" id="user-filter">
+                <option value="all">Tất cả</option>
+                <option value="admin">Admin User</option>
+                <option value="staff1">Nguyễn Văn A</option>
+                <option value="staff2">Trần Thị B</option>
+                <option value="staff3">Lê Văn C</option>
+              </select>
+            </div>
+          </div>
+          <div id="custom-date-range" class="hidden mt-4 grid grid-cols-2 gap-4">
+            <div>
+              <label class="form-label">Từ ngày</label>
+              <input type="date" class="form-input" id="start-date">
+            </div>
+            <div>
+              <label class="form-label">Đến ngày</label>
+              <input type="date" class="form-input" id="end-date">
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      <!-- Movements List -->
+      <Card>
+        <div class="p-6">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-lg font-medium text-gray-900">Lịch sử xuất nhập kho</h2>
+            <div class="flex space-x-3">
+              <Button onclick="refreshMovements()" variant="secondary">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                Làm mới
+              </Button>
+            </div>
+          </div>
+
+          <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+            <table class="min-w-full divide-y divide-gray-300">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Thời gian</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mã giao dịch</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sản phẩm</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Loại</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Số lượng</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tồn trước</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tồn sau</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nguyên nhân</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Người thực hiện</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200" id="movements-tbody">
+                <!-- Movements will be populated here -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination -->
+          <div class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
+            <div class="flex flex-1 justify-between sm:hidden">
+              <button class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                Trước
+              </button>
+              <button class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                Sau
+              </button>
+            </div>
+            <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+              <div>
+                <p class="text-sm text-gray-700">
+                  Hiển thị <span class="font-medium" id="from-item">1</span> đến <span class="font-medium" id="to-item">50</span> 
+                  trong tổng số <span class="font-medium" id="total-items">0</span> kết quả
+                </p>
+              </div>
+              <div>
+                <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" id="pagination">
+                  <!-- Pagination buttons will be populated here -->
+                </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Card>
+    </main>
+
+    <!-- View Movement Detail Modal -->
+    <div id="movement-detail-modal" class="modal-overlay hidden">
+      <div class="modal-content max-w-3xl">
+        <div class="modal-header">
+          <h3 class="modal-title" id="movement-detail-title">Chi tiết giao dịch</h3>
+          <button class="modal-close" onclick="closeModal('movement-detail-modal')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div id="movement-detail-content">
+            <!-- Movement details will be populated here -->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('movement-detail-modal')">Đóng</button>
+        </div>
+      </div>
+    </div>
+  </DashboardLayout>
+</BaseLayout>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  let movements = [];
+  let filteredMovements = [];
+  let currentPage = 1;
+  const itemsPerPage = 50;
+
+  // Load sample data
+  function loadSampleData() {
+    movements = JSON.parse(localStorage.getItem('inventoryMovements') || '[]');
+
+    // Initialize with sample data if empty
+    if (movements.length === 0) {
+      movements = generateSampleMovements();
+      saveData();
+    }
+  }
+
+  function generateSampleMovements() {
+    const products = [
+      { id: 'prod_1', name: 'Intel Core i5-13400F', sku: 'CPU-I5-13400F' },
+      { id: 'prod_2', name: 'RTX 4070 Super', sku: 'GPU-RTX-4070S' },
+      { id: 'prod_3', name: 'RAM DDR4 16GB Corsair', sku: 'RAM-DDR4-16GB-COR' },
+      { id: 'prod_4', name: 'SSD Samsung 980 Pro 1TB', sku: 'SSD-SAM-980P-1TB' },
+      { id: 'prod_5', name: 'Motherboard ASUS B550M', sku: 'MB-ASUS-B550M' }
+    ];
+
+    const users = ['Admin User', 'Nguyễn Văn A', 'Trần Thị B', 'Lê Văn C'];
+    const reasons = ['purchase', 'sale', 'adjustment', 'return', 'transfer', 'loss'];
+    const types = ['in', 'out', 'transfer'];
+    
+    const sampleMovements = [];
+    
+    for (let i = 0; i < 150; i++) {
+      const product = products[Math.floor(Math.random() * products.length)];
+      const type = types[Math.floor(Math.random() * types.length)];
+      const reason = reasons[Math.floor(Math.random() * reasons.length)];
+      const user = users[Math.floor(Math.random() * users.length)];
+      
+      const quantity = Math.floor(Math.random() * 50) + 1;
+      const beforeStock = Math.floor(Math.random() * 100) + 10;
+      const afterStock = type === 'in' ? beforeStock + quantity : beforeStock - quantity;
+      
+      const movement = {
+        id: 'mov_' + (i + 1),
+        transactionCode: 'TXN-' + (i + 1).toString().padStart(4, '0'),
+        productId: product.id,
+        productName: product.name,
+        productSku: product.sku,
+        type,
+        quantity: type === 'in' ? quantity : -quantity,
+        beforeStock,
+        afterStock,
+        reason,
+        unitCost: Math.floor(Math.random() * 10000000) + 1000000,
+        totalValue: 0, // Will be calculated
+        user,
+        timestamp: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString(),
+        reference: type === 'in' ? 'PO-' + Math.floor(Math.random() * 1000) : 'SO-' + Math.floor(Math.random() * 1000),
+        notes: 'Giao dịch tự động từ hệ thống'
+      };
+      
+      movement.totalValue = Math.abs(movement.quantity) * movement.unitCost;
+      sampleMovements.push(movement);
+    }
+    
+    return sampleMovements.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+  }
+
+  function saveData() {
+    localStorage.setItem('inventoryMovements', JSON.stringify(movements));
+  }
+
+  function renderMovements() {
+    const tbody = document.getElementById('movements-tbody');
+    const searchTerm = document.getElementById('search-input').value.toLowerCase();
+    const typeFilter = document.getElementById('type-filter').value;
+    const reasonFilter = document.getElementById('reason-filter').value;
+    const dateFilter = document.getElementById('date-filter').value;
+    const userFilter = document.getElementById('user-filter').value;
+
+    filteredMovements = movements.filter(movement => {
+      const matchesSearch = movement.productName.toLowerCase().includes(searchTerm) ||
+                           movement.productSku.toLowerCase().includes(searchTerm) ||
+                           movement.transactionCode.toLowerCase().includes(searchTerm);
+      const matchesType = typeFilter === 'all' || movement.type === typeFilter;
+      const matchesReason = reasonFilter === 'all' || movement.reason === reasonFilter;
+      const matchesUser = userFilter === 'all' || movement.user.includes(userFilter);
+      
+      let matchesDate = true;
+      if (dateFilter === 'today') {
+        const today = new Date().toDateString();
+        matchesDate = new Date(movement.timestamp).toDateString() === today;
+      } else if (dateFilter !== 'custom') {
+        const days = parseInt(dateFilter);
+        const cutoffDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+        matchesDate = new Date(movement.timestamp) >= cutoffDate;
+      }
+
+      return matchesSearch && matchesType && matchesReason && matchesUser && matchesDate;
+    });
+
+    renderPaginatedMovements();
+    updateStats();
+    renderChart();
+    renderTopProducts();
+  }
+
+  function renderPaginatedMovements() {
+    const tbody = document.getElementById('movements-tbody');
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const pageMovements = filteredMovements.slice(startIndex, endIndex);
+
+    if (pageMovements.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="10" class="px-6 py-12 text-center text-gray-500">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+            </svg>
+            <h3 class="mt-2 text-sm font-medium text-gray-900">Không tìm thấy giao dịch nào</h3>
+            <p class="mt-1 text-sm text-gray-500">Thử thay đổi bộ lọc để xem thêm kết quả.</p>
+          </td>
+        </tr>
+      `;
+      updatePagination();
+      return;
+    }
+
+    let html = '';
+    pageMovements.forEach(movement => {
+      const typeColors = {
+        in: 'bg-green-100 text-green-800',
+        out: 'bg-red-100 text-red-800',
+        transfer: 'bg-blue-100 text-blue-800'
+      };
+
+      const typeNames = {
+        in: 'Nhập kho',
+        out: 'Xuất kho',
+        transfer: 'Chuyển kho'
+      };
+
+      const reasonNames = {
+        purchase: 'Nhập mua',
+        sale: 'Bán hàng',
+        adjustment: 'Điều chỉnh',
+        return: 'Trả hàng',
+        transfer: 'Chuyển kho',
+        loss: 'Hao hụt'
+      };
+
+      html += `
+        <tr class="hover:bg-gray-50">
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            ${new Date(movement.timestamp).toLocaleString('vi-VN')}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+            ${movement.transactionCode}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm font-medium text-gray-900">${movement.productName}</div>
+            <div class="text-sm text-gray-500">${movement.productSku}</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="px-2 py-1 text-xs font-medium rounded-full ${typeColors[movement.type]}">${typeNames[movement.type]}</span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm ${movement.quantity >= 0 ? 'text-green-600' : 'text-red-600'}">
+            ${movement.quantity >= 0 ? '+' : ''}${movement.quantity}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${movement.beforeStock}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${movement.afterStock}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${reasonNames[movement.reason]}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${movement.user}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+            <button onclick="viewMovement('${movement.id}')" class="text-blue-600 hover:text-blue-900">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+            </button>
+          </td>
+        </tr>
+      `;
+    });
+
+    tbody.innerHTML = html;
+    updatePagination();
+  }
+
+  function updatePagination() {
+    const totalPages = Math.ceil(filteredMovements.length / itemsPerPage);
+    const startItem = (currentPage - 1) * itemsPerPage + 1;
+    const endItem = Math.min(currentPage * itemsPerPage, filteredMovements.length);
+    
+    document.getElementById('from-item').textContent = filteredMovements.length > 0 ? startItem : 0;
+    document.getElementById('to-item').textContent = endItem;
+    document.getElementById('total-items').textContent = filteredMovements.length;
+
+    const pagination = document.getElementById('pagination');
+    let paginationHtml = '';
+
+    // Previous button
+    paginationHtml += `
+      <button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''} 
+              class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 ${currentPage === 1 ? 'cursor-not-allowed' : ''}">
+        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
+        </svg>
+      </button>
+    `;
+
+    // Page numbers
+    for (let i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) {
+      paginationHtml += `
+        <button onclick="changePage(${i})" 
+                class="relative inline-flex items-center px-4 py-2 text-sm font-semibold ${i === currentPage ? 'z-10 bg-blue-600 text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600' : 'text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0'}">
+          ${i}
+        </button>
+      `;
+    }
+
+    // Next button
+    paginationHtml += `
+      <button onclick="changePage(${currentPage + 1})" ${currentPage === totalPages || totalPages === 0 ? 'disabled' : ''} 
+              class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 ${currentPage === totalPages || totalPages === 0 ? 'cursor-not-allowed' : ''}">
+        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+        </svg>
+      </button>
+    `;
+
+    pagination.innerHTML = paginationHtml;
+  }
+
+  window.changePage = function(page) {
+    const totalPages = Math.ceil(filteredMovements.length / itemsPerPage);
+    if (page >= 1 && page <= totalPages) {
+      currentPage = page;
+      renderPaginatedMovements();
+    }
+  };
+
+  function updateStats() {
+    const totalMovements = filteredMovements.length;
+    const inboundMovements = filteredMovements.filter(m => m.type === 'in').length;
+    const outboundMovements = filteredMovements.filter(m => m.type === 'out').length;
+    const totalValue = filteredMovements.reduce((sum, m) => sum + Math.abs(m.totalValue), 0);
+
+    document.getElementById('total-movements').textContent = totalMovements;
+    document.getElementById('inbound-movements').textContent = inboundMovements;
+    document.getElementById('outbound-movements').textContent = outboundMovements;
+    document.getElementById('movement-value').textContent = formatVND(totalValue);
+  }
+
+  function renderChart() {
+    const canvas = document.getElementById('movement-chart');
+    const ctx = canvas.getContext('2d');
+    const period = parseInt(document.getElementById('chart-period').value);
+    const chartType = document.getElementById('chart-type').value;
+    
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Group movements by date
+    const dateGroups = {};
+    const cutoffDate = new Date(Date.now() - period * 24 * 60 * 60 * 1000);
+    
+    filteredMovements
+      .filter(m => new Date(m.timestamp) >= cutoffDate)
+      .forEach(movement => {
+        const date = new Date(movement.timestamp).toLocaleDateString('vi-VN');
+        if (!dateGroups[date]) {
+          dateGroups[date] = { in: 0, out: 0 };
+        }
+        
+        if (chartType === 'quantity') {
+          if (movement.type === 'in') {
+            dateGroups[date].in += movement.quantity;
+          } else {
+            dateGroups[date].out += Math.abs(movement.quantity);
+          }
+        } else {
+          if (movement.type === 'in') {
+            dateGroups[date].in += movement.totalValue;
+          } else {
+            dateGroups[date].out += movement.totalValue;
+          }
+        }
+      });
+
+    const dates = Object.keys(dateGroups).sort((a, b) => new Date(a) - new Date(b)).slice(-7);
+    if (dates.length === 0) {
+      ctx.fillStyle = '#9CA3AF';
+      ctx.font = '16px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Không có dữ liệu', canvas.width / 2, canvas.height / 2);
+      return;
+    }
+
+    const maxValue = Math.max(...dates.map(date => Math.max(dateGroups[date].in, dateGroups[date].out)));
+    const barWidth = canvas.width / dates.length * 0.4;
+    const barSpacing = canvas.width / dates.length * 0.6;
+
+    dates.forEach((date, index) => {
+      const x = index * (canvas.width / dates.length);
+      
+      // In bar (green)
+      const inHeight = (dateGroups[date].in / maxValue) * (canvas.height * 0.6);
+      ctx.fillStyle = '#10B981';
+      ctx.fillRect(x + barSpacing/4, canvas.height - inHeight - 50, barWidth/2, inHeight);
+      
+      // Out bar (red)
+      const outHeight = (dateGroups[date].out / maxValue) * (canvas.height * 0.6);
+      ctx.fillStyle = '#EF4444';
+      ctx.fillRect(x + barSpacing/4 + barWidth/2, canvas.height - outHeight - 50, barWidth/2, outHeight);
+      
+      // Date label
+      ctx.fillStyle = '#374151';
+      ctx.font = '12px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(date.split('/').slice(0, 2).join('/'), x + barWidth/2, canvas.height - 20);
+    });
+
+    // Legend
+    ctx.fillStyle = '#10B981';
+    ctx.fillRect(20, 20, 15, 15);
+    ctx.fillStyle = '#374151';
+    ctx.font = '14px sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('Nhập kho', 45, 32);
+    
+    ctx.fillStyle = '#EF4444';
+    ctx.fillRect(120, 20, 15, 15);
+    ctx.fillText('Xuất kho', 145, 32);
+  }
+
+  function renderTopProducts() {
+    const container = document.getElementById('top-products');
+    const productGroups = {};
+    
+    filteredMovements.forEach(movement => {
+      const key = movement.productId;
+      if (!productGroups[key]) {
+        productGroups[key] = {
+          name: movement.productName,
+          sku: movement.productSku,
+          totalQuantity: 0,
+          totalValue: 0
+        };
+      }
+      productGroups[key].totalQuantity += Math.abs(movement.quantity);
+      productGroups[key].totalValue += movement.totalValue;
+    });
+
+    const topProducts = Object.values(productGroups)
+      .sort((a, b) => b.totalQuantity - a.totalQuantity)
+      .slice(0, 5);
+
+    let html = '';
+    topProducts.forEach((product, index) => {
+      html += `
+        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+          <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
+              ${index + 1}
+            </div>
+            <div>
+              <p class="text-sm font-medium text-gray-900">${product.name}</p>
+              <p class="text-xs text-gray-500">${product.sku}</p>
+            </div>
+          </div>
+          <div class="text-right">
+            <p class="text-sm font-medium text-gray-900">${product.totalQuantity} lần</p>
+            <p class="text-xs text-gray-500">${formatVND(product.totalValue)}</p>
+          </div>
+        </div>
+      `;
+    });
+
+    container.innerHTML = html || '<p class="text-sm text-gray-500 text-center py-4">Không có dữ liệu</p>';
+  }
+
+  window.viewMovement = function(movementId) {
+    const movement = movements.find(m => m.id === movementId);
+    if (!movement) return;
+
+    const typeNames = {
+      in: 'Nhập kho',
+      out: 'Xuất kho',
+      transfer: 'Chuyển kho'
+    };
+
+    const reasonNames = {
+      purchase: 'Nhập mua',
+      sale: 'Bán hàng',
+      adjustment: 'Điều chỉnh',
+      return: 'Trả hàng',
+      transfer: 'Chuyển kho',
+      loss: 'Hao hụt'
+    };
+
+    const html = `
+      <div class="space-y-6">
+        <div class="grid grid-cols-2 gap-6">
+          <div>
+            <h4 class="font-semibold text-gray-900 mb-3">Thông tin giao dịch</h4>
+            <div class="space-y-2 text-sm">
+              <div><strong>Mã giao dịch:</strong> ${movement.transactionCode}</div>
+              <div><strong>Loại:</strong> ${typeNames[movement.type]}</div>
+              <div><strong>Nguyên nhân:</strong> ${reasonNames[movement.reason]}</div>
+              <div><strong>Tham chiếu:</strong> ${movement.reference}</div>
+              <div><strong>Thời gian:</strong> ${new Date(movement.timestamp).toLocaleString('vi-VN')}</div>
+            </div>
+          </div>
+          <div>
+            <h4 class="font-semibold text-gray-900 mb-3">Thông tin sản phẩm</h4>
+            <div class="space-y-2 text-sm">
+              <div><strong>Tên sản phẩm:</strong> ${movement.productName}</div>
+              <div><strong>SKU:</strong> ${movement.productSku}</div>
+              <div><strong>Tồn kho trước:</strong> ${movement.beforeStock}</div>
+              <div><strong>Số lượng di chuyển:</strong> <span class="${movement.quantity >= 0 ? 'text-green-600' : 'text-red-600'}">${movement.quantity >= 0 ? '+' : ''}${movement.quantity}</span></div>
+              <div><strong>Tồn kho sau:</strong> ${movement.afterStock}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-6">
+          <div>
+            <h4 class="font-semibold text-gray-900 mb-3">Thông tin tài chính</h4>
+            <div class="space-y-2 text-sm">
+              <div><strong>Giá vốn đơn vị:</strong> ${formatVND(movement.unitCost)}</div>
+              <div><strong>Tổng giá trị:</strong> ${formatVND(movement.totalValue)}</div>
+            </div>
+          </div>
+          <div>
+            <h4 class="font-semibold text-gray-900 mb-3">Thông tin khác</h4>
+            <div class="space-y-2 text-sm">
+              <div><strong>Người thực hiện:</strong> ${movement.user}</div>
+              <div><strong>Ghi chú:</strong> ${movement.notes || 'Không có'}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.getElementById('movement-detail-title').textContent = `Chi tiết giao dịch ${movement.transactionCode}`;
+    document.getElementById('movement-detail-content').innerHTML = html;
+    document.getElementById('movement-detail-modal').classList.remove('hidden');
+  };
+
+  window.exportMovements = function() {
+    const csvContent = generateMovementCSV(filteredMovements);
+    downloadCSV(csvContent, `inventory-movements-${new Date().toISOString().split('T')[0]}.csv`);
+  };
+
+  function generateMovementCSV(data) {
+    const headers = ['Thời gian', 'Mã giao dịch', 'Sản phẩm', 'SKU', 'Loại', 'Số lượng', 'Tồn trước', 'Tồn sau', 'Nguyên nhân', 'Người thực hiện', 'Giá trị'];
+    
+    const typeNames = {
+      in: 'Nhập kho',
+      out: 'Xuất kho',
+      transfer: 'Chuyển kho'
+    };
+
+    const reasonNames = {
+      purchase: 'Nhập mua',
+      sale: 'Bán hàng',
+      adjustment: 'Điều chỉnh',
+      return: 'Trả hàng',
+      transfer: 'Chuyển kho',
+      loss: 'Hao hụt'
+    };
+    
+    const rows = data.map(movement => [
+      new Date(movement.timestamp).toLocaleString('vi-VN'),
+      movement.transactionCode,
+      movement.productName,
+      movement.productSku,
+      typeNames[movement.type],
+      movement.quantity,
+      movement.beforeStock,
+      movement.afterStock,
+      reasonNames[movement.reason],
+      movement.user,
+      movement.totalValue
+    ]);
+
+    return [headers, ...rows].map(row => 
+      row.map(field => `"${field}"`).join(',')
+    ).join('\n');
+  }
+
+  function downloadCSV(content, filename) {
+    const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  window.refreshMovements = function() {
+    currentPage = 1;
+    renderMovements();
+  };
+
+  window.closeModal = function(modalId) {
+    document.getElementById(modalId).classList.add('hidden');
+  };
+
+  function formatVND(amount) {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND'
+    }).format(amount);
+  }
+
+  // Event listeners
+  document.getElementById('search-input').addEventListener('input', () => {
+    currentPage = 1;
+    renderMovements();
+  });
+  document.getElementById('type-filter').addEventListener('change', () => {
+    currentPage = 1;
+    renderMovements();
+  });
+  document.getElementById('reason-filter').addEventListener('change', () => {
+    currentPage = 1;
+    renderMovements();
+  });
+  document.getElementById('date-filter').addEventListener('change', function() {
+    const customRange = document.getElementById('custom-date-range');
+    if (this.value === 'custom') {
+      customRange.classList.remove('hidden');
+    } else {
+      customRange.classList.add('hidden');
+      currentPage = 1;
+      renderMovements();
+    }
+  });
+  document.getElementById('user-filter').addEventListener('change', () => {
+    currentPage = 1;
+    renderMovements();
+  });
+  document.getElementById('chart-period').addEventListener('change', renderChart);
+  document.getElementById('chart-type').addEventListener('change', renderChart);
+
+  // Initialize
+  loadSampleData();
+  renderMovements();
+});
+</script>
+
+<style>
+.form-input, .form-select {
+  @apply px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full;
+}
+
+.modal-overlay {
+  @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50;
+}
+
+.modal-content {
+  @apply bg-white rounded-lg shadow-xl w-full mx-4 max-h-screen overflow-y-auto;
+}
+
+.modal-header {
+  @apply flex items-center justify-between p-6 border-b;
+}
+
+.modal-title {
+  @apply text-lg font-medium text-gray-900;
+}
+
+.modal-close {
+  @apply text-gray-400 hover:text-gray-600 text-2xl font-bold cursor-pointer;
+}
+
+.modal-body {
+  @apply p-6;
+}
+
+.modal-footer {
+  @apply flex items-center justify-end space-x-3 p-6 border-t bg-gray-50;
+}
+
+.btn {
+  @apply px-4 py-2 rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-offset-2;
+}
+
+.btn-primary {
+  @apply bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500;
+}
+
+.btn-secondary {
+  @apply bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500;
+}
+
+.form-label {
+  @apply block text-sm font-medium text-gray-700 mb-1;
+}
+</style>

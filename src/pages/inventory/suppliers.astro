@@ -1,0 +1,1040 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import DashboardLayout from '../../layouts/DashboardLayout.astro';
+import Card from '../../components/ui/Card.astro';
+import Button from '../../components/ui/Button.astro';
+---
+
+<BaseLayout title="Supplier Management - ComputerPOS Pro">
+  <DashboardLayout>
+    <main class="p-6 space-y-6">
+      <!-- Header -->
+      <div class="flex justify-between items-center">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">Supplier Management</h1>
+          <p class="text-gray-600 mt-1">Quản lý nhà cung cấp và đối tác</p>
+        </div>
+        <div class="flex space-x-3">
+          <Button href="/inventory" variant="secondary">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Quay lại Kho hàng
+          </Button>
+          <Button variant="primary" onclick="createNewSupplier()">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            Thêm nhà cung cấp
+          </Button>
+        </div>
+      </div>
+
+      <!-- Supplier Stats -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Tổng số NCC</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="total-suppliers">0</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-green-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Đang hoạt động</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="active-suppliers">0</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-orange-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Đơn hàng tháng</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="monthly-orders">0</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-purple-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Tổng giá trị</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="total-value">0₫</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      <!-- Filters and Search -->
+      <Card>
+        <div class="p-6">
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div>
+              <label class="form-label">Tìm kiếm</label>
+              <input type="text" class="form-input" id="search-input" placeholder="Tên, mã, email, SĐT...">
+            </div>
+            <div>
+              <label class="form-label">Loại sản phẩm</label>
+              <select class="form-select" id="category-filter">
+                <option value="all">Tất cả</option>
+                <option value="cpu">CPU & Processor</option>
+                <option value="gpu">Card đồ họa</option>
+                <option value="ram">RAM & Memory</option>
+                <option value="storage">Ổ cứng & SSD</option>
+                <option value="motherboard">Mainboard</option>
+                <option value="psu">Nguồn máy tính</option>
+                <option value="cooling">Tản nhiệt</option>
+                <option value="case">Case & Vỏ máy</option>
+                <option value="peripherals">Phụ kiện</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label">Trạng thái</label>
+              <select class="form-select" id="status-filter">
+                <option value="all">Tất cả</option>
+                <option value="active">Đang hoạt động</option>
+                <option value="inactive">Tạm ngừng</option>
+                <option value="pending">Chờ duyệt</option>
+                <option value="blocked">Bị khóa</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label">Đánh giá</label>
+              <select class="form-select" id="rating-filter">
+                <option value="all">Tất cả</option>
+                <option value="5">5 sao</option>
+                <option value="4">4 sao trở lên</option>
+                <option value="3">3 sao trở lên</option>
+                <option value="2">2 sao trở lên</option>
+                <option value="1">1 sao trở lên</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      <!-- Suppliers List -->
+      <Card>
+        <div class="p-6">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-lg font-medium text-gray-900">Danh sách nhà cung cấp</h2>
+            <div class="flex space-x-3">
+              <Button onclick="exportSuppliers()" variant="secondary">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Xuất danh sách
+              </Button>
+              <Button onclick="refreshSuppliers()" variant="secondary">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                Làm mới
+              </Button>
+            </div>
+          </div>
+
+          <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+            <table class="min-w-full divide-y divide-gray-300">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nhà cung cấp</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Thông tin liên hệ</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Chuyên môn</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Đánh giá</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Đơn hàng</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Trạng thái</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200" id="suppliers-tbody">
+                <!-- Suppliers will be populated here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </Card>
+    </main>
+
+    <!-- Create/Edit Supplier Modal -->
+    <div id="supplier-modal" class="modal-overlay hidden">
+      <div class="modal-content max-w-4xl">
+        <div class="modal-header">
+          <h3 class="modal-title" id="supplier-modal-title">Thêm nhà cung cấp mới</h3>
+          <button class="modal-close" onclick="closeModal('supplier-modal')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="space-y-6">
+            <!-- Basic Information -->
+            <div>
+              <h4 class="text-md font-medium text-gray-900 mb-4">Thông tin cơ bản</h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="form-label">Mã nhà cung cấp *</label>
+                  <input type="text" class="form-input" id="supplier-code" placeholder="SUP001">
+                </div>
+                <div>
+                  <label class="form-label">Tên công ty *</label>
+                  <input type="text" class="form-input" id="supplier-name" placeholder="Tên công ty...">
+                </div>
+                <div>
+                  <label class="form-label">Tên người liên hệ</label>
+                  <input type="text" class="form-input" id="contact-person" placeholder="Họ tên người liên hệ...">
+                </div>
+                <div>
+                  <label class="form-label">Chức vụ</label>
+                  <input type="text" class="form-input" id="contact-position" placeholder="Giám đốc, Trưởng phòng...">
+                </div>
+              </div>
+            </div>
+
+            <!-- Contact Information -->
+            <div>
+              <h4 class="text-md font-medium text-gray-900 mb-4">Thông tin liên hệ</h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="form-label">Email *</label>
+                  <input type="email" class="form-input" id="supplier-email" placeholder="contact@company.com">
+                </div>
+                <div>
+                  <label class="form-label">Số điện thoại *</label>
+                  <input type="tel" class="form-input" id="supplier-phone" placeholder="0123456789">
+                </div>
+                <div>
+                  <label class="form-label">Website</label>
+                  <input type="url" class="form-input" id="supplier-website" placeholder="https://website.com">
+                </div>
+                <div>
+                  <label class="form-label">Fax</label>
+                  <input type="tel" class="form-input" id="supplier-fax" placeholder="024-12345678">
+                </div>
+                <div class="md:col-span-2">
+                  <label class="form-label">Địa chỉ</label>
+                  <textarea class="form-textarea" id="supplier-address" rows="3" placeholder="Địa chỉ chi tiết..."></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Business Information -->
+            <div>
+              <h4 class="text-md font-medium text-gray-900 mb-4">Thông tin kinh doanh</h4>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label class="form-label">Mã số thuế</label>
+                  <input type="text" class="form-input" id="tax-code" placeholder="0123456789">
+                </div>
+                <div>
+                  <label class="form-label">Loại sản phẩm chính</label>
+                  <select class="form-select" id="primary-category">
+                    <option value="">Chọn loại sản phẩm...</option>
+                    <option value="cpu">CPU & Processor</option>
+                    <option value="gpu">Card đồ họa</option>
+                    <option value="ram">RAM & Memory</option>
+                    <option value="storage">Ổ cứng & SSD</option>
+                    <option value="motherboard">Mainboard</option>
+                    <option value="psu">Nguồn máy tính</option>
+                    <option value="cooling">Tản nhiệt</option>
+                    <option value="case">Case & Vỏ máy</option>
+                    <option value="peripherals">Phụ kiện</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="form-label">Phương thức thanh toán</label>
+                  <select class="form-select" id="payment-terms">
+                    <option value="cod">Thanh toán khi nhận hàng</option>
+                    <option value="30">Chuyển khoản 30 ngày</option>
+                    <option value="15">Chuyển khoản 15 ngày</option>
+                    <option value="7">Chuyển khoản 7 ngày</option>
+                    <option value="0">Thanh toán ngay</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Additional Information -->
+            <div>
+              <h4 class="text-md font-medium text-gray-900 mb-4">Thông tin bổ sung</h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="form-label">Ghi chú</label>
+                  <textarea class="form-textarea" id="supplier-notes" rows="3" placeholder="Ghi chú về nhà cung cấp..."></textarea>
+                </div>
+                <div>
+                  <label class="form-label">Trạng thái</label>
+                  <select class="form-select" id="supplier-status">
+                    <option value="active">Đang hoạt động</option>
+                    <option value="inactive">Tạm ngừng</option>
+                    <option value="pending">Chờ duyệt</option>
+                    <option value="blocked">Bị khóa</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <input type="hidden" id="supplier-id">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('supplier-modal')">Hủy</button>
+          <button type="button" class="btn btn-primary" onclick="saveSupplier()">Lưu thông tin</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- View Supplier Detail Modal -->
+    <div id="supplier-detail-modal" class="modal-overlay hidden">
+      <div class="modal-content max-w-5xl">
+        <div class="modal-header">
+          <h3 class="modal-title" id="supplier-detail-title">Chi tiết nhà cung cấp</h3>
+          <button class="modal-close" onclick="closeModal('supplier-detail-modal')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div id="supplier-detail-content">
+            <!-- Supplier details will be populated here -->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('supplier-detail-modal')">Đóng</button>
+          <button type="button" class="btn btn-primary" id="edit-supplier-btn">Chỉnh sửa</button>
+        </div>
+      </div>
+    </div>
+  </DashboardLayout>
+</BaseLayout>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  let suppliers = [];
+  let currentEditingSupplier = null;
+
+  // Load sample data
+  function loadSampleData() {
+    suppliers = JSON.parse(localStorage.getItem('suppliers') || '[]');
+
+    // Initialize with sample data if empty
+    if (suppliers.length === 0) {
+      suppliers = [
+        {
+          id: 'sup_1',
+          code: 'SUP001',
+          name: 'ASUS Vietnam Corporation',
+          contactPerson: 'Nguyễn Văn Minh',
+          contactPosition: 'Sales Manager',
+          email: 'sales@asus.vn',
+          phone: '024-3944-1234',
+          website: 'https://www.asus.com/vn',
+          fax: '024-3944-1235',
+          address: 'Tầng 15, Tòa nhà Vincom Center, 72 Lê Thánh Tôn, Q1, TP.HCM',
+          taxCode: '0123456789',
+          primaryCategory: 'motherboard',
+          paymentTerms: '30',
+          status: 'active',
+          rating: 4.8,
+          totalOrders: 45,
+          totalValue: 2500000000,
+          notes: 'Nhà cung cấp chính cho mainboard và laptop',
+          createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+          lastOrderDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString()
+        },
+        {
+          id: 'sup_2',
+          code: 'SUP002',
+          name: 'MSI Technology Vietnam',
+          contactPerson: 'Trần Thị Lan',
+          contactPosition: 'Business Development',
+          email: 'contact@msi.vn',
+          phone: '028-3823-5678',
+          website: 'https://vn.msi.com',
+          fax: '028-3823-5679',
+          address: '123 Nguyễn Văn Cừ, Q5, TP.HCM',
+          taxCode: '0987654321',
+          primaryCategory: 'gpu',
+          paymentTerms: '15',
+          status: 'active',
+          rating: 4.6,
+          totalOrders: 38,
+          totalValue: 3200000000,
+          notes: 'Chuyên cung cấp VGA và laptop gaming',
+          createdAt: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000).toISOString(),
+          lastOrderDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString()
+        },
+        {
+          id: 'sup_3',
+          code: 'SUP003',
+          name: 'Intel Vietnam Limited',
+          contactPerson: 'Lê Hoàng Nam',
+          contactPosition: 'Channel Manager',
+          email: 'vietnam@intel.com',
+          phone: '024-3771-9999',
+          website: 'https://www.intel.vn',
+          fax: '024-3771-9998',
+          address: 'Tầng 8, Keangnam Hanoi Landmark Tower, Phạm Hùng, Hà Nội',
+          taxCode: '0345678901',
+          primaryCategory: 'cpu',
+          paymentTerms: '7',
+          status: 'active',
+          rating: 4.9,
+          totalOrders: 62,
+          totalValue: 4100000000,
+          notes: 'Nhà cung cấp CPU Intel chính thức',
+          createdAt: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString(),
+          lastOrderDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString()
+        },
+        {
+          id: 'sup_4',
+          code: 'SUP004',
+          name: 'Samsung Electronics Vietnam',
+          contactPerson: 'Park Min Ho',
+          contactPosition: 'Sales Director',
+          email: 'b2b@samsung.vn',
+          phone: '028-3911-0000',
+          website: 'https://www.samsung.com/vn',
+          fax: '028-3911-0001',
+          address: '2 Hải Triều, Q1, TP.HCM',
+          taxCode: '0456789012',
+          primaryCategory: 'storage',
+          paymentTerms: '30',
+          status: 'active',
+          rating: 4.7,
+          totalOrders: 29,
+          totalValue: 1800000000,
+          notes: 'Cung cấp SSD, màn hình và thiết bị di động',
+          createdAt: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString(),
+          lastOrderDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
+        },
+        {
+          id: 'sup_5',
+          code: 'SUP005',
+          name: 'Corsair Vietnam Distribution',
+          contactPerson: 'Võ Thành Đạt',
+          contactPosition: 'Country Manager',
+          email: 'vietnam@corsair.com',
+          phone: '024-3555-7788',
+          website: 'https://www.corsair.com',
+          fax: '024-3555-7789',
+          address: '56 Láng Hạ, Đống Đa, Hà Nội',
+          taxCode: '0567890123',
+          primaryCategory: 'ram',
+          paymentTerms: '15',
+          status: 'inactive',
+          rating: 4.4,
+          totalOrders: 18,
+          totalValue: 950000000,
+          notes: 'RAM, PSU và thiết bị gaming. Tạm ngừng hợp tác.',
+          createdAt: new Date(Date.now() - 120 * 24 * 60 * 60 * 1000).toISOString(),
+          lastOrderDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
+        }
+      ];
+
+      saveData();
+    }
+  }
+
+  function saveData() {
+    localStorage.setItem('suppliers', JSON.stringify(suppliers));
+  }
+
+  function renderSuppliers() {
+    const tbody = document.getElementById('suppliers-tbody');
+    const searchTerm = document.getElementById('search-input').value.toLowerCase();
+    const categoryFilter = document.getElementById('category-filter').value;
+    const statusFilter = document.getElementById('status-filter').value;
+    const ratingFilter = document.getElementById('rating-filter').value;
+
+    let filteredSuppliers = suppliers.filter(supplier => {
+      const matchesSearch = supplier.name.toLowerCase().includes(searchTerm) ||
+                           supplier.code.toLowerCase().includes(searchTerm) ||
+                           supplier.email.toLowerCase().includes(searchTerm) ||
+                           supplier.phone.includes(searchTerm) ||
+                           supplier.contactPerson.toLowerCase().includes(searchTerm);
+      const matchesCategory = categoryFilter === 'all' || supplier.primaryCategory === categoryFilter;
+      const matchesStatus = statusFilter === 'all' || supplier.status === statusFilter;
+      const matchesRating = ratingFilter === 'all' || supplier.rating >= parseInt(ratingFilter);
+
+      return matchesSearch && matchesCategory && matchesStatus && matchesRating;
+    });
+
+    if (filteredSuppliers.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="7" class="px-6 py-12 text-center text-gray-500">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+            </svg>
+            <h3 class="mt-2 text-sm font-medium text-gray-900">Không tìm thấy nhà cung cấp nào</h3>
+            <p class="mt-1 text-sm text-gray-500">Thử thay đổi bộ lọc hoặc thêm nhà cung cấp mới.</p>
+          </td>
+        </tr>
+      `;
+      updateStats(filteredSuppliers);
+      return;
+    }
+
+    let html = '';
+    filteredSuppliers.forEach(supplier => {
+      const statusColors = {
+        active: 'bg-green-100 text-green-800',
+        inactive: 'bg-red-100 text-red-800',
+        pending: 'bg-yellow-100 text-yellow-800',
+        blocked: 'bg-gray-100 text-gray-800'
+      };
+
+      const statusNames = {
+        active: 'Hoạt động',
+        inactive: 'Tạm ngừng',
+        pending: 'Chờ duyệt',
+        blocked: 'Bị khóa'
+      };
+
+      const categoryNames = {
+        cpu: 'CPU',
+        gpu: 'GPU',
+        ram: 'RAM',
+        storage: 'Storage',
+        motherboard: 'Mainboard',
+        psu: 'PSU',
+        cooling: 'Cooling',
+        case: 'Case',
+        peripherals: 'Phụ kiện'
+      };
+
+      html += `
+        <tr class="hover:bg-gray-50">
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex items-center">
+              <div class="flex-shrink-0 w-10 h-10">
+                <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                  <span class="text-white font-semibold text-sm">${supplier.name.substring(0, 2).toUpperCase()}</span>
+                </div>
+              </div>
+              <div class="ml-4">
+                <div class="text-sm font-medium text-gray-900">${supplier.name}</div>
+                <div class="text-sm text-gray-500">${supplier.code}</div>
+              </div>
+            </div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm text-gray-900">${supplier.contactPerson}</div>
+            <div class="text-sm text-gray-500">${supplier.email}</div>
+            <div class="text-sm text-gray-500">${supplier.phone}</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
+              ${categoryNames[supplier.primaryCategory] || supplier.primaryCategory}
+            </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex items-center">
+              <div class="flex text-yellow-400">
+                ${generateStarRating(supplier.rating)}
+              </div>
+              <span class="ml-2 text-sm text-gray-600">${supplier.rating}</span>
+            </div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm text-gray-900">${supplier.totalOrders} đơn</div>
+            <div class="text-sm text-gray-500">${formatVND(supplier.totalValue)}</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="px-2 py-1 text-xs font-medium rounded-full ${statusColors[supplier.status]}">${statusNames[supplier.status]}</span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+            <div class="flex space-x-2">
+              <button onclick="viewSupplier('${supplier.id}')" class="text-blue-600 hover:text-blue-900">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+              </button>
+              <button onclick="editSupplier('${supplier.id}')" class="text-green-600 hover:text-green-900">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+              </button>
+              <button onclick="deleteSupplier('${supplier.id}')" class="text-red-600 hover:text-red-900">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+              </button>
+            </div>
+          </td>
+        </tr>
+      `;
+    });
+
+    tbody.innerHTML = html;
+    updateStats(filteredSuppliers);
+  }
+
+  function generateStarRating(rating) {
+    let stars = '';
+    for (let i = 1; i <= 5; i++) {
+      if (i <= Math.floor(rating)) {
+        stars += '<svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>';
+      } else if (i === Math.ceil(rating) && rating % 1 !== 0) {
+        stars += '<svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><defs><linearGradient id="half"><stop offset="50%" stop-color="currentColor"/><stop offset="50%" stop-color="transparent"/></linearGradient></defs><path fill="url(#half)" d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>';
+      } else {
+        stars += '<svg class="w-4 h-4 text-gray-300" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>';
+      }
+    }
+    return stars;
+  }
+
+  function updateStats(filtered = suppliers) {
+    const totalSuppliers = filtered.length;
+    const activeSuppliers = filtered.filter(s => s.status === 'active').length;
+    const totalOrders = filtered.reduce((sum, s) => sum + s.totalOrders, 0);
+    const totalValue = filtered.reduce((sum, s) => sum + s.totalValue, 0);
+
+    document.getElementById('total-suppliers').textContent = totalSuppliers;
+    document.getElementById('active-suppliers').textContent = activeSuppliers;
+    document.getElementById('monthly-orders').textContent = totalOrders;
+    document.getElementById('total-value').textContent = formatVND(totalValue);
+  }
+
+  window.createNewSupplier = function() {
+    currentEditingSupplier = null;
+    document.getElementById('supplier-modal-title').textContent = 'Thêm nhà cung cấp mới';
+    
+    // Generate new supplier code
+    const supplierCount = suppliers.length + 1;
+    document.getElementById('supplier-code').value = `SUP${supplierCount.toString().padStart(3, '0')}`;
+    
+    // Reset form
+    const form = document.getElementById('supplier-modal');
+    const inputs = form.querySelectorAll('input, select, textarea');
+    inputs.forEach(input => {
+      if (input.id !== 'supplier-code' && input.id !== 'supplier-status') {
+        input.value = '';
+      }
+    });
+    
+    document.getElementById('supplier-status').value = 'active';
+    document.getElementById('supplier-id').value = '';
+    
+    document.getElementById('supplier-modal').classList.remove('hidden');
+  };
+
+  window.editSupplier = function(supplierId) {
+    const supplier = suppliers.find(s => s.id === supplierId);
+    if (!supplier) return;
+
+    currentEditingSupplier = supplier;
+    document.getElementById('supplier-modal-title').textContent = 'Chỉnh sửa nhà cung cấp';
+    
+    // Populate form
+    document.getElementById('supplier-id').value = supplier.id;
+    document.getElementById('supplier-code').value = supplier.code;
+    document.getElementById('supplier-name').value = supplier.name;
+    document.getElementById('contact-person').value = supplier.contactPerson;
+    document.getElementById('contact-position').value = supplier.contactPosition;
+    document.getElementById('supplier-email').value = supplier.email;
+    document.getElementById('supplier-phone').value = supplier.phone;
+    document.getElementById('supplier-website').value = supplier.website || '';
+    document.getElementById('supplier-fax').value = supplier.fax || '';
+    document.getElementById('supplier-address').value = supplier.address;
+    document.getElementById('tax-code').value = supplier.taxCode || '';
+    document.getElementById('primary-category').value = supplier.primaryCategory;
+    document.getElementById('payment-terms').value = supplier.paymentTerms;
+    document.getElementById('supplier-status').value = supplier.status;
+    document.getElementById('supplier-notes').value = supplier.notes || '';
+    
+    document.getElementById('supplier-modal').classList.remove('hidden');
+  };
+
+  window.saveSupplier = function() {
+    const id = document.getElementById('supplier-id').value;
+    const code = document.getElementById('supplier-code').value;
+    const name = document.getElementById('supplier-name').value;
+    const contactPerson = document.getElementById('contact-person').value;
+    const contactPosition = document.getElementById('contact-position').value;
+    const email = document.getElementById('supplier-email').value;
+    const phone = document.getElementById('supplier-phone').value;
+    const website = document.getElementById('supplier-website').value;
+    const fax = document.getElementById('supplier-fax').value;
+    const address = document.getElementById('supplier-address').value;
+    const taxCode = document.getElementById('tax-code').value;
+    const primaryCategory = document.getElementById('primary-category').value;
+    const paymentTerms = document.getElementById('payment-terms').value;
+    const status = document.getElementById('supplier-status').value;
+    const notes = document.getElementById('supplier-notes').value;
+
+    if (!name || !email || !phone) {
+      alert('Vui lòng điền đầy đủ thông tin bắt buộc!');
+      return;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      alert('Email không hợp lệ!');
+      return;
+    }
+
+    // Phone validation
+    const phoneRegex = /^[0-9]{10,11}$/;
+    if (!phoneRegex.test(phone.replace(/[\s-]/g, ''))) {
+      alert('Số điện thoại không hợp lệ!');
+      return;
+    }
+
+    if (id) {
+      // Update existing supplier
+      const supplier = suppliers.find(s => s.id === id);
+      if (supplier) {
+        supplier.code = code;
+        supplier.name = name;
+        supplier.contactPerson = contactPerson;
+        supplier.contactPosition = contactPosition;
+        supplier.email = email;
+        supplier.phone = phone;
+        supplier.website = website;
+        supplier.fax = fax;
+        supplier.address = address;
+        supplier.taxCode = taxCode;
+        supplier.primaryCategory = primaryCategory;
+        supplier.paymentTerms = paymentTerms;
+        supplier.status = status;
+        supplier.notes = notes;
+      }
+    } else {
+      // Create new supplier
+      const newSupplier = {
+        id: 'sup_' + Date.now(),
+        code,
+        name,
+        contactPerson,
+        contactPosition,
+        email,
+        phone,
+        website,
+        fax,
+        address,
+        taxCode,
+        primaryCategory,
+        paymentTerms,
+        status,
+        rating: 0,
+        totalOrders: 0,
+        totalValue: 0,
+        notes,
+        createdAt: new Date().toISOString(),
+        lastOrderDate: null
+      };
+      suppliers.unshift(newSupplier);
+    }
+
+    saveData();
+    closeModal('supplier-modal');
+    renderSuppliers();
+    alert(id ? 'Đã cập nhật thông tin nhà cung cấp!' : 'Đã thêm nhà cung cấp mới!');
+  };
+
+  window.viewSupplier = function(supplierId) {
+    const supplier = suppliers.find(s => s.id === supplierId);
+    if (!supplier) return;
+
+    const categoryNames = {
+      cpu: 'CPU & Processor',
+      gpu: 'Card đồ họa',
+      ram: 'RAM & Memory',
+      storage: 'Ổ cứng & SSD',
+      motherboard: 'Mainboard',
+      psu: 'Nguồn máy tính',
+      cooling: 'Tản nhiệt',
+      case: 'Case & Vỏ máy',
+      peripherals: 'Phụ kiện'
+    };
+
+    const statusNames = {
+      active: 'Đang hoạt động',
+      inactive: 'Tạm ngừng',
+      pending: 'Chờ duyệt',
+      blocked: 'Bị khóa'
+    };
+
+    const paymentTermsNames = {
+      'cod': 'Thanh toán khi nhận hàng',
+      '30': 'Chuyển khoản 30 ngày',
+      '15': 'Chuyển khoản 15 ngày',
+      '7': 'Chuyển khoản 7 ngày',
+      '0': 'Thanh toán ngay'
+    };
+
+    const html = `
+      <div class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <h4 class="font-semibold text-gray-900 mb-3">Thông tin cơ bản</h4>
+            <div class="space-y-2 text-sm">
+              <div><strong>Mã nhà cung cấp:</strong> ${supplier.code}</div>
+              <div><strong>Tên công ty:</strong> ${supplier.name}</div>
+              <div><strong>Người liên hệ:</strong> ${supplier.contactPerson}</div>
+              <div><strong>Chức vụ:</strong> ${supplier.contactPosition}</div>
+              <div><strong>Trạng thái:</strong> <span class="px-2 py-1 text-xs rounded-full ${getStatusColor(supplier.status)}">${statusNames[supplier.status]}</span></div>
+            </div>
+          </div>
+          <div>
+            <h4 class="font-semibold text-gray-900 mb-3">Thông tin liên hệ</h4>
+            <div class="space-y-2 text-sm">
+              <div><strong>Email:</strong> <a href="mailto:${supplier.email}" class="text-blue-600">${supplier.email}</a></div>
+              <div><strong>Điện thoại:</strong> <a href="tel:${supplier.phone}" class="text-blue-600">${supplier.phone}</a></div>
+              ${supplier.website ? `<div><strong>Website:</strong> <a href="${supplier.website}" target="_blank" class="text-blue-600">${supplier.website}</a></div>` : ''}
+              ${supplier.fax ? `<div><strong>Fax:</strong> ${supplier.fax}</div>` : ''}
+              <div><strong>Địa chỉ:</strong> ${supplier.address}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <h4 class="font-semibold text-gray-900 mb-3">Thông tin kinh doanh</h4>
+            <div class="space-y-2 text-sm">
+              ${supplier.taxCode ? `<div><strong>Mã số thuế:</strong> ${supplier.taxCode}</div>` : ''}
+              <div><strong>Chuyên môn:</strong> ${categoryNames[supplier.primaryCategory] || supplier.primaryCategory}</div>
+              <div><strong>Thanh toán:</strong> ${paymentTermsNames[supplier.paymentTerms] || supplier.paymentTerms}</div>
+              <div><strong>Ngày tham gia:</strong> ${new Date(supplier.createdAt).toLocaleDateString('vi-VN')}</div>
+              ${supplier.lastOrderDate ? `<div><strong>Đơn hàng cuối:</strong> ${new Date(supplier.lastOrderDate).toLocaleDateString('vi-VN')}</div>` : ''}
+            </div>
+          </div>
+          <div>
+            <h4 class="font-semibold text-gray-900 mb-3">Thống kê hoạt động</h4>
+            <div class="space-y-2 text-sm">
+              <div><strong>Đánh giá:</strong> 
+                <div class="flex items-center mt-1">
+                  <div class="flex text-yellow-400">${generateStarRating(supplier.rating)}</div>
+                  <span class="ml-2 text-gray-600">${supplier.rating}/5</span>
+                </div>
+              </div>
+              <div><strong>Tổng đơn hàng:</strong> ${supplier.totalOrders}</div>
+              <div><strong>Tổng giá trị:</strong> <span class="text-green-600 font-semibold">${formatVND(supplier.totalValue)}</span></div>
+              <div><strong>Trung bình/đơn:</strong> ${supplier.totalOrders > 0 ? formatVND(supplier.totalValue / supplier.totalOrders) : '0₫'}</div>
+            </div>
+          </div>
+        </div>
+
+        ${supplier.notes ? `
+          <div>
+            <h4 class="font-semibold text-gray-900 mb-2">Ghi chú</h4>
+            <p class="text-sm text-gray-600 bg-gray-50 p-3 rounded-md">${supplier.notes}</p>
+          </div>
+        ` : ''}
+      </div>
+    `;
+
+    document.getElementById('supplier-detail-title').textContent = `Chi tiết - ${supplier.name}`;
+    document.getElementById('supplier-detail-content').innerHTML = html;
+    
+    // Set up edit button
+    document.getElementById('edit-supplier-btn').onclick = () => {
+      closeModal('supplier-detail-modal');
+      editSupplier(supplier.id);
+    };
+    
+    document.getElementById('supplier-detail-modal').classList.remove('hidden');
+  };
+
+  function getStatusColor(status) {
+    const colors = {
+      active: 'bg-green-100 text-green-800',
+      inactive: 'bg-red-100 text-red-800',
+      pending: 'bg-yellow-100 text-yellow-800',
+      blocked: 'bg-gray-100 text-gray-800'
+    };
+    return colors[status] || '';
+  }
+
+  window.deleteSupplier = function(supplierId) {
+    if (!confirm('Bạn có chắc chắn muốn xóa nhà cung cấp này? Hành động này không thể hoàn tác.')) return;
+
+    const index = suppliers.findIndex(s => s.id === supplierId);
+    if (index !== -1) {
+      suppliers.splice(index, 1);
+      saveData();
+      renderSuppliers();
+      alert('Đã xóa nhà cung cấp thành công!');
+    }
+  };
+
+  window.exportSuppliers = function() {
+    const csvContent = generateSupplierCSV(suppliers);
+    downloadCSV(csvContent, `suppliers-${new Date().toISOString().split('T')[0]}.csv`);
+  };
+
+  function generateSupplierCSV(data) {
+    const headers = ['Mã NCC', 'Tên công ty', 'Người liên hệ', 'Email', 'Điện thoại', 'Chuyên môn', 'Trạng thái', 'Đánh giá', 'Tổng đơn', 'Tổng giá trị'];
+    
+    const categoryNames = {
+      cpu: 'CPU & Processor',
+      gpu: 'Card đồ họa',
+      ram: 'RAM & Memory',
+      storage: 'Ổ cứng & SSD',
+      motherboard: 'Mainboard',
+      psu: 'Nguồn máy tính',
+      cooling: 'Tản nhiệt',
+      case: 'Case & Vỏ máy',
+      peripherals: 'Phụ kiện'
+    };
+
+    const statusNames = {
+      active: 'Đang hoạt động',
+      inactive: 'Tạm ngừng',
+      pending: 'Chờ duyệt',
+      blocked: 'Bị khóa'
+    };
+    
+    const rows = data.map(supplier => [
+      supplier.code,
+      supplier.name,
+      supplier.contactPerson,
+      supplier.email,
+      supplier.phone,
+      categoryNames[supplier.primaryCategory] || supplier.primaryCategory,
+      statusNames[supplier.status],
+      supplier.rating,
+      supplier.totalOrders,
+      supplier.totalValue
+    ]);
+
+    return [headers, ...rows].map(row => 
+      row.map(field => `"${field}"`).join(',')
+    ).join('\n');
+  }
+
+  function downloadCSV(content, filename) {
+    const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  window.refreshSuppliers = function() {
+    renderSuppliers();
+    alert('Đã làm mới danh sách nhà cung cấp!');
+  };
+
+  window.closeModal = function(modalId) {
+    document.getElementById(modalId).classList.add('hidden');
+  };
+
+  function formatVND(amount) {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND'
+    }).format(amount);
+  }
+
+  // Event listeners
+  document.getElementById('search-input').addEventListener('input', renderSuppliers);
+  document.getElementById('category-filter').addEventListener('change', renderSuppliers);
+  document.getElementById('status-filter').addEventListener('change', renderSuppliers);
+  document.getElementById('rating-filter').addEventListener('change', renderSuppliers);
+
+  // Initialize
+  loadSampleData();
+  renderSuppliers();
+});
+</script>
+
+<style>
+.form-input, .form-select, .form-textarea {
+  @apply px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full;
+}
+
+.modal-overlay {
+  @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50;
+}
+
+.modal-content {
+  @apply bg-white rounded-lg shadow-xl w-full mx-4 max-h-screen overflow-y-auto;
+}
+
+.modal-header {
+  @apply flex items-center justify-between p-6 border-b;
+}
+
+.modal-title {
+  @apply text-lg font-medium text-gray-900;
+}
+
+.modal-close {
+  @apply text-gray-400 hover:text-gray-600 text-2xl font-bold cursor-pointer;
+}
+
+.modal-body {
+  @apply p-6;
+}
+
+.modal-footer {
+  @apply flex items-center justify-end space-x-3 p-6 border-t bg-gray-50;
+}
+
+.btn {
+  @apply px-4 py-2 rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-offset-2;
+}
+
+.btn-primary {
+  @apply bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500;
+}
+
+.btn-secondary {
+  @apply bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500;
+}
+
+.form-label {
+  @apply block text-sm font-medium text-gray-700 mb-1;
+}
+</style>

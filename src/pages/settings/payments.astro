@@ -1,0 +1,43 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import DashboardLayout from '../../layouts/DashboardLayout.astro';
+import Card from '../../components/ui/Card.astro';
+import Button from '../../components/ui/Button.astro';
+---
+
+<BaseLayout title="Cài đặt thanh toán - ComputerPOS Pro">
+  <DashboardLayout>
+    <main class="p-6 space-y-6">
+      <div class="flex justify-between items-center">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">Cài đặt thanh toán</h1>
+          <p class="text-gray-600 mt-1">Quản lý phương thức thanh toán</p>
+        </div>
+        <div class="flex space-x-3">
+          <Button href="/settings" variant="secondary">Quay lại</Button>
+          <Button variant="primary">Lưu cài đặt</Button>
+        </div>
+      </div>
+
+      <Card>
+        <div class="p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Phương thức thanh toán</h3>
+          <div class="space-y-4">
+            <label class="flex items-center">
+              <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500" checked>
+              <span class="ml-2 text-sm text-gray-700">Tiền mặt</span>
+            </label>
+            <label class="flex items-center">
+              <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500" checked>
+              <span class="ml-2 text-sm text-gray-700">Chuyển khoản</span>
+            </label>
+            <label class="flex items-center">
+              <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+              <span class="ml-2 text-sm text-gray-700">Thẻ tín dụng</span>
+            </label>
+          </div>
+        </div>
+      </Card>
+    </main>
+  </DashboardLayout>
+</BaseLayout>

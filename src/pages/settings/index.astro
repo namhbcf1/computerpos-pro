@@ -1,0 +1,264 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import DashboardLayout from '../../layouts/DashboardLayout.astro';
+import Card from '../../components/ui/Card.astro';
+import Button from '../../components/ui/Button.astro';
+---
+
+<BaseLayout title="Cài đặt hệ thống - ComputerPOS Pro">
+  <DashboardLayout>
+    <main class="p-6 space-y-6">
+      <!-- Header -->
+      <div class="flex justify-between items-center">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">Cài đặt hệ thống</h1>
+          <p class="text-gray-600 mt-1">Cấu hình và tùy chỉnh hệ thống ComputerPOS Pro</p>
+        </div>
+        <div class="flex space-x-3">
+          <Button href="/settings/backup" variant="secondary">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+            </svg>
+            Sao lưu dữ liệu
+          </Button>
+          <Button variant="primary">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+            Lưu cài đặt
+          </Button>
+        </div>
+      </div>
+
+      <!-- Settings Categories -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Store Settings -->
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center mb-4">
+              <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+              </div>
+              <h3 class="ml-3 text-lg font-medium text-gray-900">Thông tin cửa hàng</h3>
+            </div>
+            <p class="text-gray-600 mb-4">Cấu hình thông tin cơ bản của cửa hàng</p>
+            <div class="space-y-2">
+              <Button href="/settings/store" variant="outline" size="sm" class="w-full justify-start">
+                Thông tin công ty
+              </Button>
+              <Button href="/settings/store" variant="outline" size="sm" class="w-full justify-start">
+                Địa chỉ & liên hệ
+              </Button>
+              <Button href="/settings/store" variant="outline" size="sm" class="w-full justify-start">
+                Logo & branding
+              </Button>
+            </div>
+          </div>
+        </Card>
+
+        <!-- User Management -->
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center mb-4">
+              <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+                </svg>
+              </div>
+              <h3 class="ml-3 text-lg font-medium text-gray-900">Quản lý người dùng</h3>
+            </div>
+            <p class="text-gray-600 mb-4">Cài đặt tài khoản và phân quyền</p>
+            <div class="space-y-2">
+              <Button href="/settings/users" variant="outline" size="sm" class="w-full justify-start">
+                Tài khoản người dùng
+              </Button>
+              <Button href="/settings/roles" variant="outline" size="sm" class="w-full justify-start">
+                Vai trò & quyền hạn
+              </Button>
+              <Button href="/settings/security" variant="outline" size="sm" class="w-full justify-start">
+                Bảo mật
+              </Button>
+            </div>
+          </div>
+        </Card>
+
+        <!-- Payment Settings -->
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center mb-4">
+              <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                </svg>
+              </div>
+              <h3 class="ml-3 text-lg font-medium text-gray-900">Thanh toán</h3>
+            </div>
+            <p class="text-gray-600 mb-4">Cấu hình phương thức thanh toán</p>
+            <div class="space-y-2">
+              <Button href="/settings/payments" variant="outline" size="sm" class="w-full justify-start">
+                Phương thức thanh toán
+              </Button>
+              <Button href="/settings/payments" variant="outline" size="sm" class="w-full justify-start">
+                Cổng thanh toán
+              </Button>
+              <Button href="/settings/taxes" variant="outline" size="sm" class="w-full justify-start">
+                Thuế & phí
+              </Button>
+            </div>
+          </div>
+        </Card>
+
+        <!-- System Settings -->
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center mb-4">
+              <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </div>
+              <h3 class="ml-3 text-lg font-medium text-gray-900">Hệ thống</h3>
+            </div>
+            <p class="text-gray-600 mb-4">Cài đặt chung của hệ thống</p>
+            <div class="space-y-2">
+              <Button href="/settings/notifications" variant="outline" size="sm" class="w-full justify-start">
+                Thông báo
+              </Button>
+              <Button href="/settings/backup" variant="outline" size="sm" class="w-full justify-start">
+                Sao lưu & khôi phục
+              </Button>
+              <Button href="/settings/integrations" variant="outline" size="sm" class="w-full justify-start">
+                Tích hợp
+              </Button>
+            </div>
+          </div>
+        </Card>
+
+        <!-- Reports & Analytics -->
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center mb-4">
+              <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+              </div>
+              <h3 class="ml-3 text-lg font-medium text-gray-900">Báo cáo & Phân tích</h3>
+            </div>
+            <p class="text-gray-600 mb-4">Cấu hình báo cáo và dashboard</p>
+            <div class="space-y-2">
+              <Button href="/reports/custom" variant="outline" size="sm" class="w-full justify-start">
+                Báo cáo tùy chỉnh
+              </Button>
+              <Button href="/settings" variant="outline" size="sm" class="w-full justify-start">
+                Dashboard layout
+              </Button>
+              <Button href="/settings" variant="outline" size="sm" class="w-full justify-start">
+                Xuất dữ liệu
+              </Button>
+            </div>
+          </div>
+        </Card>
+
+        <!-- Hardware Settings -->
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center mb-4">
+              <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+                <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <h3 class="ml-3 text-lg font-medium text-gray-900">Thiết bị</h3>
+            </div>
+            <p class="text-gray-600 mb-4">Cấu hình máy in, máy quét barcode</p>
+            <div class="space-y-2">
+              <Button href="/settings" variant="outline" size="sm" class="w-full justify-start">
+                Máy in hóa đơn
+              </Button>
+              <Button href="/settings" variant="outline" size="sm" class="w-full justify-start">
+                Máy quét barcode
+              </Button>
+              <Button href="/settings" variant="outline" size="sm" class="w-full justify-start">
+                Màn hình khách hàng
+              </Button>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      <!-- Quick Actions -->
+      <Card>
+        <div class="p-6">
+          <h3 class="text-lg font-medium text-gray-900 mb-4">Thao tác nhanh</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <Button variant="outline" class="justify-start">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+              </svg>
+              Xuất dữ liệu
+            </Button>
+            <Button variant="outline" class="justify-start">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              Nhập dữ liệu
+            </Button>
+            <Button variant="outline" class="justify-start">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+              </svg>
+              Sao lưu ngay
+            </Button>
+            <Button variant="outline" class="justify-start">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              Khôi phục
+            </Button>
+          </div>
+        </div>
+      </Card>
+
+      <!-- System Information -->
+      <Card>
+        <div class="p-6">
+          <h3 class="text-lg font-medium text-gray-900 mb-4">Thông tin hệ thống</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Phiên bản</dt>
+              <dd class="mt-1 text-sm text-gray-900">ComputerPOS Pro v2.1.0</dd>
+            </div>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Cơ sở dữ liệu</dt>
+              <dd class="mt-1 text-sm text-gray-900">MySQL 8.0.35</dd>
+            </div>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Cập nhật cuối</dt>
+              <dd class="mt-1 text-sm text-gray-900">17/07/2024 10:30</dd>
+            </div>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Dung lượng sử dụng</dt>
+              <dd class="mt-1 text-sm text-gray-900">2.4 GB / 10 GB</dd>
+            </div>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Số người dùng</dt>
+              <dd class="mt-1 text-sm text-gray-900">24 / 50</dd>
+            </div>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Trạng thái</dt>
+              <dd class="mt-1">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                  Hoạt động bình thường
+                </span>
+              </dd>
+            </div>
+          </div>
+        </div>
+      </Card>
+    </main>
+  </DashboardLayout>
+</BaseLayout>

@@ -1,0 +1,20 @@
+---
+export const prerender = false;
+
+// This is a dynamic route that will be handled by the server
+const { id } = Astro.params;
+---
+
+<script>
+// Redirect to product detail page with proper ID handling
+if (typeof window !== 'undefined') {
+  const productId = new URLSearchParams(window.location.search).get('id') || window.location.pathname.split('/').pop();
+  if (productId && productId !== '[id]') {
+    window.location.href = `/products/index.html?id=${productId}`;
+  } else {
+    window.location.href = '/products/';
+  }
+}
+</script>
+
+<p>Redirecting to product details...</p>

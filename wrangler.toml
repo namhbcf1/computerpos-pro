@@ -1,0 +1,45 @@
+name = "computerpos-pro"
+main = "dist/_worker.js"
+compatibility_date = "2024-01-15"
+compatibility_flags = ["nodejs_compat"]
+
+[env.production]
+vars = { ENVIRONMENT = "production" }
+
+[[env.production.d1_databases]]
+binding = "DB"
+database_name = "kho1-production"
+database_id = "39657891-9d7b-4a02-8b43-9921eb8c7d8e"
+
+# KV Storage for caching
+[[env.production.kv_namespaces]]
+binding = "CACHE"
+id = "your-kv-namespace-id"
+preview_id = "your-kv-preview-id"
+
+# R2 Storage for assets
+[[env.production.r2_buckets]]
+binding = "ASSETS"
+bucket_name = "computerpos-assets"
+preview_bucket_name = "computerpos-assets-preview"
+
+# Analytics
+[env.production.analytics]
+dataset = "computerpos_analytics"
+
+# Development environment
+[env.development]
+vars = { ENVIRONMENT = "development" }
+
+[[env.development.d1_databases]]
+binding = "DB"
+database_name = "kho1-development"
+database_id = "your-dev-database-id"
+
+[[env.development.kv_namespaces]]
+binding = "CACHE"
+id = "your-dev-kv-namespace-id"
+
+[[env.development.r2_buckets]]
+binding = "ASSETS"
+bucket_name = "computerpos-assets-dev"

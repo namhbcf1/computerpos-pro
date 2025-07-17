@@ -1,0 +1,1575 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import DashboardLayout from '../../layouts/DashboardLayout.astro';
+import Card from '../../components/ui/Card.astro';
+import Button from '../../components/ui/Button.astro';
+---
+
+<BaseLayout title="Order Tracking - ComputerPOS Pro">
+  <DashboardLayout>
+    <main class="p-6 space-y-6">
+      <!-- Header -->
+      <div class="flex justify-between items-center">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">Order Tracking</h1>
+          <p class="text-gray-600 mt-1">Theo dõi trạng thái và tiến độ giao hàng</p>
+        </div>
+        <div class="flex space-x-3">
+          <Button href="/orders" variant="secondary">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Quay lại Đơn hàng
+          </Button>
+          <Button variant="primary" onclick="addNewTracking()">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            Thêm theo dõi mới
+          </Button>
+        </div>
+      </div>
+
+      <!-- Quick Search -->
+      <Card>
+        <div class="p-6">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="md:col-span-2">
+              <label class="form-label">Tìm kiếm nhanh đơn hàng</label>
+              <div class="relative">
+                <input type="text" class="form-input pl-10" id="quick-search" placeholder="Nhập mã đơn hàng, mã vận đơn hoặc SĐT khách hàng...">
+                <svg class="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+            </div>
+            <div>
+              <label class="form-label">Tìm kiếm theo</label>
+              <select class="form-select" id="search-type">
+                <option value="order">Mã đơn hàng</option>
+                <option value="tracking">Mã vận đơn</option>
+                <option value="phone">Số điện thoại</option>
+                <option value="email">Email khách hàng</option>
+              </select>
+            </div>
+          </div>
+          <div class="mt-4 flex justify-end">
+            <Button onclick="performQuickSearch()" variant="primary">
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              Tìm kiếm
+            </Button>
+          </div>
+        </div>
+      </Card>
+
+      <!-- Tracking Stats -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Đang vận chuyển</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="shipping-count">0</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-yellow-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Chờ lấy hàng</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="pending-pickup-count">0</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-green-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Đã giao</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="delivered-count">0</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-red-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Có vấn đề</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="problem-count">0</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      <!-- Real-time Tracking Map (Placeholder) -->
+      <Card>
+        <div class="p-6">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-lg font-medium text-gray-900">Bản đồ theo dõi thời gian thực</h2>
+            <div class="flex space-x-3">
+              <select class="form-select w-48" id="map-filter">
+                <option value="all">Tất cả đơn hàng</option>
+                <option value="shipping">Đang vận chuyển</option>
+                <option value="out_for_delivery">Đang giao</option>
+                <option value="pending_pickup">Chờ lấy hàng</option>
+              </select>
+              <Button onclick="refreshMap()" variant="secondary">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                Làm mới
+              </Button>
+            </div>
+          </div>
+          
+          <div class="bg-gray-100 rounded-lg p-8 text-center" id="tracking-map">
+            <svg class="mx-auto h-16 w-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">Bản đồ theo dõi GPS</h3>
+            <p class="text-gray-500 mb-4">Theo dõi vị trí thời gian thực của đơn hàng đang vận chuyển</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+              <div class="flex items-center justify-center space-x-2">
+                <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
+                <span>Đang vận chuyển</span>
+              </div>
+              <div class="flex items-center justify-center space-x-2">
+                <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                <span>Đang giao</span>
+              </div>
+              <div class="flex items-center justify-center space-x-2">
+                <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                <span>Chờ lấy hàng</span>
+              </div>
+              <div class="flex items-center justify-center space-x-2">
+                <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                <span>Có vấn đề</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      <!-- Filters and Search -->
+      <Card>
+        <div class="p-6">
+          <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+            <div>
+              <label class="form-label">Tìm kiếm</label>
+              <input type="text" class="form-input" id="search-input" placeholder="Mã đơn hàng, vận đơn...">
+            </div>
+            <div>
+              <label class="form-label">Trạng thái giao hàng</label>
+              <select class="form-select" id="status-filter">
+                <option value="all">Tất cả</option>
+                <option value="preparing">Chuẩn bị hàng</option>
+                <option value="ready_for_pickup">Sẵn sàng lấy hàng</option>
+                <option value="picked_up">Đã lấy hàng</option>
+                <option value="in_transit">Đang vận chuyển</option>
+                <option value="out_for_delivery">Đang giao</option>
+                <option value="delivered">Đã giao</option>
+                <option value="failed_delivery">Giao thất bại</option>
+                <option value="returned">Trả về</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label">Đơn vị vận chuyển</label>
+              <select class="form-select" id="carrier-filter">
+                <option value="all">Tất cả</option>
+                <option value="ghn">Giao Hàng Nhanh</option>
+                <option value="ghtk">Giao Hàng Tiết Kiệm</option>
+                <option value="viettel">Viettel Post</option>
+                <option value="vnpost">Bưu điện Việt Nam</option>
+                <option value="best">BEST Express</option>
+                <option value="jnt">J&T Express</option>
+                <option value="self">Tự giao</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label">Khoảng thời gian</label>
+              <select class="form-select" id="date-filter">
+                <option value="today">Hôm nay</option>
+                <option value="yesterday">Hôm qua</option>
+                <option value="week">7 ngày qua</option>
+                <option value="month">30 ngày qua</option>
+                <option value="custom">Tùy chọn</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label">Sắp xếp</label>
+              <select class="form-select" id="sort-by">
+                <option value="newest">Mới nhất</option>
+                <option value="oldest">Cũ nhất</option>
+                <option value="status">Theo trạng thái</option>
+                <option value="carrier">Theo nhà vận chuyển</option>
+              </select>
+            </div>
+          </div>
+          <div id="custom-date-range" class="hidden mt-4 grid grid-cols-2 gap-4">
+            <div>
+              <label class="form-label">Từ ngày</label>
+              <input type="date" class="form-input" id="start-date">
+            </div>
+            <div>
+              <label class="form-label">Đến ngày</label>
+              <input type="date" class="form-input" id="end-date">
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      <!-- Tracking List -->
+      <Card>
+        <div class="p-6">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-lg font-medium text-gray-900">Danh sách theo dõi đơn hàng</h2>
+            <div class="flex space-x-3">
+              <Button onclick="exportTracking()" variant="secondary">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Xuất báo cáo
+              </Button>
+              <Button onclick="refreshTracking()" variant="secondary">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                Làm mới
+              </Button>
+            </div>
+          </div>
+
+          <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+            <table class="min-w-full divide-y divide-gray-300">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Đơn hàng</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Khách hàng</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vận đơn</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nhà vận chuyển</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Trạng thái</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cập nhật</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200" id="tracking-tbody">
+                <!-- Tracking data will be populated here -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination -->
+          <div class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
+            <div class="flex flex-1 justify-between sm:hidden">
+              <button class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                Trước
+              </button>
+              <button class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                Sau
+              </button>
+            </div>
+            <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+              <div>
+                <p class="text-sm text-gray-700">
+                  Hiển thị <span class="font-medium" id="from-item">1</span> đến <span class="font-medium" id="to-item">20</span> 
+                  trong tổng số <span class="font-medium" id="total-items">0</span> đơn hàng
+                </p>
+              </div>
+              <div>
+                <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" id="pagination">
+                  <!-- Pagination buttons will be populated here -->
+                </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Card>
+    </main>
+
+    <!-- Add Tracking Modal -->
+    <div id="tracking-modal" class="modal-overlay hidden">
+      <div class="modal-content max-w-3xl">
+        <div class="modal-header">
+          <h3 class="modal-title">Thêm theo dõi đơn hàng mới</h3>
+          <button class="modal-close" onclick="closeModal('tracking-modal')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="space-y-6">
+            <!-- Order Information -->
+            <div>
+              <h4 class="text-md font-medium text-gray-900 mb-4">Thông tin đơn hàng</h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="form-label">Mã đơn hàng *</label>
+                  <input type="text" class="form-input" id="order-id" placeholder="ORD-2024-001">
+                </div>
+                <div>
+                  <label class="form-label">Khách hàng *</label>
+                  <input type="text" class="form-input" id="customer-name" placeholder="Tên khách hàng">
+                </div>
+                <div>
+                  <label class="form-label">Số điện thoại *</label>
+                  <input type="tel" class="form-input" id="customer-phone" placeholder="0123456789">
+                </div>
+                <div>
+                  <label class="form-label">Email</label>
+                  <input type="email" class="form-input" id="customer-email" placeholder="email@example.com">
+                </div>
+              </div>
+            </div>
+
+            <!-- Shipping Information -->
+            <div>
+              <h4 class="text-md font-medium text-gray-900 mb-4">Thông tin vận chuyển</h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="form-label">Đơn vị vận chuyển *</label>
+                  <select class="form-select" id="carrier">
+                    <option value="ghn">Giao Hàng Nhanh</option>
+                    <option value="ghtk">Giao Hàng Tiết Kiệm</option>
+                    <option value="viettel">Viettel Post</option>
+                    <option value="vnpost">Bưu điện Việt Nam</option>
+                    <option value="best">BEST Express</option>
+                    <option value="jnt">J&T Express</option>
+                    <option value="self">Tự giao</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="form-label">Mã vận đơn *</label>
+                  <input type="text" class="form-input" id="tracking-number" placeholder="Nhập mã vận đơn">
+                </div>
+                <div>
+                  <label class="form-label">Trạng thái hiện tại</label>
+                  <select class="form-select" id="current-status">
+                    <option value="preparing">Chuẩn bị hàng</option>
+                    <option value="ready_for_pickup">Sẵn sàng lấy hàng</option>
+                    <option value="picked_up">Đã lấy hàng</option>
+                    <option value="in_transit">Đang vận chuyển</option>
+                    <option value="out_for_delivery">Đang giao</option>
+                    <option value="delivered">Đã giao</option>
+                    <option value="failed_delivery">Giao thất bại</option>
+                    <option value="returned">Trả về</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="form-label">Ngày dự kiến giao</label>
+                  <input type="datetime-local" class="form-input" id="estimated-delivery">
+                </div>
+              </div>
+            </div>
+
+            <!-- Shipping Address -->
+            <div>
+              <h4 class="text-md font-medium text-gray-900 mb-4">Địa chỉ giao hàng</h4>
+              <div class="space-y-4">
+                <div>
+                  <label class="form-label">Địa chỉ đầy đủ *</label>
+                  <textarea class="form-textarea" id="shipping-address" rows="3" placeholder="Nhập địa chỉ giao hàng đầy đủ..."></textarea>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label class="form-label">Tỉnh/Thành phố</label>
+                    <input type="text" class="form-input" id="shipping-city" placeholder="TP. Hồ Chí Minh">
+                  </div>
+                  <div>
+                    <label class="form-label">Quận/Huyện</label>
+                    <input type="text" class="form-input" id="shipping-district" placeholder="Quận 1">
+                  </div>
+                  <div>
+                    <label class="form-label">Phường/Xã</label>
+                    <input type="text" class="form-input" id="shipping-ward" placeholder="Phường Bến Nghé">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Additional Notes -->
+            <div>
+              <h4 class="text-md font-medium text-gray-900 mb-4">Ghi chú bổ sung</h4>
+              <div class="space-y-4">
+                <div>
+                  <label class="form-label">Ghi chú giao hàng</label>
+                  <textarea class="form-textarea" id="delivery-notes" rows="3" placeholder="Ghi chú đặc biệt cho shipper..."></textarea>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label class="form-label">Ưu tiên giao hàng</label>
+                    <select class="form-select" id="delivery-priority">
+                      <option value="normal">Bình thường</option>
+                      <option value="urgent">Khẩn cấp</option>
+                      <option value="express">Hỏa tốc</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="form-label">Phí vận chuyển</label>
+                    <input type="number" class="form-input" id="shipping-fee" placeholder="0" min="0">
+                  </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                  <label class="flex items-center">
+                    <input type="checkbox" id="cod-enabled" class="form-checkbox">
+                    <span class="ml-2 text-sm text-gray-700">Thu hộ COD</span>
+                  </label>
+                  <label class="flex items-center">
+                    <input type="checkbox" id="fragile-items" class="form-checkbox">
+                    <span class="ml-2 text-sm text-gray-700">Hàng dễ vỡ</span>
+                  </label>
+                  <label class="flex items-center">
+                    <input type="checkbox" id="insurance" class="form-checkbox">
+                    <span class="ml-2 text-sm text-gray-700">Bảo hiểm hàng hóa</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <input type="hidden" id="tracking-id">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('tracking-modal')">Hủy</button>
+          <button type="button" class="btn btn-primary" onclick="saveTracking()">Thêm theo dõi</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tracking Detail Modal -->
+    <div id="tracking-detail-modal" class="modal-overlay hidden">
+      <div class="modal-content max-w-4xl">
+        <div class="modal-header">
+          <h3 class="modal-title" id="tracking-detail-title">Chi tiết theo dõi đơn hàng</h3>
+          <button class="modal-close" onclick="closeModal('tracking-detail-modal')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div id="tracking-detail-content">
+            <!-- Tracking details will be populated here -->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('tracking-detail-modal')">Đóng</button>
+          <button type="button" class="btn btn-primary" id="update-status-btn" onclick="updateTrackingStatus()">Cập nhật trạng thái</button>
+        </div>
+      </div>
+    </div>
+  </DashboardLayout>
+</BaseLayout>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  let trackingData = [];
+  let currentTracking = null;
+  const itemsPerPage = 15;
+  let currentPage = 1;
+  let filteredTracking = [];
+
+  // Load sample data
+  function loadSampleData() {
+    trackingData = JSON.parse(localStorage.getItem('orderTracking') || '[]');
+
+    // Initialize with sample data if empty
+    if (trackingData.length === 0) {
+      trackingData = [
+        {
+          id: 'track_1',
+          orderId: 'ORD-2024-001',
+          customerName: 'Nguyễn Văn An',
+          customerPhone: '0987654321',
+          customerEmail: 'an.nguyen@email.com',
+          trackingNumber: 'GHN001234567',
+          carrier: 'ghn',
+          status: 'in_transit',
+          estimatedDelivery: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(),
+          shippingAddress: '123 Đường ABC, Phường Bến Nghé, Quận 1, TP.HCM',
+          shippingCity: 'TP. Hồ Chí Minh',
+          shippingDistrict: 'Quận 1', 
+          shippingWard: 'Phường Bến Nghé',
+          deliveryNotes: 'Gọi trước 15 phút',
+          deliveryPriority: 'normal',
+          shippingFee: 35000,
+          codEnabled: true,
+          codAmount: 25000000,
+          fragileItems: false,
+          insurance: true,
+          createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+          updatedAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+          statusHistory: [
+            {
+              status: 'preparing',
+              timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+              location: 'Kho ComputerPOS Pro',
+              description: 'Đơn hàng được chuẩn bị'
+            },
+            {
+              status: 'picked_up',
+              timestamp: new Date(Date.now() - 18 * 60 * 60 * 1000).toISOString(),
+              location: 'Kho ComputerPOS Pro',
+              description: 'Đã lấy hàng, chuyển về trung tâm phân loại'
+            },
+            {
+              status: 'in_transit',
+              timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+              location: 'Trung tâm phân loại GHN Q.1',
+              description: 'Hàng đang vận chuyển'
+            }
+          ]
+        },
+        {
+          id: 'track_2',
+          orderId: 'ORD-2024-002',
+          customerName: 'Trần Thị Bình',
+          customerPhone: '0912345678',
+          customerEmail: 'binh.tran@email.com',
+          trackingNumber: 'GHTK987654321',
+          carrier: 'ghtk',
+          status: 'delivered',
+          estimatedDelivery: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+          actualDelivery: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
+          shippingAddress: '456 Đường XYZ, Phường 5, Quận 3, TP.HCM',
+          shippingCity: 'TP. Hồ Chí Minh',
+          shippingDistrict: 'Quận 3',
+          shippingWard: 'Phường 5',
+          deliveryNotes: 'Giao trong giờ hành chính',
+          deliveryPriority: 'normal',
+          shippingFee: 28000,
+          codEnabled: false,
+          codAmount: 0,
+          fragileItems: true,
+          insurance: true,
+          createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+          updatedAt: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
+          statusHistory: [
+            {
+              status: 'preparing',
+              timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+              location: 'Kho ComputerPOS Pro',
+              description: 'Đơn hàng được chuẩn bị'
+            },
+            {
+              status: 'picked_up',
+              timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+              location: 'Kho ComputerPOS Pro',
+              description: 'GHTK đã lấy hàng'
+            },
+            {
+              status: 'in_transit',
+              timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+              location: 'Bưu cục GHTK Q.3',
+              description: 'Hàng về bưu cục giao hàng'
+            },
+            {
+              status: 'out_for_delivery',
+              timestamp: new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString(),
+              location: 'Shipper đang giao',
+              description: 'Shipper đang trên đường giao hàng'
+            },
+            {
+              status: 'delivered',
+              timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
+              location: '456 Đường XYZ, Q.3',
+              description: 'Giao hàng thành công, người nhận: Trần Thị Bình'
+            }
+          ]
+        },
+        {
+          id: 'track_3',
+          orderId: 'ORD-2024-003',
+          customerName: 'Lê Minh Cường',
+          customerPhone: '0923456789',
+          customerEmail: 'cuong.le@email.com',
+          trackingNumber: 'VTP555666777',
+          carrier: 'viettel',
+          status: 'out_for_delivery',
+          estimatedDelivery: new Date(Date.now() + 4 * 60 * 60 * 1000).toISOString(),
+          shippingAddress: '789 Đường DEF, Phường Tân Định, Quận 1, TP.HCM',
+          shippingCity: 'TP. Hồ Chí Minh',
+          shippingDistrict: 'Quận 1',
+          shippingWard: 'Phường Tân Định',
+          deliveryNotes: 'Có thang máy, tầng 15',
+          deliveryPriority: 'urgent',
+          shippingFee: 42000,
+          codEnabled: true,
+          codAmount: 45000000,
+          fragileItems: true,
+          insurance: true,
+          createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+          updatedAt: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
+          statusHistory: [
+            {
+              status: 'preparing',
+              timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+              location: 'Kho ComputerPOS Pro',
+              description: 'Đơn hàng được chuẩn bị, đóng gói cẩn thận do hàng dễ vỡ'
+            },
+            {
+              status: 'picked_up',
+              timestamp: new Date(Date.now() - 36 * 60 * 60 * 1000).toISOString(),
+              location: 'Kho ComputerPOS Pro',
+              description: 'Viettel Post đã lấy hàng'
+            },
+            {
+              status: 'in_transit',
+              timestamp: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(),
+              location: 'Trung tâm Viettel Post Q.1',
+              description: 'Hàng về trung tâm giao hàng'
+            },
+            {
+              status: 'out_for_delivery',
+              timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
+              location: 'Shipper VTP đang giao',
+              description: 'Shipper đang trên đường giao hàng - ưu tiên khẩn cấp'
+            }
+          ]
+        },
+        {
+          id: 'track_4',
+          orderId: 'ORD-2024-004',
+          customerName: 'Phạm Thị Dung',
+          customerPhone: '0934567890',
+          customerEmail: 'dung.pham@email.com',
+          trackingNumber: 'JNT123789456',
+          carrier: 'jnt',
+          status: 'failed_delivery',
+          estimatedDelivery: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+          shippingAddress: '321 Đường GHI, Phường 12, Quận 5, TP.HCM',
+          shippingCity: 'TP. Hồ Chí Minh',
+          shippingDistrict: 'Quận 5',
+          shippingWard: 'Phường 12',
+          deliveryNotes: 'Gọi trước khi giao',
+          deliveryPriority: 'normal',
+          shippingFee: 32000,
+          codEnabled: false,
+          codAmount: 0,
+          fragileItems: false,
+          insurance: false,
+          createdAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
+          updatedAt: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
+          statusHistory: [
+            {
+              status: 'preparing',
+              timestamp: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
+              location: 'Kho ComputerPOS Pro',
+              description: 'Đơn hàng được chuẩn bị'
+            },
+            {
+              status: 'picked_up',
+              timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+              location: 'Kho ComputerPOS Pro',
+              description: 'J&T đã lấy hàng'
+            },
+            {
+              status: 'in_transit',
+              timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+              location: 'Trạm J&T Q.5',
+              description: 'Hàng về trạm giao hàng'
+            },
+            {
+              status: 'out_for_delivery',
+              timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
+              location: 'Shipper J&T',
+              description: 'Shipper đang giao hàng'
+            },
+            {
+              status: 'failed_delivery',
+              timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
+              location: '321 Đường GHI, Q.5',
+              description: 'Giao hàng thất bại - không liên lạc được khách hàng'
+            }
+          ],
+          failureReason: 'Không liên lạc được khách hàng',
+          nextAttempt: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000).toISOString()
+        },
+        {
+          id: 'track_5',
+          orderId: 'ORD-2024-005',
+          customerName: 'Hoàng Minh Tuấn',
+          customerPhone: '0945678901',
+          customerEmail: 'tuan.hoang@email.com',
+          trackingNumber: 'BEST888999000',
+          carrier: 'best',
+          status: 'ready_for_pickup',
+          estimatedDelivery: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000).toISOString(),
+          shippingAddress: '555 Đường JKL, Phường Cầu Ông Lãnh, Quận 1, TP.HCM',
+          shippingCity: 'TP. Hồ Chí Minh',
+          shippingDistrict: 'Quận 1',
+          shippingWard: 'Phường Cầu Ông Lãnh',
+          deliveryNotes: 'Khách đến nhận tại cửa hàng',
+          deliveryPriority: 'normal',
+          shippingFee: 0,
+          codEnabled: false,
+          codAmount: 0,
+          fragileItems: false,
+          insurance: false,
+          selfPickup: true,
+          createdAt: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(),
+          updatedAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+          statusHistory: [
+            {
+              status: 'preparing',
+              timestamp: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(),
+              location: 'Kho ComputerPOS Pro',
+              description: 'Đơn hàng được chuẩn bị'
+            },
+            {
+              status: 'ready_for_pickup',
+              timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+              location: 'Cửa hàng ComputerPOS Pro',
+              description: 'Hàng sẵn sàng để khách đến nhận'
+            }
+          ]
+        }
+      ];
+
+      saveData();
+    }
+  }
+
+  function saveData() {
+    localStorage.setItem('orderTracking', JSON.stringify(trackingData));
+  }
+
+  function renderTracking() {
+    const tbody = document.getElementById('tracking-tbody');
+    const searchTerm = document.getElementById('search-input').value.toLowerCase();
+    const statusFilter = document.getElementById('status-filter').value;
+    const carrierFilter = document.getElementById('carrier-filter').value;
+    const dateFilter = document.getElementById('date-filter').value;
+    const sortBy = document.getElementById('sort-by').value;
+
+    filteredTracking = trackingData.filter(item => {
+      const matchesSearch = item.orderId.toLowerCase().includes(searchTerm) ||
+                           item.trackingNumber.toLowerCase().includes(searchTerm) ||
+                           item.customerName.toLowerCase().includes(searchTerm) ||
+                           item.customerPhone.includes(searchTerm);
+      const matchesStatus = statusFilter === 'all' || item.status === statusFilter;
+      const matchesCarrier = carrierFilter === 'all' || item.carrier === carrierFilter;
+      
+      let matchesDate = true;
+      if (dateFilter !== 'custom') {
+        const now = new Date();
+        const itemDate = new Date(item.createdAt);
+        switch (dateFilter) {
+          case 'today':
+            matchesDate = itemDate.toDateString() === now.toDateString();
+            break;
+          case 'yesterday':
+            const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+            matchesDate = itemDate.toDateString() === yesterday.toDateString();
+            break;
+          case 'week':
+            const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+            matchesDate = itemDate >= weekAgo;
+            break;
+          case 'month':
+            const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+            matchesDate = itemDate >= monthAgo;
+            break;
+        }
+      }
+
+      return matchesSearch && matchesStatus && matchesCarrier && matchesDate;
+    });
+
+    // Sort filtered results
+    filteredTracking.sort((a, b) => {
+      switch (sortBy) {
+        case 'newest':
+          return new Date(b.createdAt) - new Date(a.createdAt);
+        case 'oldest':
+          return new Date(a.createdAt) - new Date(b.createdAt);
+        case 'status':
+          return a.status.localeCompare(b.status);
+        case 'carrier':
+          return a.carrier.localeCompare(b.carrier);
+        default:
+          return 0;
+      }
+    });
+
+    renderPaginatedTracking();
+    updateStats();
+  }
+
+  function renderPaginatedTracking() {
+    const tbody = document.getElementById('tracking-tbody');
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const pageItems = filteredTracking.slice(startIndex, endIndex);
+
+    if (pageItems.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="7" class="px-6 py-12 text-center text-gray-500">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+            </svg>
+            <h3 class="mt-2 text-sm font-medium text-gray-900">Không tìm thấy đơn hàng nào</h3>
+            <p class="mt-1 text-sm text-gray-500">Thử thay đổi bộ lọc hoặc thêm theo dõi mới.</p>
+          </td>
+        </tr>
+      `;
+      updatePagination();
+      return;
+    }
+
+    const statusColors = {
+      preparing: 'bg-yellow-100 text-yellow-800',
+      ready_for_pickup: 'bg-blue-100 text-blue-800',
+      picked_up: 'bg-purple-100 text-purple-800',
+      in_transit: 'bg-indigo-100 text-indigo-800',
+      out_for_delivery: 'bg-orange-100 text-orange-800',
+      delivered: 'bg-green-100 text-green-800',
+      failed_delivery: 'bg-red-100 text-red-800',
+      returned: 'bg-gray-100 text-gray-800'
+    };
+
+    const statusNames = {
+      preparing: 'Chuẩn bị hàng',
+      ready_for_pickup: 'Sẵn sàng lấy hàng',
+      picked_up: 'Đã lấy hàng',
+      in_transit: 'Đang vận chuyển',
+      out_for_delivery: 'Đang giao',
+      delivered: 'Đã giao',
+      failed_delivery: 'Giao thất bại',
+      returned: 'Trả về'
+    };
+
+    const carrierNames = {
+      ghn: 'Giao Hàng Nhanh',
+      ghtk: 'Giao Hàng Tiết Kiệm',
+      viettel: 'Viettel Post',
+      vnpost: 'Bưu điện VN',
+      best: 'BEST Express',
+      jnt: 'J&T Express',
+      self: 'Tự giao'
+    };
+
+    let html = '';
+    pageItems.forEach(item => {
+      html += `
+        <tr class="hover:bg-gray-50">
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm font-medium text-gray-900">${item.orderId}</div>
+            <div class="text-sm text-gray-500">${new Date(item.createdAt).toLocaleDateString('vi-VN')}</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm font-medium text-gray-900">${item.customerName}</div>
+            <div class="text-sm text-gray-500">${item.customerPhone}</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm font-medium text-gray-900">${item.trackingNumber}</div>
+            ${item.codEnabled ? `<div class="text-sm text-green-600">COD: ${formatVND(item.codAmount)}</div>` : ''}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm font-medium text-gray-900">${carrierNames[item.carrier]}</div>
+            ${item.shippingFee > 0 ? `<div class="text-sm text-gray-500">Phí: ${formatVND(item.shippingFee)}</div>` : ''}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="px-2 py-1 text-xs font-medium rounded-full ${statusColors[item.status]}">${statusNames[item.status]}</span>
+            ${item.deliveryPriority === 'urgent' ? '<div class="text-xs text-red-600 mt-1">Khẩn cấp</div>' : ''}
+            ${item.deliveryPriority === 'express' ? '<div class="text-xs text-red-600 mt-1">Hỏa tốc</div>' : ''}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm text-gray-900">${new Date(item.updatedAt).toLocaleString('vi-VN')}</div>
+            ${item.estimatedDelivery ? `<div class="text-sm text-gray-500">Dự kiến: ${new Date(item.estimatedDelivery).toLocaleString('vi-VN')}</div>` : ''}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+            <div class="flex space-x-2">
+              <button onclick="viewTrackingDetail('${item.id}')" class="text-blue-600 hover:text-blue-900">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+              </button>
+              ${item.status !== 'delivered' && item.status !== 'returned' ? `
+                <button onclick="updateTrackingStatus('${item.id}')" class="text-green-600 hover:text-green-900">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                </button>
+              ` : ''}
+              ${item.trackingNumber && item.carrier !== 'self' ? `
+                <button onclick="openCarrierTracking('${item.carrier}', '${item.trackingNumber}')" class="text-indigo-600 hover:text-indigo-900">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                </button>
+              ` : ''}
+            </div>
+          </td>
+        </tr>
+      `;
+    });
+
+    tbody.innerHTML = html;
+    updatePagination();
+  }
+
+  function updatePagination() {
+    const totalPages = Math.ceil(filteredTracking.length / itemsPerPage);
+    const startItem = (currentPage - 1) * itemsPerPage + 1;
+    const endItem = Math.min(currentPage * itemsPerPage, filteredTracking.length);
+    
+    document.getElementById('from-item').textContent = filteredTracking.length > 0 ? startItem : 0;
+    document.getElementById('to-item').textContent = endItem;
+    document.getElementById('total-items').textContent = filteredTracking.length;
+
+    const pagination = document.getElementById('pagination');
+    let paginationHtml = '';
+
+    // Previous button
+    paginationHtml += `
+      <button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''} 
+              class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 ${currentPage === 1 ? 'cursor-not-allowed' : ''}">
+        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
+        </svg>
+      </button>
+    `;
+
+    // Page numbers
+    for (let i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) {
+      paginationHtml += `
+        <button onclick="changePage(${i})" 
+                class="relative inline-flex items-center px-4 py-2 text-sm font-semibold ${i === currentPage ? 'z-10 bg-blue-600 text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600' : 'text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0'}">
+          ${i}
+        </button>
+      `;
+    }
+
+    // Next button
+    paginationHtml += `
+      <button onclick="changePage(${currentPage + 1})" ${currentPage === totalPages || totalPages === 0 ? 'disabled' : ''} 
+              class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 ${currentPage === totalPages || totalPages === 0 ? 'cursor-not-allowed' : ''}">
+        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+        </svg>
+      </button>
+    `;
+
+    pagination.innerHTML = paginationHtml;
+  }
+
+  window.changePage = function(page) {
+    const totalPages = Math.ceil(filteredTracking.length / itemsPerPage);
+    if (page >= 1 && page <= totalPages) {
+      currentPage = page;
+      renderPaginatedTracking();
+    }
+  };
+
+  function updateStats() {
+    const shippingCount = trackingData.filter(item => 
+      item.status === 'in_transit' || item.status === 'picked_up'
+    ).length;
+    
+    const pendingPickupCount = trackingData.filter(item => 
+      item.status === 'preparing' || item.status === 'ready_for_pickup'
+    ).length;
+    
+    const deliveredCount = trackingData.filter(item => 
+      item.status === 'delivered'
+    ).length;
+    
+    const problemCount = trackingData.filter(item => 
+      item.status === 'failed_delivery' || item.status === 'returned'
+    ).length;
+
+    document.getElementById('shipping-count').textContent = shippingCount;
+    document.getElementById('pending-pickup-count').textContent = pendingPickupCount;
+    document.getElementById('delivered-count').textContent = deliveredCount;
+    document.getElementById('problem-count').textContent = problemCount;
+  }
+
+  window.performQuickSearch = function() {
+    const searchTerm = document.getElementById('quick-search').value.trim();
+    const searchType = document.getElementById('search-type').value;
+    
+    if (!searchTerm) {
+      alert('Vui lòng nhập từ khóa tìm kiếm!');
+      return;
+    }
+
+    let found = null;
+    const term = searchTerm.toLowerCase();
+
+    switch (searchType) {
+      case 'order':
+        found = trackingData.find(item => item.orderId.toLowerCase().includes(term));
+        break;
+      case 'tracking':
+        found = trackingData.find(item => item.trackingNumber.toLowerCase().includes(term));
+        break;
+      case 'phone':
+        found = trackingData.find(item => item.customerPhone.includes(searchTerm));
+        break;
+      case 'email':
+        found = trackingData.find(item => item.customerEmail && item.customerEmail.toLowerCase().includes(term));
+        break;
+    }
+
+    if (found) {
+      viewTrackingDetail(found.id);
+    } else {
+      alert('Không tìm thấy đơn hàng nào khớp với thông tin tìm kiếm!');
+    }
+  };
+
+  window.addNewTracking = function() {
+    // Reset form
+    const form = document.getElementById('tracking-modal');
+    const inputs = form.querySelectorAll('input, select, textarea');
+    inputs.forEach(input => {
+      if (input.type === 'checkbox') {
+        input.checked = false;
+      } else {
+        input.value = '';
+      }
+    });
+    
+    document.getElementById('carrier').value = 'ghn';
+    document.getElementById('current-status').value = 'preparing';
+    document.getElementById('delivery-priority').value = 'normal';
+    document.getElementById('tracking-id').value = '';
+    
+    document.getElementById('tracking-modal').classList.remove('hidden');
+  };
+
+  window.saveTracking = function() {
+    const orderId = document.getElementById('order-id').value;
+    const customerName = document.getElementById('customer-name').value;
+    const customerPhone = document.getElementById('customer-phone').value;
+    const customerEmail = document.getElementById('customer-email').value;
+    const carrier = document.getElementById('carrier').value;
+    const trackingNumber = document.getElementById('tracking-number').value;
+    const currentStatus = document.getElementById('current-status').value;
+    const estimatedDelivery = document.getElementById('estimated-delivery').value;
+    const shippingAddress = document.getElementById('shipping-address').value;
+    const shippingCity = document.getElementById('shipping-city').value;
+    const shippingDistrict = document.getElementById('shipping-district').value;
+    const shippingWard = document.getElementById('shipping-ward').value;
+    const deliveryNotes = document.getElementById('delivery-notes').value;
+    const deliveryPriority = document.getElementById('delivery-priority').value;
+    const shippingFee = parseFloat(document.getElementById('shipping-fee').value) || 0;
+    const codEnabled = document.getElementById('cod-enabled').checked;
+    const fragileItems = document.getElementById('fragile-items').checked;
+    const insurance = document.getElementById('insurance').checked;
+
+    if (!orderId || !customerName || !customerPhone || !trackingNumber || !shippingAddress) {
+      alert('Vui lòng điền đầy đủ thông tin bắt buộc!');
+      return;
+    }
+
+    // Phone validation
+    const phoneRegex = /^[0-9]{10,11}$/;
+    if (!phoneRegex.test(customerPhone.replace(/[\s-]/g, ''))) {
+      alert('Số điện thoại không hợp lệ!');
+      return;
+    }
+
+    const tracking = {
+      id: 'track_' + Date.now(),
+      orderId,
+      customerName,
+      customerPhone,
+      customerEmail,
+      trackingNumber,
+      carrier,
+      status: currentStatus,
+      estimatedDelivery: estimatedDelivery ? new Date(estimatedDelivery).toISOString() : null,
+      shippingAddress,
+      shippingCity,
+      shippingDistrict,
+      shippingWard,
+      deliveryNotes,
+      deliveryPriority,
+      shippingFee,
+      codEnabled,
+      codAmount: 0, // Will be updated if needed
+      fragileItems,
+      insurance,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      statusHistory: [
+        {
+          status: currentStatus,
+          timestamp: new Date().toISOString(),
+          location: 'ComputerPOS Pro',
+          description: 'Theo dõi đơn hàng được tạo'
+        }
+      ]
+    };
+
+    trackingData.unshift(tracking);
+    saveData();
+    closeModal('tracking-modal');
+    renderTracking();
+    alert('Đã thêm theo dõi đơn hàng thành công!');
+  };
+
+  window.viewTrackingDetail = function(trackingId) {
+    const tracking = trackingData.find(item => item.id === trackingId);
+    if (!tracking) return;
+
+    currentTracking = tracking;
+
+    const statusNames = {
+      preparing: 'Chuẩn bị hàng',
+      ready_for_pickup: 'Sẵn sàng lấy hàng',
+      picked_up: 'Đã lấy hàng',
+      in_transit: 'Đang vận chuyển',
+      out_for_delivery: 'Đang giao',
+      delivered: 'Đã giao',
+      failed_delivery: 'Giao thất bại',
+      returned: 'Trả về'
+    };
+
+    const carrierNames = {
+      ghn: 'Giao Hàng Nhanh',
+      ghtk: 'Giao Hàng Tiết Kiệm',
+      viettel: 'Viettel Post',
+      vnpost: 'Bưu điện Việt Nam',
+      best: 'BEST Express',
+      jnt: 'J&T Express',
+      self: 'Tự giao'
+    };
+
+    const priorityNames = {
+      normal: 'Bình thường',
+      urgent: 'Khẩn cấp',
+      express: 'Hỏa tốc'
+    };
+
+    // Status timeline
+    let timelineHtml = '';
+    tracking.statusHistory.forEach((status, index) => {
+      const isLast = index === tracking.statusHistory.length - 1;
+      timelineHtml += `
+        <div class="flex items-start space-x-3">
+          <div class="flex-shrink-0">
+            <div class="w-8 h-8 ${isLast ? 'bg-blue-500' : 'bg-gray-300'} rounded-full flex items-center justify-center">
+              <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            ${!isLast ? '<div class="w-0.5 h-6 bg-gray-300 ml-3.5 mt-1"></div>' : ''}
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="text-sm font-medium text-gray-900">${statusNames[status.status]}</div>
+            <div class="text-sm text-gray-500">${status.location}</div>
+            <div class="text-xs text-gray-400">${new Date(status.timestamp).toLocaleString('vi-VN')}</div>
+            <div class="text-sm text-gray-600 mt-1">${status.description}</div>
+          </div>
+        </div>
+      `;
+    });
+
+    const html = `
+      <div class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <h4 class="font-semibold text-gray-900 mb-3">Thông tin đơn hàng</h4>
+            <div class="space-y-2 text-sm">
+              <div><strong>Mã đơn hàng:</strong> ${tracking.orderId}</div>
+              <div><strong>Mã vận đơn:</strong> ${tracking.trackingNumber}</div>
+              <div><strong>Nhà vận chuyển:</strong> ${carrierNames[tracking.carrier]}</div>
+              <div><strong>Trạng thái:</strong> <span class="px-2 py-1 text-xs rounded-full ${getStatusColor(tracking.status)}">${statusNames[tracking.status]}</span></div>
+              <div><strong>Ưu tiên:</strong> <span class="px-2 py-1 text-xs rounded-full ${getPriorityColor(tracking.deliveryPriority)}">${priorityNames[tracking.deliveryPriority]}</span></div>
+              <div><strong>Phí vận chuyển:</strong> ${formatVND(tracking.shippingFee)}</div>
+            </div>
+          </div>
+          <div>
+            <h4 class="font-semibold text-gray-900 mb-3">Thông tin khách hàng</h4>
+            <div class="space-y-2 text-sm">
+              <div><strong>Tên khách hàng:</strong> ${tracking.customerName}</div>
+              <div><strong>Điện thoại:</strong> <a href="tel:${tracking.customerPhone}" class="text-blue-600">${tracking.customerPhone}</a></div>
+              ${tracking.customerEmail ? `<div><strong>Email:</strong> <a href="mailto:${tracking.customerEmail}" class="text-blue-600">${tracking.customerEmail}</a></div>` : ''}
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="font-semibold text-gray-900 mb-3">Địa chỉ giao hàng</h4>
+          <div class="bg-gray-50 p-3 rounded-md text-sm">
+            ${tracking.shippingAddress}
+          </div>
+        </div>
+
+        ${tracking.deliveryNotes ? `
+          <div>
+            <h4 class="font-semibold text-gray-900 mb-3">Ghi chú giao hàng</h4>
+            <div class="bg-yellow-50 p-3 rounded-md text-sm text-yellow-800">
+              ${tracking.deliveryNotes}
+            </div>
+          </div>
+        ` : ''}
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <h4 class="font-semibold text-gray-900 mb-3">Thông tin thời gian</h4>
+            <div class="space-y-2 text-sm">
+              <div><strong>Ngày tạo:</strong> ${new Date(tracking.createdAt).toLocaleString('vi-VN')}</div>
+              <div><strong>Cập nhật cuối:</strong> ${new Date(tracking.updatedAt).toLocaleString('vi-VN')}</div>
+              ${tracking.estimatedDelivery ? `<div><strong>Dự kiến giao:</strong> ${new Date(tracking.estimatedDelivery).toLocaleString('vi-VN')}</div>` : ''}
+              ${tracking.actualDelivery ? `<div><strong>Thực tế giao:</strong> ${new Date(tracking.actualDelivery).toLocaleString('vi-VN')}</div>` : ''}
+            </div>
+          </div>
+          <div>
+            <h4 class="font-semibold text-gray-900 mb-3">Thông tin bổ sung</h4>
+            <div class="space-y-2 text-sm">
+              ${tracking.codEnabled ? `<div><strong>COD:</strong> <span class="text-green-600">${formatVND(tracking.codAmount)}</span></div>` : ''}
+              ${tracking.fragileItems ? '<div class="text-orange-600">⚠️ Hàng dễ vỡ</div>' : ''}
+              ${tracking.insurance ? '<div class="text-blue-600">🛡️ Có bảo hiểm</div>' : ''}
+              ${tracking.failureReason ? `<div><strong>Lý do thất bại:</strong> <span class="text-red-600">${tracking.failureReason}</span></div>` : ''}
+              ${tracking.nextAttempt ? `<div><strong>Giao lại vào:</strong> ${new Date(tracking.nextAttempt).toLocaleString('vi-VN')}</div>` : ''}
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="font-semibold text-gray-900 mb-4">Lịch sử trạng thái</h4>
+          <div class="space-y-4">
+            ${timelineHtml}
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.getElementById('tracking-detail-title').textContent = `Chi tiết theo dõi ${tracking.orderId}`;
+    document.getElementById('tracking-detail-content').innerHTML = html;
+    
+    // Show/hide update button
+    const updateBtn = document.getElementById('update-status-btn');
+    if (tracking.status === 'delivered' || tracking.status === 'returned') {
+      updateBtn.classList.add('hidden');
+    } else {
+      updateBtn.classList.remove('hidden');
+    }
+    
+    document.getElementById('tracking-detail-modal').classList.remove('hidden');
+  };
+
+  window.updateTrackingStatus = function(trackingId) {
+    let tracking;
+    if (trackingId) {
+      tracking = trackingData.find(item => item.id === trackingId);
+    } else {
+      tracking = currentTracking;
+    }
+    
+    if (!tracking) return;
+
+    const statusOptions = {
+      preparing: 'ready_for_pickup',
+      ready_for_pickup: 'picked_up',
+      picked_up: 'in_transit',
+      in_transit: 'out_for_delivery',
+      out_for_delivery: 'delivered',
+      failed_delivery: 'out_for_delivery'
+    };
+
+    const nextStatus = statusOptions[tracking.status];
+    if (!nextStatus) {
+      alert('Không thể cập nhật trạng thái cho đơn hàng này!');
+      return;
+    }
+
+    const statusNames = {
+      ready_for_pickup: 'Sẵn sàng lấy hàng',
+      picked_up: 'Đã lấy hàng',
+      in_transit: 'Đang vận chuyển',
+      out_for_delivery: 'Đang giao',
+      delivered: 'Đã giao'
+    };
+
+    if (confirm(`Cập nhật trạng thái đơn hàng ${tracking.orderId} thành "${statusNames[nextStatus]}"?`)) {
+      tracking.status = nextStatus;
+      tracking.updatedAt = new Date().toISOString();
+      
+      // Add to status history
+      const description = nextStatus === 'delivered' ? 
+        `Giao hàng thành công, người nhận: ${tracking.customerName}` :
+        `Trạng thái cập nhật thành ${statusNames[nextStatus]}`;
+        
+      tracking.statusHistory.push({
+        status: nextStatus,
+        timestamp: new Date().toISOString(),
+        location: nextStatus === 'delivered' ? tracking.shippingAddress.split(',')[0] : 'Đang cập nhật',
+        description: description
+      });
+
+      if (nextStatus === 'delivered') {
+        tracking.actualDelivery = new Date().toISOString();
+      }
+
+      saveData();
+      renderTracking();
+      
+      if (currentTracking && currentTracking.id === tracking.id) {
+        closeModal('tracking-detail-modal');
+      }
+      
+      alert('Đã cập nhật trạng thái thành công!');
+    }
+  };
+
+  window.openCarrierTracking = function(carrier, trackingNumber) {
+    const urls = {
+      ghn: `https://5sao.ghn.dev/`,
+      ghtk: `https://khachhang.giaohangtietkiem.vn/`,
+      viettel: `https://viettelpost.com.vn/`,
+      vnpost: `https://www.vnpost.vn/`,
+      best: `https://www.best-inc.com.vn/`,
+      jnt: `https://www.jtexpress.vn/`
+    };
+
+    const url = urls[carrier];
+    if (url) {
+      window.open(url, '_blank');
+    } else {
+      alert('Liên kết theo dõi không khả dụng cho nhà vận chuyển này!');
+    }
+  };
+
+  function getStatusColor(status) {
+    const colors = {
+      preparing: 'bg-yellow-100 text-yellow-800',
+      ready_for_pickup: 'bg-blue-100 text-blue-800',
+      picked_up: 'bg-purple-100 text-purple-800',
+      in_transit: 'bg-indigo-100 text-indigo-800',
+      out_for_delivery: 'bg-orange-100 text-orange-800',
+      delivered: 'bg-green-100 text-green-800',
+      failed_delivery: 'bg-red-100 text-red-800',
+      returned: 'bg-gray-100 text-gray-800'
+    };
+    return colors[status] || '';
+  }
+
+  function getPriorityColor(priority) {
+    const colors = {
+      normal: 'bg-gray-100 text-gray-800',
+      urgent: 'bg-orange-100 text-orange-800',
+      express: 'bg-red-100 text-red-800'
+    };
+    return colors[priority] || '';
+  }
+
+  window.exportTracking = function() {
+    const csvContent = generateTrackingCSV(trackingData);
+    downloadCSV(csvContent, `order-tracking-${new Date().toISOString().split('T')[0]}.csv`);
+  };
+
+  function generateTrackingCSV(data) {
+    const headers = ['Đơn hàng', 'Khách hàng', 'Điện thoại', 'Mã vận đơn', 'Nhà vận chuyển', 'Trạng thái', 'Địa chỉ giao', 'Ngày tạo', 'Cập nhật cuối'];
+    
+    const statusNames = {
+      preparing: 'Chuẩn bị hàng',
+      ready_for_pickup: 'Sẵn sàng lấy hàng',
+      picked_up: 'Đã lấy hàng',
+      in_transit: 'Đang vận chuyển',
+      out_for_delivery: 'Đang giao',
+      delivered: 'Đã giao',
+      failed_delivery: 'Giao thất bại',
+      returned: 'Trả về'
+    };
+
+    const carrierNames = {
+      ghn: 'Giao Hàng Nhanh',
+      ghtk: 'Giao Hàng Tiết Kiệm',
+      viettel: 'Viettel Post',
+      vnpost: 'Bưu điện VN',
+      best: 'BEST Express',
+      jnt: 'J&T Express',
+      self: 'Tự giao'
+    };
+    
+    const rows = data.map(item => [
+      item.orderId,
+      item.customerName,
+      item.customerPhone,
+      item.trackingNumber,
+      carrierNames[item.carrier],
+      statusNames[item.status],
+      item.shippingAddress,
+      new Date(item.createdAt).toLocaleDateString('vi-VN'),
+      new Date(item.updatedAt).toLocaleDateString('vi-VN')
+    ]);
+
+    return [headers, ...rows].map(row => 
+      row.map(field => `"${field}"`).join(',')
+    ).join('\n');
+  }
+
+  function downloadCSV(content, filename) {
+    const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  window.refreshTracking = function() {
+    currentPage = 1;
+    renderTracking();
+    alert('Đã làm mới danh sách theo dõi!');
+  };
+
+  window.refreshMap = function() {
+    // Simulate map refresh
+    alert('Đã làm mới bản đồ theo dõi!');
+  };
+
+  window.closeModal = function(modalId) {
+    document.getElementById(modalId).classList.add('hidden');
+  };
+
+  function formatVND(amount) {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND'
+    }).format(amount);
+  }
+
+  // Event listeners
+  document.getElementById('search-input').addEventListener('input', () => {
+    currentPage = 1;
+    renderTracking();
+  });
+  document.getElementById('status-filter').addEventListener('change', () => {
+    currentPage = 1;
+    renderTracking();
+  });
+  document.getElementById('carrier-filter').addEventListener('change', () => {
+    currentPage = 1;
+    renderTracking();
+  });
+  document.getElementById('date-filter').addEventListener('change', function() {
+    const customRange = document.getElementById('custom-date-range');
+    if (this.value === 'custom') {
+      customRange.classList.remove('hidden');
+    } else {
+      customRange.classList.add('hidden');
+      currentPage = 1;
+      renderTracking();
+    }
+  });
+  document.getElementById('sort-by').addEventListener('change', () => {
+    currentPage = 1;
+    renderTracking();
+  });
+
+  // Quick search on Enter
+  document.getElementById('quick-search').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      performQuickSearch();
+    }
+  });
+
+  // Initialize
+  loadSampleData();
+  renderTracking();
+});
+</script>
+
+<style>
+.form-input, .form-select, .form-textarea, .form-checkbox {
+  @apply px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full;
+}
+
+.form-checkbox {
+  @apply w-4 h-4;
+}
+
+.modal-overlay {
+  @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50;
+}
+
+.modal-content {
+  @apply bg-white rounded-lg shadow-xl w-full mx-4 max-h-screen overflow-y-auto;
+}
+
+.modal-header {
+  @apply flex items-center justify-between p-6 border-b;
+}
+
+.modal-title {
+  @apply text-lg font-medium text-gray-900;
+}
+
+.modal-close {
+  @apply text-gray-400 hover:text-gray-600 text-2xl font-bold cursor-pointer;
+}
+
+.modal-body {
+  @apply p-6;
+}
+
+.modal-footer {
+  @apply flex items-center justify-end space-x-3 p-6 border-t bg-gray-50;
+}
+
+.btn {
+  @apply px-4 py-2 rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-offset-2;
+}
+
+.btn-primary {
+  @apply bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500;
+}
+
+.btn-secondary {
+  @apply bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500;
+}
+
+.form-label {
+  @apply block text-sm font-medium text-gray-700 mb-1;
+}
+</style>

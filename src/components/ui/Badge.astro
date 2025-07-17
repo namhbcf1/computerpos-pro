@@ -1,0 +1,74 @@
+---
+export interface Props {
+  variant?: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'light' | 'dark' | 'glass' | 'gradient';
+  size?: 'xs' | 'sm' | 'md';
+  pill?: boolean;
+  outline?: boolean;
+  glow?: boolean;
+  class?: string;
+}
+
+const { 
+  variant = 'primary',
+  size = 'sm',
+  pill = false,
+  outline = false,
+  glow = false,
+  class: className = ''
+} = Astro.props;
+
+// Base styles
+const baseClasses = 'inline-flex items-center justify-center font-medium';
+
+// Size variations
+const sizes = {
+  xs: 'px-1.5 py-0.5 text-xs',
+  sm: 'px-2 py-1 text-xs',
+  md: 'px-2.5 py-1 text-sm'
+};
+
+// Border radius based on pill prop
+const radiusClasses = pill ? 'rounded-full' : 'rounded-md';
+
+// Variant styles
+const variants = {
+  primary: outline ? 'bg-transparent border border-indigo-500 text-indigo-600' : 'bg-indigo-100 text-indigo-800',
+  secondary: outline ? 'bg-transparent border border-slate-500 text-slate-700' : 'bg-slate-100 text-slate-800',
+  success: outline ? 'bg-transparent border border-emerald-500 text-emerald-600' : 'bg-emerald-100 text-emerald-800',
+  danger: outline ? 'bg-transparent border border-rose-500 text-rose-600' : 'bg-rose-100 text-rose-800',
+  warning: outline ? 'bg-transparent border border-amber-500 text-amber-600' : 'bg-amber-100 text-amber-800',
+  info: outline ? 'bg-transparent border border-sky-500 text-sky-600' : 'bg-sky-100 text-sky-800',
+  light: outline ? 'bg-transparent border border-gray-300 text-gray-700' : 'bg-gray-100 text-gray-800',
+  dark: outline ? 'bg-transparent border border-gray-700 text-gray-800' : 'bg-gray-700 text-gray-100',
+  glass: 'backdrop-blur-md bg-white/10 border border-white/20 text-white',
+  gradient: 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white'
+};
+
+// Glow effect
+const glowClasses = glow 
+  ? variant === 'primary' ? 'shadow-md shadow-indigo-200 dark:shadow-indigo-900/30' : 
+    variant === 'secondary' ? 'shadow-md shadow-slate-200 dark:shadow-slate-900/30' :
+    variant === 'success' ? 'shadow-md shadow-emerald-200 dark:shadow-emerald-900/30' :
+    variant === 'danger' ? 'shadow-md shadow-rose-200 dark:shadow-rose-900/30' :
+    variant === 'warning' ? 'shadow-md shadow-amber-200 dark:shadow-amber-900/30' :
+    variant === 'info' ? 'shadow-md shadow-sky-200 dark:shadow-sky-900/30' :
+    variant === 'light' ? 'shadow-md shadow-gray-200 dark:shadow-gray-900/30' :
+    variant === 'dark' ? 'shadow-md shadow-gray-300 dark:shadow-gray-900/30' :
+    variant === 'glass' ? 'shadow-md shadow-white/20' :
+    variant === 'gradient' ? 'shadow-md shadow-purple-200 dark:shadow-purple-900/30' : ''
+  : '';
+
+// Combine all classes
+const classes = [
+  baseClasses, 
+  variants[variant], 
+  sizes[size], 
+  radiusClasses,
+  glowClasses,
+  className
+].join(' ');
+---
+
+<span class={classes}>
+  <slot />
+</span>

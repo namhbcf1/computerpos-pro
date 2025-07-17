@@ -1,0 +1,125 @@
+---
+export interface Props {
+  variant?: 'default' | 'modern' | 'glass' | 'minimal';
+  striped?: boolean;
+  hover?: boolean;
+  bordered?: boolean;
+  compact?: boolean;
+  responsive?: boolean;
+  class?: string;
+}
+
+const { 
+  variant = 'default',
+  striped = false,
+  hover = true,
+  bordered = false,
+  compact = false,
+  responsive = true,
+  class: className = ''
+} = Astro.props;
+
+// Base styles
+const tableClasses = 'w-full text-sm text-left rtl:text-right';
+
+// Variant styles
+const variants = {
+  default: 'bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300',
+  modern: 'bg-white/5 backdrop-blur-sm text-gray-200 rounded-xl overflow-hidden',
+  glass: 'bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-xl overflow-hidden',
+  minimal: 'bg-transparent text-gray-700 dark:text-gray-300'
+};
+
+// Additional style modifiers
+const stripedClasses = striped 
+  ? variant === 'modern' || variant === 'glass'
+    ? 'even:bg-black/5 odd:bg-transparent'
+    : 'even:bg-gray-50 dark:even:bg-slate-700 odd:bg-white dark:odd:bg-slate-800'
+  : '';
+
+const hoverClasses = hover 
+  ? variant === 'modern' || variant === 'glass'
+    ? 'hover:bg-white/10'
+    : 'hover:bg-gray-100 dark:hover:bg-slate-700/70'
+  : '';
+
+const borderedClasses = bordered
+  ? variant === 'glass'
+    ? 'border-b border-white/10'
+    : 'border-b border-gray-200 dark:border-gray-700'
+  : '';
+
+const compactClasses = compact ? 'py-2 px-3' : 'py-3 px-4';
+
+// Header styles
+const thClasses = [
+  compactClasses,
+  variant === 'glass' || variant === 'modern' 
+    ? 'bg-black/20 text-white font-medium' 
+    : 'bg-gray-50 dark:bg-slate-700 font-medium text-gray-700 dark:text-gray-200',
+  borderedClasses,
+].join(' ');
+
+// Cell styles
+const tdClasses = [
+  compactClasses,
+  borderedClasses,
+].join(' ');
+
+// Combine table classes
+const classes = [
+  tableClasses,
+  variants[variant],
+  className
+].join(' ');
+
+// Row classes for body rows
+const trClasses = [
+  stripedClasses,
+  hoverClasses,
+].join(' ');
+
+// Responsive wrapper class
+const wrapperClasses = responsive ? 'overflow-x-auto' : '';
+---
+
+<div class={wrapperClasses}>
+  <table class={classes}>
+    <thead>
+      <tr>
+        <slot name="header" />
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+      <slot name="rows" />
+    </tbody>
+    {Astro.slots.has('footer') && (
+      <tfoot>
+        <tr>
+          <slot name="footer" />
+        </tr>
+      </tfoot>
+    )}
+  </table>
+</div>
+
+<style>
+  /* Custom scrollbar for table */
+  .overflow-x-auto::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .overflow-x-auto::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 3px;
+  }
+
+  .overflow-x-auto::-webkit-scrollbar-thumb {
+    background: rgba(156, 163, 175, 0.5);
+    border-radius: 3px;
+  }
+
+  .overflow-x-auto::-webkit-scrollbar-thumb:hover {
+    background: rgba(156, 163, 175, 0.7);
+  }
+</style>

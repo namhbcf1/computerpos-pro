@@ -1,0 +1,716 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import DashboardLayout from '../../layouts/DashboardLayout.astro';
+import Card from '../../components/ui/Card.astro';
+import Button from '../../components/ui/Button.astro';
+---
+
+<BaseLayout title="Customer History - ComputerPOS Pro">
+  <DashboardLayout>
+    <main class="p-6 space-y-6">
+      <!-- Header -->
+      <div class="flex justify-between items-center">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">Customer History</h1>
+          <p class="text-gray-600 mt-1">Lịch sử mua hàng và tương tác khách hàng</p>
+        </div>
+        <div class="flex space-x-3">
+          <Button href="/customers" variant="secondary">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Quay lại Khách hàng
+          </Button>
+          <Button variant="primary" onclick="exportHistory()">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Xuất báo cáo
+          </Button>
+        </div>
+      </div>
+
+      <!-- Customer Search -->
+      <Card>
+        <div class="p-6">
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div>
+              <label class="form-label">Tìm khách hàng</label>
+              <input type="text" class="form-input" id="customer-search" placeholder="Tên, SĐT, Email...">
+            </div>
+            <div>
+              <label class="form-label">Khoảng thời gian</label>
+              <select class="form-select" id="time-range">
+                <option value="7">7 ngày qua</option>
+                <option value="30">30 ngày qua</option>
+                <option value="90">3 tháng qua</option>
+                <option value="365">1 năm qua</option>
+                <option value="custom">Tùy chọn</option>
+              </select>
+            </div>
+            <div id="custom-date-range" class="hidden md:col-span-2 grid grid-cols-2 gap-2">
+              <div>
+                <label class="form-label">Từ ngày</label>
+                <input type="date" class="form-input" id="start-date">
+              </div>
+              <div>
+                <label class="form-label">Đến ngày</label>
+                <input type="date" class="form-input" id="end-date">
+              </div>
+            </div>
+            <div id="search-button-container" class="md:col-span-2">
+              <label class="form-label">&nbsp;</label>
+              <Button onclick="searchHistory()" variant="primary" class="w-full">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                Tìm kiếm
+              </Button>
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      <!-- History Stats -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Tổng đơn hàng</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="total-orders">0</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-green-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Tổng doanh thu</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="total-revenue">0₫</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-purple-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Khách hàng tương tác</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="active-customers">0</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-orange-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Đơn hàng trung bình</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="avg-order-value">0₫</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      <!-- History Timeline -->
+      <Card>
+        <div class="p-6">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-lg font-medium text-gray-900">Lịch sử tương tác</h2>
+            <div class="flex space-x-2">
+              <select class="form-select w-40" id="activity-filter">
+                <option value="all">Tất cả hoạt động</option>
+                <option value="purchase">Mua hàng</option>
+                <option value="quotation">Báo giá</option>
+                <option value="communication">Giao tiếp</option>
+                <option value="support">Hỗ trợ</option>
+              </select>
+              <select class="form-select w-40" id="sort-order">
+                <option value="newest">Mới nhất</option>
+                <option value="oldest">Cũ nhất</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="space-y-6" id="history-timeline">
+            <!-- Timeline will be populated here -->
+          </div>
+        </div>
+      </Card>
+
+      <!-- Customer Details Modal -->
+      <div id="customer-detail-modal" class="modal-overlay hidden">
+        <div class="modal-content max-w-4xl">
+          <div class="modal-header">
+            <h3 class="modal-title" id="customer-modal-title">Chi tiết khách hàng</h3>
+            <button class="modal-close" onclick="closeModal('customer-detail-modal')">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div id="customer-detail-content">
+              <!-- Customer details will be populated here -->
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="closeModal('customer-detail-modal')">Đóng</button>
+            <button type="button" class="btn btn-primary" onclick="contactCustomer()">Liên hệ</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </DashboardLayout>
+</BaseLayout>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  let customerHistory = [];
+  let filteredHistory = [];
+
+  // Load sample data
+  function loadSampleData() {
+    customerHistory = [
+      {
+        id: 'hist_1',
+        customerId: 'cust_1',
+        customerName: 'Nguyễn Văn A',
+        customerPhone: '0901234567',
+        customerEmail: 'nguyenvana@email.com',
+        type: 'purchase',
+        title: 'Đơn hàng #DH001',
+        description: 'Mua laptop gaming MSI GF63 Thin',
+        amount: 18990000,
+        products: ['MSI GF63 Thin', 'Chuột gaming Logitech G502'],
+        status: 'completed',
+        timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+        metadata: {
+          orderId: 'DH001',
+          paymentMethod: 'bank_transfer',
+          staff: 'Nguyễn Thị B'
+        }
+      },
+      {
+        id: 'hist_2',
+        customerId: 'cust_2',
+        customerName: 'Trần Thị C',
+        customerPhone: '0912345678',
+        customerEmail: 'tranthic@email.com',
+        type: 'quotation',
+        title: 'Báo giá build gaming',
+        description: 'Yêu cầu báo giá máy tính gaming tầm trung',
+        amount: 25000000,
+        products: ['Intel i5-13400F', 'RTX 4060 Ti', 'RAM 16GB DDR4'],
+        status: 'pending',
+        timestamp: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+        metadata: {
+          quotationId: 'QT001',
+          staff: 'Lê Văn D'
+        }
+      },
+      {
+        id: 'hist_3',
+        customerId: 'cust_1',
+        customerName: 'Nguyễn Văn A',
+        customerPhone: '0901234567',
+        customerEmail: 'nguyenvana@email.com',
+        type: 'communication',
+        title: 'Gửi email khuyến mãi',
+        description: 'Nhận email về chương trình giảm giá cuối tuần',
+        amount: 0,
+        products: [],
+        status: 'sent',
+        timestamp: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+        metadata: {
+          campaignId: 'camp_1',
+          type: 'email',
+          opened: true
+        }
+      },
+      {
+        id: 'hist_4',
+        customerId: 'cust_3',
+        customerName: 'Lê Thị E',
+        customerPhone: '0923456789',
+        customerEmail: 'lethie@email.com',
+        type: 'support',
+        title: 'Hỗ trợ kỹ thuật',
+        description: 'Hỗ trợ cài đặt driver card đồ họa',
+        amount: 0,
+        products: ['RTX 4070 Super'],
+        status: 'resolved',
+        timestamp: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+        metadata: {
+          ticketId: 'SUP001',
+          staff: 'Phạm Văn F',
+          duration: '45 phút'
+        }
+      },
+      {
+        id: 'hist_5',
+        customerId: 'cust_2',
+        customerName: 'Trần Thị C',
+        customerPhone: '0912345678',
+        customerEmail: 'tranthic@email.com',
+        type: 'purchase',
+        title: 'Đơn hàng #DH002',
+        description: 'Mua màn hình gaming 27 inch',
+        amount: 8990000,
+        products: ['Monitor ASUS TUF Gaming VG27AQ'],
+        status: 'completed',
+        timestamp: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
+        metadata: {
+          orderId: 'DH002',
+          paymentMethod: 'cash',
+          staff: 'Hoàng Văn G'
+        }
+      }
+    ];
+
+    filteredHistory = [...customerHistory];
+  }
+
+  function renderHistoryTimeline() {
+    const container = document.getElementById('history-timeline');
+    
+    if (filteredHistory.length === 0) {
+      container.innerHTML = `
+        <div class="text-center py-12">
+          <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <h3 class="mt-2 text-sm font-medium text-gray-900">Không tìm thấy lịch sử</h3>
+          <p class="mt-1 text-sm text-gray-500">Thử thay đổi tiêu chí tìm kiếm hoặc mở rộng khoảng thời gian.</p>
+        </div>
+      `;
+      return;
+    }
+
+    let html = '';
+    let currentDate = '';
+
+    filteredHistory.forEach((item, index) => {
+      const itemDate = new Date(item.timestamp).toLocaleDateString('vi-VN');
+      
+      // Add date separator
+      if (itemDate !== currentDate) {
+        currentDate = itemDate;
+        html += `
+          <div class="relative">
+            <div class="absolute left-0 top-0 flex items-center justify-center w-8 h-8">
+              <div class="h-1 w-8 bg-gray-300"></div>
+            </div>
+            <div class="ml-10 pb-4">
+              <div class="text-sm font-medium text-gray-900 bg-gray-100 inline-block px-3 py-1 rounded-full">
+                ${itemDate}
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      const typeColors = {
+        purchase: { bg: 'bg-green-500', icon: '💰' },
+        quotation: { bg: 'bg-blue-500', icon: '📋' },
+        communication: { bg: 'bg-purple-500', icon: '📧' },
+        support: { bg: 'bg-orange-500', icon: '🛠️' }
+      };
+
+      const statusColors = {
+        completed: 'text-green-600',
+        pending: 'text-yellow-600',
+        sent: 'text-blue-600',
+        resolved: 'text-green-600',
+        cancelled: 'text-red-600'
+      };
+
+      const typeData = typeColors[item.type] || { bg: 'bg-gray-500', icon: '📄' };
+
+      html += `
+        <div class="relative">
+          <div class="absolute left-0 top-0 flex items-center justify-center w-8 h-8 ${typeData.bg} rounded-full text-white text-sm">
+            ${typeData.icon}
+          </div>
+          <div class="ml-10 pb-6">
+            <div class="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer" onclick="viewCustomerDetail('${item.customerId}')">
+              <div class="flex items-start justify-between">
+                <div class="flex-1">
+                  <div class="flex items-center space-x-2 mb-2">
+                    <h3 class="text-sm font-medium text-gray-900">${item.title}</h3>
+                    <span class="px-2 py-1 text-xs font-medium ${statusColors[item.status]} bg-gray-100 rounded-full">
+                      ${getStatusName(item.status)}
+                    </span>
+                  </div>
+                  <p class="text-sm text-gray-600 mb-2">${item.description}</p>
+                  <div class="flex items-center space-x-4 text-xs text-gray-500">
+                    <span>👤 ${item.customerName}</span>
+                    <span>📞 ${item.customerPhone}</span>
+                    ${item.amount > 0 ? `<span>💵 ${formatVND(item.amount)}</span>` : ''}
+                    <span>🕒 ${new Date(item.timestamp).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}</span>
+                  </div>
+                  ${item.products.length > 0 ? `
+                    <div class="mt-2">
+                      <div class="flex flex-wrap gap-1">
+                        ${item.products.map(product => `
+                          <span class="inline-block px-2 py-1 text-xs bg-blue-50 text-blue-700 rounded">${product}</span>
+                        `).join('')}
+                      </div>
+                    </div>
+                  ` : ''}
+                </div>
+                <div class="text-right">
+                  <div class="text-xs text-gray-400">
+                    ${getTypeName(item.type)}
+                  </div>
+                  ${item.metadata?.staff ? `
+                    <div class="text-xs text-gray-500 mt-1">
+                      NV: ${item.metadata.staff}
+                    </div>
+                  ` : ''}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    });
+
+    container.innerHTML = html;
+  }
+
+  function getTypeName(type) {
+    const names = {
+      purchase: 'Mua hàng',
+      quotation: 'Báo giá',
+      communication: 'Giao tiếp',
+      support: 'Hỗ trợ'
+    };
+    return names[type] || type;
+  }
+
+  function getStatusName(status) {
+    const names = {
+      completed: 'Hoàn thành',
+      pending: 'Chờ xử lý',
+      sent: 'Đã gửi',
+      resolved: 'Đã giải quyết',
+      cancelled: 'Đã hủy'
+    };
+    return names[status] || status;
+  }
+
+  function updateStats() {
+    const totalOrders = filteredHistory.filter(h => h.type === 'purchase').length;
+    const totalRevenue = filteredHistory
+      .filter(h => h.type === 'purchase' && h.status === 'completed')
+      .reduce((sum, h) => sum + h.amount, 0);
+    
+    const uniqueCustomers = new Set(filteredHistory.map(h => h.customerId)).size;
+    const avgOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
+
+    document.getElementById('total-orders').textContent = totalOrders;
+    document.getElementById('total-revenue').textContent = formatVND(totalRevenue);
+    document.getElementById('active-customers').textContent = uniqueCustomers;
+    document.getElementById('avg-order-value').textContent = formatVND(avgOrderValue);
+  }
+
+  window.searchHistory = function() {
+    const searchTerm = document.getElementById('customer-search').value.toLowerCase();
+    const timeRange = document.getElementById('time-range').value;
+    const activityFilter = document.getElementById('activity-filter').value;
+    const sortOrder = document.getElementById('sort-order').value;
+
+    let filtered = [...customerHistory];
+
+    // Filter by search term
+    if (searchTerm) {
+      filtered = filtered.filter(item => 
+        item.customerName.toLowerCase().includes(searchTerm) ||
+        item.customerPhone.includes(searchTerm) ||
+        item.customerEmail.toLowerCase().includes(searchTerm) ||
+        item.title.toLowerCase().includes(searchTerm) ||
+        item.description.toLowerCase().includes(searchTerm)
+      );
+    }
+
+    // Filter by time range
+    if (timeRange !== 'custom') {
+      const days = parseInt(timeRange);
+      const cutoffDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+      filtered = filtered.filter(item => new Date(item.timestamp) >= cutoffDate);
+    } else {
+      const startDate = document.getElementById('start-date').value;
+      const endDate = document.getElementById('end-date').value;
+      if (startDate && endDate) {
+        filtered = filtered.filter(item => {
+          const itemDate = new Date(item.timestamp);
+          return itemDate >= new Date(startDate) && itemDate <= new Date(endDate + 'T23:59:59');
+        });
+      }
+    }
+
+    // Filter by activity type
+    if (activityFilter !== 'all') {
+      filtered = filtered.filter(item => item.type === activityFilter);
+    }
+
+    // Sort
+    filtered.sort((a, b) => {
+      const dateA = new Date(a.timestamp);
+      const dateB = new Date(b.timestamp);
+      return sortOrder === 'newest' ? dateB - dateA : dateA - dateB;
+    });
+
+    filteredHistory = filtered;
+    renderHistoryTimeline();
+    updateStats();
+  };
+
+  window.viewCustomerDetail = function(customerId) {
+    const customerItems = customerHistory.filter(h => h.customerId === customerId);
+    const firstItem = customerItems[0];
+    
+    if (!firstItem) return;
+
+    const purchases = customerItems.filter(h => h.type === 'purchase').length;
+    const totalSpent = customerItems
+      .filter(h => h.type === 'purchase' && h.status === 'completed')
+      .reduce((sum, h) => sum + h.amount, 0);
+    
+    const lastPurchase = customerItems
+      .filter(h => h.type === 'purchase')
+      .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))[0];
+
+    let timelineHtml = '';
+    customerItems
+      .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+      .forEach(item => {
+        timelineHtml += `
+          <div class="border-l-2 border-gray-200 pl-4 pb-4">
+            <div class="flex items-center space-x-2 mb-1">
+              <h4 class="text-sm font-medium text-gray-900">${item.title}</h4>
+              <span class="text-xs text-gray-500">${getTypeName(item.type)}</span>
+            </div>
+            <p class="text-sm text-gray-600 mb-1">${item.description}</p>
+            <div class="text-xs text-gray-500">
+              ${new Date(item.timestamp).toLocaleString('vi-VN')}
+              ${item.amount > 0 ? ` • ${formatVND(item.amount)}` : ''}
+            </div>
+          </div>
+        `;
+      });
+
+    const html = `
+      <div class="space-y-6">
+        <!-- Customer Summary -->
+        <div class="grid grid-cols-2 gap-6">
+          <div>
+            <h4 class="font-semibold text-gray-900 mb-3">Thông tin khách hàng</h4>
+            <div class="space-y-2 text-sm">
+              <div><strong>Tên:</strong> ${firstItem.customerName}</div>
+              <div><strong>SĐT:</strong> ${firstItem.customerPhone}</div>
+              <div><strong>Email:</strong> ${firstItem.customerEmail}</div>
+            </div>
+          </div>
+          <div>
+            <h4 class="font-semibold text-gray-900 mb-3">Thống kê</h4>
+            <div class="space-y-2 text-sm">
+              <div><strong>Tổng đơn hàng:</strong> ${purchases}</div>
+              <div><strong>Tổng chi tiêu:</strong> ${formatVND(totalSpent)}</div>
+              <div><strong>Mua hàng cuối:</strong> ${lastPurchase ? new Date(lastPurchase.timestamp).toLocaleDateString('vi-VN') : 'Chưa có'}</div>
+              <div><strong>Tổng tương tác:</strong> ${customerItems.length}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Timeline -->
+        <div>
+          <h4 class="font-semibold text-gray-900 mb-3">Lịch sử tương tác (${customerItems.length})</h4>
+          <div class="max-h-64 overflow-y-auto">
+            ${timelineHtml}
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.getElementById('customer-modal-title').textContent = `Chi tiết: ${firstItem.customerName}`;
+    document.getElementById('customer-detail-content').innerHTML = html;
+    document.getElementById('customer-detail-modal').classList.remove('hidden');
+  };
+
+  window.contactCustomer = function() {
+    alert('Tính năng liên hệ khách hàng sẽ được tích hợp sau!');
+  };
+
+  window.exportHistory = function() {
+    const csvContent = generateCSV(filteredHistory);
+    downloadCSV(csvContent, `customer-history-${new Date().toISOString().split('T')[0]}.csv`);
+  };
+
+  function generateCSV(data) {
+    const headers = ['Ngày', 'Khách hàng', 'SĐT', 'Email', 'Loại', 'Tiêu đề', 'Mô tả', 'Số tiền', 'Trạng thái'];
+    
+    const rows = data.map(item => [
+      new Date(item.timestamp).toLocaleDateString('vi-VN'),
+      item.customerName,
+      item.customerPhone,
+      item.customerEmail,
+      getTypeName(item.type),
+      item.title,
+      item.description,
+      item.amount,
+      getStatusName(item.status)
+    ]);
+
+    return [headers, ...rows].map(row => 
+      row.map(field => `"${field}"`).join(',')
+    ).join('\n');
+  }
+
+  function downloadCSV(content, filename) {
+    const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  window.closeModal = function(modalId) {
+    document.getElementById(modalId).classList.add('hidden');
+  };
+
+  function formatVND(amount) {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND'
+    }).format(amount);
+  }
+
+  // Event listeners
+  document.getElementById('time-range').addEventListener('change', function() {
+    const customRange = document.getElementById('custom-date-range');
+    const searchContainer = document.getElementById('search-button-container');
+    
+    if (this.value === 'custom') {
+      customRange.classList.remove('hidden');
+      searchContainer.classList.remove('md:col-span-2');
+    } else {
+      customRange.classList.add('hidden');
+      searchContainer.classList.add('md:col-span-2');
+    }
+  });
+
+  document.getElementById('activity-filter').addEventListener('change', searchHistory);
+  document.getElementById('sort-order').addEventListener('change', searchHistory);
+  document.getElementById('customer-search').addEventListener('input', debounce(searchHistory, 300));
+
+  function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  }
+
+  // Initialize
+  loadSampleData();
+  searchHistory();
+});
+</script>
+
+<style>
+.form-input, .form-select {
+  @apply px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full;
+}
+
+.modal-overlay {
+  @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50;
+}
+
+.modal-content {
+  @apply bg-white rounded-lg shadow-xl w-full mx-4 max-h-screen overflow-y-auto;
+}
+
+.modal-header {
+  @apply flex items-center justify-between p-6 border-b;
+}
+
+.modal-title {
+  @apply text-lg font-medium text-gray-900;
+}
+
+.modal-close {
+  @apply text-gray-400 hover:text-gray-600 text-2xl font-bold cursor-pointer;
+}
+
+.modal-body {
+  @apply p-6;
+}
+
+.modal-footer {
+  @apply flex items-center justify-end space-x-3 p-6 border-t bg-gray-50;
+}
+
+.btn {
+  @apply px-4 py-2 rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-offset-2;
+}
+
+.btn-primary {
+  @apply bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500;
+}
+
+.btn-secondary {
+  @apply bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500;
+}
+
+.form-label {
+  @apply block text-sm font-medium text-gray-700 mb-1;
+}
+</style>

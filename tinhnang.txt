@@ -1,0 +1,464 @@
+# ComputerPOS Pro - Phần Mềm Bán Máy Tính Để Bàn & Linh Kiện
+
+## 🏢 TỔNG QUAN HỆ THỐNG
+
+### Kiến Trúc Tổng Thể
+- **Frontend**: Astro với TypeScript, Tailwind CSS
+- **Backend**: Node.js với Cloudflare Workers
+- **Database**: PostgreSQL với Redis caching
+- **Cloud**: Cloudflare ecosystem free 100% D1 R2
+- **Tiền tệ**: Chỉ VND (Việt Nam Đồng)
+- **Ngôn ngữ**: Tiếng Việt
+- **Platform**: Website và Mobile App
+sử dụng free 100% các gói của cloudflare
+
+✅ Phù Hợp 100% với Cloudflare Free
+🏗️ Kiến Trúc Tối Ưu:
+
+Astro Static Pages: Tận dụng static hosting miễn phí
+Cloudflare Workers: API backend (100k requests/day)
+D1 Database: SQLite miễn phí (5GB)
+KV Storage: Cache miễn phí (100k reads/day)
+R2 Storage: File storage (10GB/month)
+
+💰 Không Tốn Phí:
+
+Pages Hosting: Unlimited static requests
+Domain: Có thể dùng subdomain miễn phí
+SSL: Miễn phí tự động
+CDN: Global CDN miễn phí
+Analytics: Web analytics miễn phí
+
+🚀 Deployment Workflow:
+
+Push to GitHub: Commit code lên GitHub
+Auto Deploy: Cloudflare Pages tự động deploy
+Workers Deploy: wrangler deploy cho API
+Database Setup: wrangler d1 create cho database
+
+📊 Resource Management:
+
+Static First: Tối đa static pages, tối thiểu API calls
+Smart Caching: Sử dụng KV store cho cache
+Local Storage: Client-side state management
+Lazy Loading: Chỉ load khi cần thiết
+
+🔧 Config Files Quan Trọng:
+
+wrangler.toml: Cloudflare Workers config
+astro.config.mjs: Astro + Cloudflare adapter
+package.json: Dependencies tối ưu
+.env.example: Environment variables
+
+Cấu trúc này đảm bảo bạn có thể chạy một POS system đầy đủ tính năng mà hoàn toàn miễn phí trên Cloudflare!
+
+---
+
+## 🖥️ QUẢN LY SẢN PHẨM CHUYÊN BIỆT
+
+### 1. 💻 Máy Tính Để Bàn (Desktop PC)
+#### Danh Mục Máy Tính Để Bàn
+- **PC Gaming**: Máy chơi game cao cấp
+- **PC Văn Phòng**: Máy làm việc, học tập
+- **PC Đồ Họa**: Máy thiết kế, render
+
+#### Thông Tin Chi Tiết PC
+- **CPU**: Loại chip, tốc độ, số nhân
+- **Mainboard**: Chipset, socket, khe mở rộng
+- **RAM**: Dung lượng, tốc độ, loại DDR
+- **Ổ cứng**: SSD, HDD, dung lượng, tốc độ
+- **VGA**: Card đồ họa, VRAM, hiệu năng
+- **PSU**: Nguồn máy tính, công suất
+- **Case**: Vỏ máy, kích thước, màu sắc
+- **Cooling**: Hệ thống tản nhiệt
+- **Bảo hành**: Thời gian, điều kiện
+- **Giá thành**: Giá bán, giá nhập, lợi nhuận
+
+### 2. 🔧 Linh Kiện Máy Tính
+#### CPU (Bộ Vi Xử Lý)
+- **Intel**: Core i3, i5, i7, i9 các thế hệ
+- **AMD**: Ryzen 3, 5, 7, 9 các series
+- **Thông số**: Số nhân, tốc độ base/boost
+- **Socket**: LGA, AM4, AM5
+- **TDP**: Công suất tiêu thụ
+- **Tích hợp**: GPU tích hợp có/không
+- **Overclock**: Hỗ trợ ép xung
+- **Giá**: Theo từng model cụ thể
+
+#### Mainboard (Bo Mạch Chủ)
+- **Intel Chipset**: B, H, Z series
+- **AMD Chipset**: A, B, X series
+- **Form Factor**: ATX, Micro-ATX, Mini-ITX
+- **Socket**: Tương thích CPU
+- **RAM Slots**: Số khe, tốc độ tối đa
+- **Expansion**: PCIe slots, M.2 slots
+- **I/O Ports**: USB, Audio, Network
+- **Features**: WiFi, Bluetooth, RGB
+- **Overclocking**: Hỗ trợ ép xung
+
+#### RAM (Bộ Nhớ)
+- **Loại**: DDR4, DDR5
+- **Dung lượng**: 4GB, 8GB, 16GB, 32GB, 64GB
+- **Tốc độ**: 2400, 2666, 3200, 3600, 4000MHz+
+- **Timing**: CL, tRCD, tRP, tRAS
+- **Kit**: Single, Dual, Quad channel
+- **RGB**: Có/không đèn LED
+- **Profile**: JEDEC, XMP, DOCP
+- **Thương hiệu**: Corsair, G.Skill, Kingston...
+
+#### Ổ Cứng (Storage)
+##### SSD (Solid State Drive)
+- **Giao tiếp**: SATA 3, M.2 NVMe
+- **Dung lượng**: 120GB, 240GB, 480GB, 1TB, 2TB+
+- **Tốc độ đọc/ghi**: MB/s
+- **TBW**: Tuổi thọ ghi
+- **Form Factor**: 2.5", M.2 2280
+- **Controller**: Loại chip điều khiển
+- **NAND**: TLC, QLC, MLC
+
+##### HDD (Hard Disk Drive)
+- **Dung lượng**: 500GB, 1TB, 2TB, 4TB+
+- **Tốc độ quay**: 5400RPM, 7200RPM
+- **Cache**: 32MB, 64MB, 128MB, 256MB
+- **Giao tiếp**: SATA 3
+- **Form Factor**: 3.5", 2.5"
+- **Ứng dụng**: Desktop, Surveillance, Enterprise
+
+#### VGA (Card Đồ Họa)
+##### NVIDIA GeForce
+- **RTX 40 Series**: RTX 4060, 4070, 4080, 4090
+- **RTX 30 Series**: RTX 3050, 3060, 3070, 3080
+- **GTX 16 Series**: GTX 1650, 1660 Super
+- **VRAM**: 4GB, 6GB, 8GB, 12GB, 16GB, 24GB
+- **Memory Type**: GDDR6, GDDR6X
+- **TDP**: Công suất tiêu thụ
+
+##### AMD Radeon
+- **RX 7000 Series**: RX 7600, 7700, 7800, 7900
+- **RX 6000 Series**: RX 6500, 6600, 6700, 6800
+- **VRAM**: 4GB, 8GB, 12GB, 16GB
+- **Memory Type**: GDDR6
+- **Features**: Ray Tracing, FSR
+
+#### PSU (Nguồn Máy Tính)
+- **Công suất**: 450W, 550W, 650W, 750W, 850W+
+- **Hiệu suất**: 80+ Bronze, Silver, Gold, Platinum
+- **Modular**: Non-modular, Semi-modular, Full-modular
+- **Connector**: 24-pin, 8-pin CPU, PCIe 6+2
+- **Fan Size**: 120mm, 140mm
+- **Bảo hành**: 3-10 năm
+- **Thương hiệu**: Corsair, Seasonic, EVGA...
+
+#### Case (Vỏ Máy Tính)
+- **Form Factor**: Full Tower, Mid Tower, Mini-ITX
+- **Chất liệu**: Thép, nhôm, kính cường lực
+- **Màu sắc**: Đen, trắng, xám, RGB
+- **Expansion Slots**: 7, 8, 9 slots
+- **Drive Bays**: 2.5", 3.5" bays
+- **Front I/O**: USB, Audio ports
+- **Airflow**: Thiết kế luồng khí
+- **Cable Management**: Quản lý dây cáp
+
+#### Cooling (Tản Nhiệt)
+##### Air Cooling
+- **CPU Cooler**: Tower, Low-profile
+- **Fan Size**: 120mm, 140mm
+- **TDP Rating**: Hỗ trợ CPU TDP
+- **Socket**: Intel, AMD compatibility
+- **RGB**: Có/không đèn
+
+##### Case Fans
+- **Size**: 120mm, 140mm, 200mm
+- **RPM**: Tốc độ quay
+- **Airflow**: CFM
+- **Noise Level**: dBA
+- **Connector**: 3-pin, 4-pin PWM
+
+### 3. 🖱️ Thiết Bị Ngoại Vi
+#### Bàn Phím (Keyboard)
+- **Loại**: Cơ, màng, hybrid
+- **Switch**: Cherry MX, Gateron, Kailh
+- **Layout**: Full-size, TKL, 60%, 65%
+- **Keycap**: ABS, PBT
+- **Backlight**: RGB, single color
+- **Connection**: USB, wireless
+
+#### Chuột (Mouse)
+- **Gaming Mouse**: High DPI, gaming sensor
+- **Office Mouse**: Ergonomic, wireless
+- **DPI**: 800-25000+ DPI
+- **Sensor**: Optical, laser
+- **Connection**: USB, wireless, bluetooth
+- **RGB**: Có/không đèn
+
+#### Màn Hình (Monitor)
+- **Kích thước**: 21.5", 24", 27", 32", 34"
+- **Độ phân giải**: 1080p, 1440p, 4K
+- **Panel**: IPS, VA, TN
+- **Refresh Rate**: 60Hz, 144Hz, 165Hz, 240Hz
+- **Response Time**: 1ms, 5ms
+- **HDR**: HDR10, HDR400, HDR600
+- **G-Sync/FreeSync**: Adaptive sync
+
+#### Loa (Speakers)
+- **Loại**: 2.0, 2.1, 5.1 system
+- **Công suất**: RMS wattage
+- **Kết nối**: 3.5mm, USB, Bluetooth
+- **RGB**: Có/không đèn led
+
+### 4. 🌐 Networking & Connectivity
+#### Card Mạng
+- **Ethernet**: Gigabit, 2.5G, 10G
+- **WiFi**: WiFi 6, WiFi 6E, WiFi 7
+- **Bluetooth**: 5.0, 5.1, 5.2, 5.3
+
+#### Webcam & Audio
+- **Webcam**: 720p, 1080p, 4K
+- **Microphone**: USB, XLR
+- **Headset**: Gaming, office use
+
+---
+
+## 💰 HỆ THỐNG BÁN HÀNG CHUYÊN BIỆT
+
+### 1. 🛒 POS Dành Cho Cửa Hàng Máy Tính
+#### Tính Năng Bán Hàng
+- **Tìm kiếm nhanh**: Tìm theo tên, model, brand
+- **So sánh sản phẩm**: So sánh cấu hình, giá
+- **Tương thích**: Kiểm tra tương thích linh kiện
+- **Gợi ý combo**: Đề xuất bộ linh kiện phù hợp
+- **Tính giá build**: Tổng giá build PC
+- **Kiểm tra tồn kho**: Trạng thái có hàng
+- **Đặt hàng trước**: Pre-order sản phẩm mới
+- **Bảo hành**: Thông tin bảo hành chi tiết
+
+#### Calculator Build PC
+- **Chọn linh kiện**: Thêm từng linh kiện
+- **Kiểm tra tương thích**: Socket, PSU, clearance
+- **Tính tổng công suất**: Yêu cầu PSU tối thiểu
+- **Bottleneck check**: Cảnh báo nghẽn cổ chai
+- **Benchmark estimate**: Dự đoán hiệu năng
+- **Giá tổng**: Tính toán giá thành
+- **In quotation**: In báo giá chi tiết
+
+#### Phương Thức Thanh Toán (VND)
+- **Tiền mặt**: Thanh toán tại cửa hàng
+- **Chuyển khoản**: Ngân hàng Việt Nam
+- **QR Code**: VietQR, MoMo, ZaloPay
+- **Thẻ ATM**: Thẻ nội địa
+- **Trả góp**: Qua thẻ tín dụng, Home Credit
+- **Đặt cọc**: Đặt cọc giữ hàng
+
+### 2. 📦 Quản Lý Kho Chuyên Biệt
+#### Phân Loại Tồn Kho
+- **Theo danh mục**: CPU, VGA, RAM, Storage...
+- **Theo thương hiệu**: Intel, AMD, NVIDIA...
+- **Theo tình trạng**: Mới, refurbished, cũ
+- **Theo nguồn**: Chính hãng, xách tay, bulk
+- **Theo bảo hành**: Local, international warranty
+
+#### Theo Dõi Linh Kiện
+- **Serial number**: Mã serial riêng biệt
+- **Batch tracking**: Theo dõi lô hàng
+- **Warranty tracking**: Theo dõi bảo hành
+- **Supplier tracking**: Nhà cung cấp
+- **Price history**: Lịch sử giá
+- **Stock alert**: Cảnh báo hết hàng
+- **Slow moving**: Hàng ế ẩm
+- **Fast moving**: Hàng bán chạy
+
+### 3. 👥 Quản Lý Khách Hàng
+#### Phân Loại Khách Hàng
+- **Gamer**: Khách mua PC gaming
+- **Office**: Khách doanh nghiệp
+- **Content Creator**: Người làm nội dung
+- **Student**: Học sinh, sinh viên
+- **Builder**: Thợ lắp ráp
+- **Retailer**: Đại lý bán lẻ
+- **Cafe Internet**: Quán net
+
+#### Lịch Sử Mua Hàng
+- **Build history**: Lịch sử build PC
+- **Warranty claims**: Lịch sử bảo hành
+- **Upgrade path**: Lộ trình nâng cấp
+- **Preference**: Sở thích thương hiệu
+- **Budget range**: Mức giá quen mua
+
+---
+
+## 📊 TÍNH NĂNG PHÂN TÍCH CHUYÊN BIỆT
+
+### 1. 📈 Phân Tích Bán Hàng
+#### Báo Cáo Theo Danh Mục
+- **CPU Sales**: Doanh số bán CPU
+- **VGA Performance**: Hiệu quả bán VGA
+- **Gaming Builds**: PC gaming bán ra
+- **Office Builds**: PC văn phòng
+- **Custom Builds**: Build theo yêu cầu
+- **Component vs Complete**: Linh kiện vs máy hoàn chình
+
+#### Phân Tích Thương Hiệu
+- **Intel vs AMD**: So sánh doanh số
+- **NVIDIA vs AMD**: Card đồ họa
+- **Memory Brands**: Thương hiệu RAM
+- **Storage Brands**: Thương hiệu ổ cứng
+- **Motherboard Brands**: Thương hiệu bo mạch chủ
+
+### 2. 🎯 Market Intelligence
+#### Trend Analysis
+- **Gaming Trends**: Xu hướng gaming
+- **Price Trends**: Biến động giá
+- **Technology Trends**: Công nghệ mới
+- **Seasonal Patterns**: Mùa vụ bán hàng
+- **Competition Analysis**: Phân tích đối thủ
+
+#### Customer Insights
+- **Build Preferences**: Sở thích build
+- **Budget Analysis**: Phân tích ngân sách
+- **Upgrade Cycles**: Chu kỳ nâng cấp
+- **Brand Loyalty**: Trung thành thương hiệu
+
+---
+
+## 🔧 TÍNH NĂNG HỖ TRỢ KỸ THUẬT
+
+### 1. 🛠️ Build Assistant
+#### Compatibility Checker
+- **Socket Match**: Kiểm tra socket CPU/Mainboard
+- **RAM Compatibility**: Tương thích RAM/Mainboard
+- **PSU Calculator**: Tính toán nguồn cần thiết
+- **Case Clearance**: Kiểm tra kích thước case
+- **Cooling Requirements**: Yêu cầu tản nhiệt
+
+#### Performance Estimator
+- **Gaming Performance**: FPS dự kiến
+- **Workstation Performance**: Hiệu năng làm việc
+- **Power Consumption**: Tiêu thụ điện
+- **Noise Level**: Mức độ ồn
+- **Temperature Estimate**: Nhiệt độ dự kiến
+
+### 2. 🔍 Product Database
+#### Specification Database
+- **Detailed Specs**: Thông số kỹ thuật chi tiết
+- **Comparison Tools**: Công cụ so sánh
+- **Review Integration**: Tích hợp đánh giá
+- **Benchmark Data**: Dữ liệu benchmark
+- **Compatibility Lists**: Danh sách tương thích
+
+#### Technical Resources
+- **Installation Guides**: Hướng dẫn lắp đặt
+- **Troubleshooting**: Khắc phục sự cố
+- **Driver Downloads**: Link download driver
+- **Manual Downloads**: Tài liệu hướng dẫn
+- **Video Tutorials**: Video hướng dẫn
+
+---
+
+## 🏪 TÍNH NĂNG CỬA HÀNG
+
+### 1. 🏢 Quản Lý Cửa Hàng
+#### Store Layout
+- **Display Areas**: Khu vực trưng bày
+- **Storage Areas**: Khu vực kho hàng
+- **Testing Stations**: Bàn test linh kiện
+- **Assembly Area**: Khu vực lắp ráp
+- **Customer Service**: Khu vực tư vấn
+
+#### Staff Management
+- **Technical Staff**: Nhân viên kỹ thuật
+- **Sales Staff**: Nhân viên bán hàng
+- **Assembly Technicians**: Thợ lắp ráp
+- **Customer Service**: Nhân viên hỗ trợ
+- **Training Programs**: Chương trình đào tạo
+
+### 2. 📱 Mobile App
+#### Customer App
+- **Product Catalog**: Danh mục sản phẩm
+- **Build Configurator**: Cấu hình build PC
+- **Price Checker**: Kiểm tra giá
+- **Store Locator**: Tìm cửa hàng
+- **Order Tracking**: Theo dõi đơn hàng
+
+#### Staff App
+- **Inventory Check**: Kiểm tra tồn kho
+- **Price Lookup**: Tra cứu giá
+- **Customer Info**: Thông tin khách hàng
+- **Sales Processing**: Xử lý bán hàng
+- **Tech Support**: Hỗ trợ kỹ thuật
+
+---
+
+## 🔒 BẢO MẬT & TUÂN THỦ
+
+### 1. 🛡️ Bảo Mật Hệ Thống
+- **Data Encryption**: Mã hóa dữ liệu
+- **Access Control**: Kiểm soát truy cập
+- **Audit Trails**: Nhật ký kiểm toán
+- **Backup Systems**: Hệ thống sao lưu
+- **Security Monitoring**: Giám sát bảo mật
+
+### 2. ⚖️ Tuân Thủ Việt Nam
+- **VAT Compliance**: Tuân thủ thuế VAT
+- **Invoice Standards**: Tiêu chuẩn hóa đơn VN
+- **Consumer Protection**: Bảo vệ người tiêu dùng
+- **Warranty Laws**: Luật bảo hành VN
+- **Import Regulations**: Quy định nhập khẩu
+
+---
+
+## 🚀 TÍNH NĂNG ĐẶC BIỆT
+
+### 1. 🎮 Gaming Focus
+- **Gaming PC Builds**: Build PC gaming chuyên biệt
+- **VR Ready Configs**: Cấu hình VR
+- **Streaming Setups**: Thiết lập streaming
+- **Esports Configs**: Cấu hình esports
+- **RGB Coordination**: Phối hợp RGB
+
+### 2. 💼 Business Solutions
+- **Office PC Configs**: Cấu hình văn phòng
+- **Server Builds**: Build server
+- **Workstation Setups**: Máy trạm làm việc
+- **Bulk Orders**: Đơn hàng số lượng lớn
+- **Corporate Accounts**: Tài khoản doanh nghiệp
+
+### 3. 🔄 After-Sales Service
+- **Warranty Management**: Quản lý bảo hành
+- **RMA Processing**: Xử lý đổi trả
+- **Upgrade Services**: Dịch vụ nâng cấp
+- **Technical Support**: Hỗ trợ kỹ thuật
+- **Maintenance Services**: Dịch vụ bảo trì
+
+---
+
+## 📱 MOBILE & WEB PLATFORM
+
+### 1. 🌐 Website Features
+- **Product Showcase**: Trưng bày sản phẩm
+- **Build Configurator**: Công cụ cấu hình
+- **Price Comparison**: So sánh giá
+- **Technical Specs**: Thông số kỹ thuật
+- **Customer Reviews**: Đánh giá khách hàng
+
+### 2. 📱 Mobile Optimization
+- **Responsive Design**: Thiết kế đáp ứng
+- **Touch Interface**: Giao diện cảm ứng
+- **Mobile Payments**: Thanh toán di động
+- **Push Notifications**: Thông báo đẩy
+- **Offline Catalog**: Danh mục offline
+
+---
+
+## 🎯 KẾT LUẬN
+
+ComputerPOS Pro là hệ thống POS chuyên biệt được thiết kế riêng cho cửa hàng bán máy tính để bàn và linh kiện tại Việt Nam. Với những tính năng chuyên sâu về:
+
+### Điểm Nổi Bật:
+- **Chuyên biệt**: Tập trung 100% vào máy tính để bàn và linh kiện
+- **Tương thích**: Kiểm tra tương thích linh kiện tự động
+- **Build Assistant**: Công cụ hỗ trợ build PC thông minh
+- **Quản lý kỹ thuật**: Theo dõi bảo hành, serial number
+- **Thị trường VN**: Tối ưu cho thị trường Việt Nam
+- **Astro Framework**: Hiệu năng cao, tải nhanh
+
+Hệ thống giúp cửa hàng máy tính tối ưu hóa quy trình bán hàng, quản lý kho hàng chuyên biệt và cung cấp trải nghiệm tốt nhất cho khách hàng yêu thích máy tính để bàn.

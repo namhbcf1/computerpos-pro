@@ -1,0 +1,308 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import DashboardLayout from '../../layouts/DashboardLayout.astro';
+import Card from '../../components/ui/Card.astro';
+import Button from '../../components/ui/Button.astro';
+---
+
+<BaseLayout title="Sao lưu & Khôi phục - ComputerPOS Pro">
+  <DashboardLayout>
+    <main class="p-6 space-y-6">
+      <!-- Header -->
+      <div class="flex justify-between items-center">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">Sao lưu & Khôi phục</h1>
+          <p class="text-gray-600 mt-1">Quản lý sao lưu dữ liệu hệ thống</p>
+        </div>
+        <div class="flex space-x-3">
+          <Button href="/settings" variant="secondary">Quay lại</Button>
+          <Button variant="primary" id="create-backup">Tạo sao lưu ngay</Button>
+        </div>
+      </div>
+
+      <!-- Backup Status -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Sao lưu cuối</dt>
+                  <dd class="text-lg font-medium text-gray-900">15/12/2024</dd>
+                  <dd class="text-sm text-green-600">Thành công</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Kích thước</dt>
+                  <dd class="text-lg font-medium text-gray-900">2.4 GB</dd>
+                  <dd class="text-sm text-blue-600">Tổng dữ liệu</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Tự động</dt>
+                  <dd class="text-lg font-medium text-gray-900">Hàng ngày</dd>
+                  <dd class="text-sm text-purple-600">02:00 AM</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      <!-- Backup Settings -->
+      <Card>
+        <div class="p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Cài đặt sao lưu tự động</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Tần suất sao lưu</label>
+                <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <option value="daily" selected>Hàng ngày</option>
+                  <option value="weekly">Hàng tuần</option>
+                  <option value="monthly">Hàng tháng</option>
+                  <option value="manual">Chỉ thủ công</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Thời gian sao lưu</label>
+                <input
+                  type="time"
+                  value="02:00"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Số bản sao lưu giữ lại</label>
+                <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <option value="7" selected>7 bản</option>
+                  <option value="14">14 bản</option>
+                  <option value="30">30 bản</option>
+                  <option value="unlimited">Không giới hạn</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-3">Dữ liệu sao lưu</label>
+                <div class="space-y-2">
+                  <label class="flex items-center">
+                    <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500" checked>
+                    <span class="ml-2 text-sm text-gray-700">Cơ sở dữ liệu</span>
+                  </label>
+                  <label class="flex items-center">
+                    <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500" checked>
+                    <span class="ml-2 text-sm text-gray-700">Hình ảnh sản phẩm</span>
+                  </label>
+                  <label class="flex items-center">
+                    <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500" checked>
+                    <span class="ml-2 text-sm text-gray-700">Cài đặt hệ thống</span>
+                  </label>
+                  <label class="flex items-center">
+                    <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                    <span class="ml-2 text-sm text-gray-700">Log files</span>
+                  </label>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Vị trí lưu trữ</label>
+                <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <option value="local" selected>Máy chủ cục bộ</option>
+                  <option value="cloud">Cloud Storage</option>
+                  <option value="ftp">FTP Server</option>
+                  <option value="network">Network Drive</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-6 flex justify-end">
+            <Button variant="primary" id="save-backup-settings">Lưu cài đặt</Button>
+          </div>
+        </div>
+      </Card>
+
+      <!-- Backup History -->
+      <Card>
+        <div class="overflow-hidden">
+          <div class="px-6 py-4 border-b border-gray-200">
+            <h3 class="text-lg font-medium text-gray-900">Lịch sử sao lưu</h3>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Thời gian</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Loại</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kích thước</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Trạng thái</th>
+                  <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">15/12/2024 02:00</td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                      Tự động
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2.4 GB</td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      Thành công
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <div class="flex justify-end space-x-2">
+                      <button class="text-blue-600 hover:text-blue-900">Tải về</button>
+                      <button class="text-green-600 hover:text-green-900">Khôi phục</button>
+                      <button class="text-red-600 hover:text-red-900">Xóa</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">14/12/2024 02:00</td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                      Tự động
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2.3 GB</td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      Thành công
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <div class="flex justify-end space-x-2">
+                      <button class="text-blue-600 hover:text-blue-900">Tải về</button>
+                      <button class="text-green-600 hover:text-green-900">Khôi phục</button>
+                      <button class="text-red-600 hover:text-red-900">Xóa</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">13/12/2024 14:30</td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                      Thủ công
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2.3 GB</td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      Thành công
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <div class="flex justify-end space-x-2">
+                      <button class="text-blue-600 hover:text-blue-900">Tải về</button>
+                      <button class="text-green-600 hover:text-green-900">Khôi phục</button>
+                      <button class="text-red-600 hover:text-red-900">Xóa</button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </Card>
+    </main>
+  </DashboardLayout>
+</BaseLayout>
+
+<script>
+  // Backup functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    // Create backup
+    const createBackupBtn = document.getElementById('create-backup');
+    createBackupBtn?.addEventListener('click', function() {
+      const originalText = createBackupBtn.innerHTML;
+      createBackupBtn.disabled = true;
+      createBackupBtn.innerHTML = `
+        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        Đang sao lưu...
+      `;
+
+      setTimeout(() => {
+        createBackupBtn.disabled = false;
+        createBackupBtn.innerHTML = originalText;
+        alert('Sao lưu đã được tạo thành công!');
+      }, 5000);
+    });
+
+    // Save settings
+    const saveSettingsBtn = document.getElementById('save-backup-settings');
+    saveSettingsBtn?.addEventListener('click', function() {
+      alert('Cài đặt sao lưu đã được lưu thành công!');
+    });
+
+    // Table actions
+    document.addEventListener('click', function(e) {
+      const buttonText = e.target.textContent;
+
+      if (buttonText === 'Tải về') {
+        alert('Đang tải file sao lưu...');
+      }
+
+      if (buttonText === 'Khôi phục') {
+        if (confirm('Bạn có chắc muốn khôi phục từ bản sao lưu này? Dữ liệu hiện tại sẽ bị ghi đè.')) {
+          alert('Đang khôi phục dữ liệu...');
+        }
+      }
+
+      if (buttonText === 'Xóa') {
+        if (confirm('Bạn có chắc muốn xóa bản sao lưu này?')) {
+          const row = e.target.closest('tr');
+          row.remove();
+          alert('Bản sao lưu đã được xóa!');
+        }
+      }
+    });
+  });
+</script>

@@ -1,0 +1,44 @@
+{
+  "name": "computerpos-pro",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "ComputerPOS Pro - Phần Mềm Bán Máy Tính Để Bàn & Linh Kiện",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "wrangler pages dev ./dist",
+    "astro": "astro",
+    "deploy:frontend": "npm run build && wrangler pages deploy ./dist",
+    "deploy:workers": "wrangler deploy",
+    "db:create": "wrangler d1 create computerpos_db",
+    "db:migrate": "wrangler d1 migrations apply computerpos_db --env production",
+    "db:seed": "wrangler d1 execute computerpos_db --file=./schemas/seed.sql --env production",
+    "typecheck": "astro check"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.8.0",
+    "@astrojs/cloudflare": "^10.0.0",
+    "@astrojs/react": "^4.3.0",
+    "@astrojs/tailwind": "^5.1.0",
+    "@headlessui/react": "^2.2.4",
+    "@heroicons/react": "^2.2.0",
+    "animate.css": "^4.1.1",
+    "aos": "^2.3.4",
+    "apexcharts": "^5.2.0",
+    "astro": "^4.11.0",
+    "chart.js": "^4.5.0",
+    "framer-motion": "^12.23.6",
+    "lucide-react": "^0.525.0",
+    "react": "^19.1.0",
+    "react-apexcharts": "^1.7.0",
+    "react-chartjs-2": "^5.3.0",
+    "react-dom": "^19.1.0",
+    "tailwindcss": "^3.4.0",
+    "typescript": "^5.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "wrangler": "^3.60.0"
+  }
+}

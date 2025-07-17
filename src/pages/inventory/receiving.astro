@@ -1,0 +1,990 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import DashboardLayout from '../../layouts/DashboardLayout.astro';
+import Card from '../../components/ui/Card.astro';
+import Button from '../../components/ui/Button.astro';
+---
+
+<BaseLayout title="Inventory Receiving - ComputerPOS Pro">
+  <DashboardLayout>
+    <main class="p-6 space-y-6">
+      <!-- Header -->
+      <div class="flex justify-between items-center">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">Inventory Receiving</h1>
+          <p class="text-gray-600 mt-1">Quản lý nhập kho và tiếp nhận hàng hóa</p>
+        </div>
+        <div class="flex space-x-3">
+          <Button href="/inventory" variant="secondary">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Quay lại Kho hàng
+          </Button>
+          <Button variant="primary" onclick="createNewReceiving()">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            Tạo phiếu nhập kho
+          </Button>
+        </div>
+      </div>
+
+      <!-- Receiving Stats -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Tổng phiếu nhập</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="total-receivings">0</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-green-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Đã hoàn thành</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="completed-receivings">0</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-yellow-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Đang xử lý</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="pending-receivings">0</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-orange-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Tổng giá trị</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="total-value">0₫</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      <!-- Filters and Search -->
+      <Card>
+        <div class="p-6">
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div>
+              <label class="form-label">Tìm kiếm</label>
+              <input type="text" class="form-input" id="search-input" placeholder="Mã phiếu, nhà cung cấp...">
+            </div>
+            <div>
+              <label class="form-label">Trạng thái</label>
+              <select class="form-select" id="status-filter">
+                <option value="all">Tất cả</option>
+                <option value="draft">Nháp</option>
+                <option value="pending">Chờ nhận</option>
+                <option value="receiving">Đang nhận</option>
+                <option value="completed">Hoàn thành</option>
+                <option value="cancelled">Đã hủy</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label">Nhà cung cấp</label>
+              <select class="form-select" id="supplier-filter">
+                <option value="all">Tất cả</option>
+                <option value="supplier1">ASUS Vietnam</option>
+                <option value="supplier2">MSI Technology</option>
+                <option value="supplier3">Intel Vietnam</option>
+                <option value="supplier4">Samsung Electronics</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label">Khoảng thời gian</label>
+              <select class="form-select" id="date-filter">
+                <option value="7">7 ngày qua</option>
+                <option value="30">30 ngày qua</option>
+                <option value="90">3 tháng qua</option>
+                <option value="365">1 năm qua</option>
+                <option value="custom">Tùy chọn</option>
+              </select>
+            </div>
+          </div>
+          <div id="custom-date-range" class="hidden mt-4 grid grid-cols-2 gap-4">
+            <div>
+              <label class="form-label">Từ ngày</label>
+              <input type="date" class="form-input" id="start-date">
+            </div>
+            <div>
+              <label class="form-label">Đến ngày</label>
+              <input type="date" class="form-input" id="end-date">
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      <!-- Receivings List -->
+      <Card>
+        <div class="p-6">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-lg font-medium text-gray-900">Danh sách phiếu nhập kho</h2>
+            <div class="flex space-x-3">
+              <Button onclick="exportReceivings()" variant="secondary">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Xuất báo cáo
+              </Button>
+              <Button onclick="refreshReceivings()" variant="secondary">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                Làm mới
+              </Button>
+            </div>
+          </div>
+
+          <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+            <table class="min-w-full divide-y divide-gray-300">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mã phiếu</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nhà cung cấp</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Số lượng SP</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tổng giá trị</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Trạng thái</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ngày tạo</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Người tạo</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200" id="receivings-tbody">
+                <!-- Receivings will be populated here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </Card>
+    </main>
+
+    <!-- Create Receiving Modal -->
+    <div id="receiving-modal" class="modal-overlay hidden">
+      <div class="modal-content max-w-5xl">
+        <div class="modal-header">
+          <h3 class="modal-title">Tạo phiếu nhập kho</h3>
+          <button class="modal-close" onclick="closeModal('receiving-modal')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="space-y-6">
+            <!-- Basic Information -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label class="form-label">Mã phiếu nhập *</label>
+                <input type="text" class="form-input" id="receiving-code" placeholder="REC-001" readonly>
+              </div>
+              <div>
+                <label class="form-label">Nhà cung cấp *</label>
+                <select class="form-select" id="receiving-supplier">
+                  <option value="">Chọn nhà cung cấp...</option>
+                  <option value="supplier1">ASUS Vietnam</option>
+                  <option value="supplier2">MSI Technology</option>
+                  <option value="supplier3">Intel Vietnam</option>
+                  <option value="supplier4">Samsung Electronics</option>
+                </select>
+              </div>
+              <div>
+                <label class="form-label">Ngày dự kiến nhận</label>
+                <input type="date" class="form-input" id="expected-date">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="form-label">Số đơn đặt hàng</label>
+                <input type="text" class="form-input" id="purchase-order" placeholder="PO-001">
+              </div>
+              <div>
+                <label class="form-label">Ghi chú</label>
+                <input type="text" class="form-input" id="receiving-notes" placeholder="Ghi chú về phiếu nhập...">
+              </div>
+            </div>
+
+            <!-- Products Section -->
+            <div>
+              <div class="flex justify-between items-center mb-4">
+                <h4 class="text-md font-medium text-gray-900">Danh sách sản phẩm</h4>
+                <Button onclick="addProductLine()" variant="primary" class="text-sm">
+                  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                  </svg>
+                  Thêm sản phẩm
+                </Button>
+              </div>
+
+              <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-300">
+                  <thead class="bg-gray-50">
+                    <tr>
+                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Sản phẩm</th>
+                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Số lượng</th>
+                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Đơn giá</th>
+                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Thành tiền</th>
+                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Thao tác</th>
+                    </tr>
+                  </thead>
+                  <tbody id="product-lines" class="bg-white divide-y divide-gray-200">
+                    <!-- Product lines will be populated here -->
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="mt-4 flex justify-end">
+                <div class="text-lg font-semibold">
+                  Tổng cộng: <span id="total-amount">0₫</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('receiving-modal')">Hủy</button>
+          <button type="button" class="btn btn-primary" onclick="saveReceiving()">Tạo phiếu nhập</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- View Receiving Modal -->
+    <div id="view-receiving-modal" class="modal-overlay hidden">
+      <div class="modal-content max-w-4xl">
+        <div class="modal-header">
+          <h3 class="modal-title" id="view-receiving-title">Chi tiết phiếu nhập</h3>
+          <button class="modal-close" onclick="closeModal('view-receiving-modal')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div id="view-receiving-content">
+            <!-- Receiving details will be populated here -->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('view-receiving-modal')">Đóng</button>
+          <button type="button" class="btn btn-success" id="process-btn" onclick="processReceiving()">Xử lý nhập kho</button>
+          <button type="button" class="btn btn-primary" id="complete-btn" onclick="completeReceiving()">Hoàn thành</button>
+        </div>
+      </div>
+    </div>
+  </DashboardLayout>
+</BaseLayout>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  let receivings = [];
+  let products = [];
+  let productLines = [];
+  let currentViewingReceiving = null;
+
+  // Load sample data
+  function loadSampleData() {
+    receivings = JSON.parse(localStorage.getItem('inventoryReceivings') || '[]');
+    products = JSON.parse(localStorage.getItem('products') || '[]');
+
+    // Initialize with sample data if empty
+    if (receivings.length === 0) {
+      receivings = [
+        {
+          id: 'rec_1',
+          code: 'REC-001',
+          supplier: 'ASUS Vietnam',
+          purchaseOrder: 'PO-001',
+          expectedDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+          status: 'pending',
+          notes: 'Đơn hàng laptop gaming cho quý 4',
+          items: [
+            { productName: 'ASUS ROG Strix G15', quantity: 10, unitPrice: 25000000, total: 250000000 },
+            { productName: 'ASUS TUF Gaming A15', quantity: 15, unitPrice: 18000000, total: 270000000 }
+          ],
+          totalValue: 520000000,
+          createdBy: 'Nguyễn Văn A',
+          createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+          receivedAt: null,
+          receivedBy: null
+        },
+        {
+          id: 'rec_2',
+          code: 'REC-002',
+          supplier: 'Intel Vietnam',
+          purchaseOrder: 'PO-002',
+          expectedDate: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+          status: 'receiving',
+          notes: 'CPU Intel thế hệ 13',
+          items: [
+            { productName: 'Intel Core i5-13400F', quantity: 50, unitPrice: 4500000, total: 225000000 },
+            { productName: 'Intel Core i7-13700KF', quantity: 30, unitPrice: 8500000, total: 255000000 }
+          ],
+          totalValue: 480000000,
+          createdBy: 'Trần Thị B',
+          createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+          receivedAt: null,
+          receivedBy: null
+        },
+        {
+          id: 'rec_3',
+          code: 'REC-003',
+          supplier: 'MSI Technology',
+          purchaseOrder: 'PO-003',
+          expectedDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+          status: 'completed',
+          notes: 'Card đồ họa MSI RTX series',
+          items: [
+            { productName: 'MSI RTX 4070 Gaming X', quantity: 20, unitPrice: 15000000, total: 300000000 },
+            { productName: 'MSI RTX 4060 Ti Gaming X', quantity: 25, unitPrice: 12000000, total: 300000000 }
+          ],
+          totalValue: 600000000,
+          createdBy: 'Lê Văn C',
+          createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+          receivedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+          receivedBy: 'Phạm Thị D'
+        },
+        {
+          id: 'rec_4',
+          code: 'REC-004',
+          supplier: 'Samsung Electronics',
+          purchaseOrder: 'PO-004',
+          expectedDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+          status: 'draft',
+          notes: 'SSD Samsung NVMe cho Q4',
+          items: [
+            { productName: 'Samsung 980 Pro 1TB', quantity: 100, unitPrice: 3200000, total: 320000000 },
+            { productName: 'Samsung 980 Pro 2TB', quantity: 50, unitPrice: 6000000, total: 300000000 }
+          ],
+          totalValue: 620000000,
+          createdBy: 'Hoàng Văn E',
+          createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+          receivedAt: null,
+          receivedBy: null
+        }
+      ];
+
+      products = [
+        { id: 'prod_1', name: 'ASUS ROG Strix G15', sku: 'LAP-ASUS-ROG-G15', price: 25000000 },
+        { id: 'prod_2', name: 'Intel Core i5-13400F', sku: 'CPU-I5-13400F', price: 4500000 },
+        { id: 'prod_3', name: 'MSI RTX 4070 Gaming X', sku: 'GPU-MSI-4070-GX', price: 15000000 },
+        { id: 'prod_4', name: 'Samsung 980 Pro 1TB', sku: 'SSD-SAM-980P-1TB', price: 3200000 },
+        { id: 'prod_5', name: 'Corsair Vengeance LPX 16GB', sku: 'RAM-COR-VEN-16GB', price: 1800000 }
+      ];
+
+      saveData();
+    }
+  }
+
+  function saveData() {
+    localStorage.setItem('inventoryReceivings', JSON.stringify(receivings));
+    localStorage.setItem('products', JSON.stringify(products));
+  }
+
+  function renderReceivings() {
+    const tbody = document.getElementById('receivings-tbody');
+    const searchTerm = document.getElementById('search-input').value.toLowerCase();
+    const statusFilter = document.getElementById('status-filter').value;
+    const supplierFilter = document.getElementById('supplier-filter').value;
+    const dateFilter = document.getElementById('date-filter').value;
+
+    let filteredReceivings = receivings.filter(receiving => {
+      const matchesSearch = receiving.code.toLowerCase().includes(searchTerm) ||
+                           receiving.supplier.toLowerCase().includes(searchTerm) ||
+                           receiving.purchaseOrder.toLowerCase().includes(searchTerm);
+      const matchesStatus = statusFilter === 'all' || receiving.status === statusFilter;
+      const matchesSupplier = supplierFilter === 'all' || receiving.supplier.includes(supplierFilter);
+      
+      let matchesDate = true;
+      if (dateFilter !== 'custom') {
+        const days = parseInt(dateFilter);
+        const cutoffDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+        matchesDate = new Date(receiving.createdAt) >= cutoffDate;
+      }
+
+      return matchesSearch && matchesStatus && matchesSupplier && matchesDate;
+    });
+
+    if (filteredReceivings.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="8" class="px-6 py-12 text-center text-gray-500">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <h3 class="mt-2 text-sm font-medium text-gray-900">Không tìm thấy phiếu nhập nào</h3>
+            <p class="mt-1 text-sm text-gray-500">Thử thay đổi bộ lọc hoặc tạo phiếu nhập mới.</p>
+          </td>
+        </tr>
+      `;
+      updateStats(filteredReceivings);
+      return;
+    }
+
+    let html = '';
+    filteredReceivings.forEach(receiving => {
+      const statusColors = {
+        draft: 'bg-gray-100 text-gray-800',
+        pending: 'bg-yellow-100 text-yellow-800',
+        receiving: 'bg-blue-100 text-blue-800',
+        completed: 'bg-green-100 text-green-800',
+        cancelled: 'bg-red-100 text-red-800'
+      };
+
+      const statusNames = {
+        draft: 'Nháp',
+        pending: 'Chờ nhận',
+        receiving: 'Đang nhận',
+        completed: 'Hoàn thành',
+        cancelled: 'Đã hủy'
+      };
+
+      html += `
+        <tr class="hover:bg-gray-50">
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${receiving.code}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${receiving.supplier}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${receiving.items.length}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatVND(receiving.totalValue)}</td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="px-2 py-1 text-xs font-medium rounded-full ${statusColors[receiving.status]}">${statusNames[receiving.status]}</span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            ${new Date(receiving.createdAt).toLocaleDateString('vi-VN')}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${receiving.createdBy}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+            <div class="flex space-x-2">
+              <button onclick="viewReceiving('${receiving.id}')" class="text-blue-600 hover:text-blue-900">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+              </button>
+              ${receiving.status === 'draft' ? `
+                <button onclick="editReceiving('${receiving.id}')" class="text-green-600 hover:text-green-900">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                </button>
+              ` : ''}
+              ${receiving.status !== 'completed' && receiving.status !== 'cancelled' ? `
+                <button onclick="deleteReceiving('${receiving.id}')" class="text-red-600 hover:text-red-900">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                </button>
+              ` : ''}
+            </div>
+          </td>
+        </tr>
+      `;
+    });
+
+    tbody.innerHTML = html;
+    updateStats(filteredReceivings);
+  }
+
+  function updateStats(filtered = receivings) {
+    const totalReceivings = filtered.length;
+    const completedReceivings = filtered.filter(r => r.status === 'completed').length;
+    const pendingReceivings = filtered.filter(r => r.status === 'pending' || r.status === 'receiving').length;
+    const totalValue = filtered.reduce((sum, r) => sum + r.totalValue, 0);
+
+    document.getElementById('total-receivings').textContent = totalReceivings;
+    document.getElementById('completed-receivings').textContent = completedReceivings;
+    document.getElementById('pending-receivings').textContent = pendingReceivings;
+    document.getElementById('total-value').textContent = formatVND(totalValue);
+  }
+
+  window.createNewReceiving = function() {
+    // Generate new receiving code
+    const receivingCount = receivings.length + 1;
+    document.getElementById('receiving-code').value = `REC-${receivingCount.toString().padStart(3, '0')}`;
+    
+    // Set expected date to tomorrow
+    const tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000);
+    document.getElementById('expected-date').value = tomorrow.toISOString().split('T')[0];
+    
+    // Reset form
+    document.getElementById('receiving-supplier').value = '';
+    document.getElementById('purchase-order').value = '';
+    document.getElementById('receiving-notes').value = '';
+    
+    // Reset product lines
+    productLines = [];
+    renderProductLines();
+    
+    document.getElementById('receiving-modal').classList.remove('hidden');
+  };
+
+  window.addProductLine = function() {
+    const line = {
+      id: Date.now(),
+      productName: '',
+      quantity: 0,
+      unitPrice: 0,
+      total: 0
+    };
+    productLines.push(line);
+    renderProductLines();
+  };
+
+  function renderProductLines() {
+    const tbody = document.getElementById('product-lines');
+    
+    if (productLines.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="5" class="px-4 py-8 text-center text-gray-500">
+            <p class="text-sm">Chưa có sản phẩm nào. Nhấn "Thêm sản phẩm" để bắt đầu.</p>
+          </td>
+        </tr>
+      `;
+      updateTotalAmount();
+      return;
+    }
+
+    let html = '';
+    productLines.forEach((line, index) => {
+      html += `
+        <tr>
+          <td class="px-4 py-2">
+            <select class="form-select text-sm" onchange="selectProduct(${index}, this.value)">
+              <option value="">Chọn sản phẩm...</option>
+              ${products.map(p => `<option value="${p.name}" ${line.productName === p.name ? 'selected' : ''}>${p.name}</option>`).join('')}
+            </select>
+          </td>
+          <td class="px-4 py-2">
+            <input type="number" class="form-input text-sm" value="${line.quantity}" 
+                   onchange="updateLineQuantity(${index}, this.value)" min="0">
+          </td>
+          <td class="px-4 py-2">
+            <input type="number" class="form-input text-sm" value="${line.unitPrice}" 
+                   onchange="updateLinePrice(${index}, this.value)" min="0">
+          </td>
+          <td class="px-4 py-2 text-sm font-medium">${formatVND(line.total)}</td>
+          <td class="px-4 py-2">
+            <button onclick="removeProductLine(${index})" class="text-red-600 hover:text-red-900">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+            </button>
+          </td>
+        </tr>
+      `;
+    });
+
+    tbody.innerHTML = html;
+    updateTotalAmount();
+  }
+
+  window.selectProduct = function(index, productName) {
+    const product = products.find(p => p.name === productName);
+    if (product) {
+      productLines[index].productName = productName;
+      productLines[index].unitPrice = product.price;
+      productLines[index].total = productLines[index].quantity * product.price;
+      renderProductLines();
+    }
+  };
+
+  window.updateLineQuantity = function(index, quantity) {
+    productLines[index].quantity = parseInt(quantity) || 0;
+    productLines[index].total = productLines[index].quantity * productLines[index].unitPrice;
+    renderProductLines();
+  };
+
+  window.updateLinePrice = function(index, price) {
+    productLines[index].unitPrice = parseFloat(price) || 0;
+    productLines[index].total = productLines[index].quantity * productLines[index].unitPrice;
+    renderProductLines();
+  };
+
+  window.removeProductLine = function(index) {
+    productLines.splice(index, 1);
+    renderProductLines();
+  };
+
+  function updateTotalAmount() {
+    const total = productLines.reduce((sum, line) => sum + line.total, 0);
+    document.getElementById('total-amount').textContent = formatVND(total);
+  }
+
+  window.saveReceiving = function() {
+    const code = document.getElementById('receiving-code').value;
+    const supplier = document.getElementById('receiving-supplier').value;
+    const purchaseOrder = document.getElementById('purchase-order').value;
+    const expectedDate = document.getElementById('expected-date').value;
+    const notes = document.getElementById('receiving-notes').value;
+
+    if (!supplier || productLines.length === 0) {
+      alert('Vui lòng chọn nhà cung cấp và thêm ít nhất một sản phẩm!');
+      return;
+    }
+
+    // Validate product lines
+    const invalidLines = productLines.filter(line => !line.productName || line.quantity <= 0 || line.unitPrice <= 0);
+    if (invalidLines.length > 0) {
+      alert('Vui lòng điền đầy đủ thông tin cho tất cả sản phẩm!');
+      return;
+    }
+
+    const receiving = {
+      id: 'rec_' + Date.now(),
+      code,
+      supplier,
+      purchaseOrder,
+      expectedDate,
+      status: 'draft',
+      notes,
+      items: productLines.map(line => ({
+        productName: line.productName,
+        quantity: line.quantity,
+        unitPrice: line.unitPrice,
+        total: line.total
+      })),
+      totalValue: productLines.reduce((sum, line) => sum + line.total, 0),
+      createdBy: 'Admin User',
+      createdAt: new Date().toISOString(),
+      receivedAt: null,
+      receivedBy: null
+    };
+
+    receivings.unshift(receiving);
+    saveData();
+    closeModal('receiving-modal');
+    renderReceivings();
+    alert('Đã tạo phiếu nhập kho thành công!');
+  };
+
+  window.viewReceiving = function(receivingId) {
+    const receiving = receivings.find(r => r.id === receivingId);
+    if (!receiving) return;
+
+    currentViewingReceiving = receiving;
+
+    const statusNames = {
+      draft: 'Nháp',
+      pending: 'Chờ nhận',
+      receiving: 'Đang nhận',
+      completed: 'Hoàn thành',
+      cancelled: 'Đã hủy'
+    };
+
+    let itemsHtml = '';
+    receiving.items.forEach(item => {
+      itemsHtml += `
+        <tr>
+          <td class="px-4 py-2 text-sm">${item.productName}</td>
+          <td class="px-4 py-2 text-sm text-center">${item.quantity}</td>
+          <td class="px-4 py-2 text-sm text-right">${formatVND(item.unitPrice)}</td>
+          <td class="px-4 py-2 text-sm text-right font-medium">${formatVND(item.total)}</td>
+        </tr>
+      `;
+    });
+
+    const html = `
+      <div class="space-y-6">
+        <div class="grid grid-cols-2 gap-6">
+          <div>
+            <h4 class="font-semibold text-gray-900 mb-3">Thông tin phiếu nhập</h4>
+            <div class="space-y-2 text-sm">
+              <div><strong>Mã phiếu:</strong> ${receiving.code}</div>
+              <div><strong>Nhà cung cấp:</strong> ${receiving.supplier}</div>
+              <div><strong>Số đơn đặt hàng:</strong> ${receiving.purchaseOrder || 'Không có'}</div>
+              <div><strong>Ngày dự kiến:</strong> ${new Date(receiving.expectedDate).toLocaleDateString('vi-VN')}</div>
+              <div><strong>Trạng thái:</strong> <span class="px-2 py-1 text-xs rounded-full ${getStatusColor(receiving.status)}">${statusNames[receiving.status]}</span></div>
+            </div>
+          </div>
+          <div>
+            <h4 class="font-semibold text-gray-900 mb-3">Thông tin tạo/nhận</h4>
+            <div class="space-y-2 text-sm">
+              <div><strong>Người tạo:</strong> ${receiving.createdBy}</div>
+              <div><strong>Ngày tạo:</strong> ${new Date(receiving.createdAt).toLocaleString('vi-VN')}</div>
+              ${receiving.receivedBy ? `
+                <div><strong>Người nhận:</strong> ${receiving.receivedBy}</div>
+                <div><strong>Ngày nhận:</strong> ${new Date(receiving.receivedAt).toLocaleString('vi-VN')}</div>
+              ` : ''}
+              ${receiving.notes ? `<div><strong>Ghi chú:</strong> ${receiving.notes}</div>` : ''}
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="font-semibold text-gray-900 mb-3">Chi tiết sản phẩm</h4>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-300">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Sản phẩm</th>
+                  <th class="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase">Số lượng</th>
+                  <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase">Đơn giá</th>
+                  <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase">Thành tiền</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                ${itemsHtml}
+              </tbody>
+            </table>
+          </div>
+          <div class="mt-4 flex justify-end">
+            <div class="text-lg font-bold">
+              Tổng cộng: ${formatVND(receiving.totalValue)}
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.getElementById('view-receiving-title').textContent = `Chi tiết phiếu ${receiving.code}`;
+    document.getElementById('view-receiving-content').innerHTML = html;
+    
+    // Show/hide action buttons based on status
+    const processBtn = document.getElementById('process-btn');
+    const completeBtn = document.getElementById('complete-btn');
+    
+    if (receiving.status === 'pending') {
+      processBtn.classList.remove('hidden');
+      completeBtn.classList.add('hidden');
+    } else if (receiving.status === 'receiving') {
+      processBtn.classList.add('hidden');
+      completeBtn.classList.remove('hidden');
+    } else {
+      processBtn.classList.add('hidden');
+      completeBtn.classList.add('hidden');
+    }
+
+    document.getElementById('view-receiving-modal').classList.remove('hidden');
+  };
+
+  window.processReceiving = function() {
+    if (!currentViewingReceiving) return;
+
+    if (!confirm('Bạn có chắc chắn muốn bắt đầu xử lý nhập kho?')) return;
+
+    const receiving = receivings.find(r => r.id === currentViewingReceiving.id);
+    if (receiving) {
+      receiving.status = 'receiving';
+      saveData();
+      closeModal('view-receiving-modal');
+      renderReceivings();
+      alert('Đã bắt đầu xử lý nhập kho!');
+    }
+  };
+
+  window.completeReceiving = function() {
+    if (!currentViewingReceiving) return;
+
+    if (!confirm('Bạn có chắc chắn muốn hoàn thành nhập kho? Hành động này không thể hoàn tác.')) return;
+
+    const receiving = receivings.find(r => r.id === currentViewingReceiving.id);
+    if (receiving) {
+      receiving.status = 'completed';
+      receiving.receivedAt = new Date().toISOString();
+      receiving.receivedBy = 'Admin User';
+      
+      saveData();
+      closeModal('view-receiving-modal');
+      renderReceivings();
+      alert('Đã hoàn thành nhập kho thành công!');
+    }
+  };
+
+  window.deleteReceiving = function(receivingId) {
+    if (!confirm('Bạn có chắc chắn muốn xóa phiếu nhập này?')) return;
+
+    const index = receivings.findIndex(r => r.id === receivingId);
+    if (index !== -1) {
+      receivings.splice(index, 1);
+      saveData();
+      renderReceivings();
+      alert('Đã xóa phiếu nhập thành công!');
+    }
+  };
+
+  function getStatusColor(status) {
+    const colors = {
+      draft: 'bg-gray-100 text-gray-800',
+      pending: 'bg-yellow-100 text-yellow-800',
+      receiving: 'bg-blue-100 text-blue-800',
+      completed: 'bg-green-100 text-green-800',
+      cancelled: 'bg-red-100 text-red-800'
+    };
+    return colors[status] || '';
+  }
+
+  window.exportReceivings = function() {
+    const csvContent = generateReceivingCSV(receivings);
+    downloadCSV(csvContent, `inventory-receivings-${new Date().toISOString().split('T')[0]}.csv`);
+  };
+
+  function generateReceivingCSV(data) {
+    const headers = ['Mã phiếu', 'Nhà cung cấp', 'Số đơn đặt hàng', 'Số lượng SP', 'Tổng giá trị', 'Trạng thái', 'Người tạo', 'Ngày tạo'];
+    
+    const statusNames = {
+      draft: 'Nháp',
+      pending: 'Chờ nhận',
+      receiving: 'Đang nhận',
+      completed: 'Hoàn thành',
+      cancelled: 'Đã hủy'
+    };
+    
+    const rows = data.map(receiving => [
+      receiving.code,
+      receiving.supplier,
+      receiving.purchaseOrder || '',
+      receiving.items.length,
+      receiving.totalValue,
+      statusNames[receiving.status],
+      receiving.createdBy,
+      new Date(receiving.createdAt).toLocaleDateString('vi-VN')
+    ]);
+
+    return [headers, ...rows].map(row => 
+      row.map(field => `"${field}"`).join(',')
+    ).join('\n');
+  }
+
+  function downloadCSV(content, filename) {
+    const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  window.refreshReceivings = function() {
+    renderReceivings();
+  };
+
+  window.closeModal = function(modalId) {
+    document.getElementById(modalId).classList.add('hidden');
+  };
+
+  function formatVND(amount) {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND'
+    }).format(amount);
+  }
+
+  // Event listeners
+  document.getElementById('search-input').addEventListener('input', renderReceivings);
+  document.getElementById('status-filter').addEventListener('change', renderReceivings);
+  document.getElementById('supplier-filter').addEventListener('change', renderReceivings);
+  document.getElementById('date-filter').addEventListener('change', function() {
+    const customRange = document.getElementById('custom-date-range');
+    if (this.value === 'custom') {
+      customRange.classList.remove('hidden');
+    } else {
+      customRange.classList.add('hidden');
+      renderReceivings();
+    }
+  });
+
+  // Initialize
+  loadSampleData();
+  renderReceivings();
+});
+</script>
+
+<style>
+.form-input, .form-select, .form-textarea {
+  @apply px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full;
+}
+
+.modal-overlay {
+  @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50;
+}
+
+.modal-content {
+  @apply bg-white rounded-lg shadow-xl w-full mx-4 max-h-screen overflow-y-auto;
+}
+
+.modal-header {
+  @apply flex items-center justify-between p-6 border-b;
+}
+
+.modal-title {
+  @apply text-lg font-medium text-gray-900;
+}
+
+.modal-close {
+  @apply text-gray-400 hover:text-gray-600 text-2xl font-bold cursor-pointer;
+}
+
+.modal-body {
+  @apply p-6;
+}
+
+.modal-footer {
+  @apply flex items-center justify-end space-x-3 p-6 border-t bg-gray-50;
+}
+
+.btn {
+  @apply px-4 py-2 rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-offset-2;
+}
+
+.btn-primary {
+  @apply bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500;
+}
+
+.btn-secondary {
+  @apply bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500;
+}
+
+.btn-success {
+  @apply bg-green-600 text-white hover:bg-green-700 focus:ring-green-500;
+}
+
+.form-label {
+  @apply block text-sm font-medium text-gray-700 mb-1;
+}
+</style>

@@ -1,0 +1,320 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import DashboardLayout from '../../layouts/DashboardLayout.astro';
+import Card from '../../components/ui/Card.astro';
+import Button from '../../components/ui/Button.astro';
+---
+
+<BaseLayout title="Cài đặt bảo mật - ComputerPOS Pro">
+  <DashboardLayout>
+    <main class="p-6 space-y-6">
+      <!-- Header -->
+      <div class="flex justify-between items-center">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">Cài đặt bảo mật</h1>
+          <p class="text-gray-600 mt-1">Quản lý bảo mật và quyền truy cập hệ thống</p>
+        </div>
+        <div class="flex space-x-3">
+          <Button href="/settings" variant="secondary">Quay lại</Button>
+          <Button variant="primary" id="save-security-settings">Lưu cài đặt</Button>
+        </div>
+      </div>
+
+      <!-- Security Overview -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Trạng thái bảo mật</dt>
+                  <dd class="text-lg font-medium text-green-600">An toàn</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Phiên đăng nhập</dt>
+                  <dd class="text-lg font-medium text-gray-900">12 hoạt động</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-yellow-500 rounded-lg flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Cảnh báo bảo mật</dt>
+                  <dd class="text-lg font-medium text-yellow-600">3 cảnh báo</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      <!-- Password Policy -->
+      <Card>
+        <div class="p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Chính sách mật khẩu</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Độ dài tối thiểu</label>
+                <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <option value="6">6 ký tự</option>
+                  <option value="8" selected>8 ký tự</option>
+                  <option value="10">10 ký tự</option>
+                  <option value="12">12 ký tự</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Thời gian hết hạn</label>
+                <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <option value="30">30 ngày</option>
+                  <option value="60">60 ngày</option>
+                  <option value="90" selected>90 ngày</option>
+                  <option value="never">Không bao giờ</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Số lần thử sai tối đa</label>
+                <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <option value="3">3 lần</option>
+                  <option value="5" selected>5 lần</option>
+                  <option value="10">10 lần</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-3">Yêu cầu mật khẩu</label>
+                <div class="space-y-2">
+                  <label class="flex items-center">
+                    <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500" checked>
+                    <span class="ml-2 text-sm text-gray-700">Chứa chữ hoa</span>
+                  </label>
+                  <label class="flex items-center">
+                    <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500" checked>
+                    <span class="ml-2 text-sm text-gray-700">Chứa chữ thường</span>
+                  </label>
+                  <label class="flex items-center">
+                    <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500" checked>
+                    <span class="ml-2 text-sm text-gray-700">Chứa số</span>
+                  </label>
+                  <label class="flex items-center">
+                    <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                    <span class="ml-2 text-sm text-gray-700">Chứa ký tự đặc biệt</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      <!-- Two-Factor Authentication -->
+      <Card>
+        <div class="p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Xác thực hai yếu tố (2FA)</h3>
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm text-gray-600">Bật xác thực hai yếu tố để tăng cường bảo mật tài khoản</p>
+            </div>
+            <div class="flex items-center">
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" class="sr-only peer" id="enable-2fa">
+                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      <!-- Session Management -->
+      <Card>
+        <div class="p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Quản lý phiên đăng nhập</h3>
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm font-medium text-gray-900">Thời gian hết hạn phiên</p>
+                <p class="text-sm text-gray-600">Tự động đăng xuất sau khoảng thời gian không hoạt động</p>
+              </div>
+              <select class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <option value="15">15 phút</option>
+                <option value="30" selected>30 phút</option>
+                <option value="60">1 giờ</option>
+                <option value="120">2 giờ</option>
+              </select>
+            </div>
+
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm font-medium text-gray-900">Đăng nhập đồng thời</p>
+                <p class="text-sm text-gray-600">Cho phép đăng nhập cùng lúc trên nhiều thiết bị</p>
+              </div>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" class="sr-only peer" checked>
+                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      <!-- Active Sessions -->
+      <Card>
+        <div class="overflow-hidden">
+          <div class="px-6 py-4 border-b border-gray-200">
+            <h3 class="text-lg font-medium text-gray-900">Phiên đăng nhập hiện tại</h3>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Thiết bị</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Địa chỉ IP</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Thời gian đăng nhập</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Trạng thái</th>
+                  <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex items-center">
+                      <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      </svg>
+                      <div>
+                        <div class="text-sm font-medium text-gray-900">Chrome - Windows</div>
+                        <div class="text-sm text-gray-500">Phiên hiện tại</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">192.168.1.100</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">15/12/2024 14:30</td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      Đang hoạt động
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <span class="text-gray-400">Phiên hiện tại</span>
+                  </td>
+                </tr>
+                <tr class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex items-center">
+                      <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                      </svg>
+                      <div>
+                        <div class="text-sm font-medium text-gray-900">Safari - iPhone</div>
+                        <div class="text-sm text-gray-500">Mobile</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">192.168.1.105</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">15/12/2024 09:15</td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                      Không hoạt động
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <button class="text-red-600 hover:text-red-900">Đăng xuất</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </Card>
+    </main>
+  </DashboardLayout>
+</BaseLayout>
+
+<script>
+  // Security settings functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    // Save settings
+    const saveBtn = document.getElementById('save-security-settings');
+    saveBtn?.addEventListener('click', function() {
+      const originalText = saveBtn.innerHTML;
+      saveBtn.innerHTML = `
+        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        Đang lưu...
+      `;
+
+      setTimeout(() => {
+        saveBtn.innerHTML = originalText;
+        alert('Cài đặt bảo mật đã được lưu thành công!');
+      }, 2000);
+    });
+
+    // 2FA toggle
+    const twoFAToggle = document.getElementById('enable-2fa');
+    twoFAToggle?.addEventListener('change', function() {
+      if (this.checked) {
+        alert('Tính năng 2FA sẽ được kích hoạt. Vui lòng cài đặt ứng dụng xác thực.');
+      } else {
+        if (confirm('Bạn có chắc muốn tắt xác thực hai yếu tố?')) {
+          alert('2FA đã được tắt.');
+        } else {
+          this.checked = true;
+        }
+      }
+    });
+
+    // Logout session
+    document.addEventListener('click', function(e) {
+      if (e.target.textContent === 'Đăng xuất') {
+        const row = e.target.closest('tr');
+        const device = row.querySelector('.font-medium').textContent;
+
+        if (confirm(`Đăng xuất khỏi thiết bị: ${device}?`)) {
+          row.remove();
+          alert('Đã đăng xuất thành công!');
+        }
+      }
+    });
+  });
+</script>

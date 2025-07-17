@@ -1,0 +1,373 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import DashboardLayout from '../../layouts/DashboardLayout.astro';
+import Card from '../../components/ui/Card.astro';
+import Button from '../../components/ui/Button.astro';
+---
+
+<BaseLayout title="Thêm sản phẩm - ComputerPOS Pro">
+  <DashboardLayout>
+    <main class="p-6 space-y-6">
+      <!-- Header -->
+      <div class="flex justify-between items-center">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">Thêm sản phẩm mới</h1>
+          <p class="text-gray-600 mt-1">Thêm linh kiện máy tính vào kho hàng</p>
+        </div>
+        <div class="flex space-x-3">
+          <Button href="/products" variant="secondary">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m0 7h18" />
+            </svg>
+            Quay lại
+          </Button>
+          <Button variant="primary" id="save-product">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+            </svg>
+            Lưu sản phẩm
+          </Button>
+        </div>
+      </div>
+
+      <form id="product-form" class="space-y-6">
+        <!-- Basic Information -->
+        <Card>
+          <div class="p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Thông tin cơ bản</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Tên sản phẩm *</label>
+                <input
+                  type="text"
+                  name="name"
+                  required
+                  minlength="3"
+                  maxlength="200"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="VD: Intel Core i7-13700K"
+                />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">SKU *</label>
+                <input
+                  type="text"
+                  name="sku"
+                  required
+                  pattern="[A-Z0-9\-]+"
+                  minlength="3"
+                  maxlength="50"
+                  title="SKU chỉ được chứa chữ hoa, số và dấu gạch ngang"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="VD: CPU-I7-13700K"
+                />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Danh mục *</label>
+                <select
+                  name="category"
+                  required
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="">Chọn danh mục</option>
+                  <option value="cpu">CPU</option>
+                  <option value="vga">VGA</option>
+                  <option value="ram">RAM</option>
+                  <option value="mainboard">Mainboard</option>
+                  <option value="storage">Ổ cứng</option>
+                  <option value="psu">Nguồn</option>
+                  <option value="case">Case</option>
+                  <option value="cooling">Tản nhiệt</option>
+                  <option value="monitor">Màn hình</option>
+                  <option value="keyboard">Bàn phím</option>
+                  <option value="mouse">Chuột</option>
+                  <option value="headset">Tai nghe</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Thương hiệu</label>
+                <select
+                  name="brand"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="">Chọn thương hiệu</option>
+                  <option value="intel">Intel</option>
+                  <option value="amd">AMD</option>
+                  <option value="nvidia">NVIDIA</option>
+                  <option value="asus">ASUS</option>
+                  <option value="msi">MSI</option>
+                  <option value="gigabyte">Gigabyte</option>
+                  <option value="corsair">Corsair</option>
+                  <option value="kingston">Kingston</option>
+                  <option value="samsung">Samsung</option>
+                  <option value="western-digital">Western Digital</option>
+                  <option value="seagate">Seagate</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="mt-6">
+              <label class="block text-sm font-medium text-gray-700 mb-2">Mô tả sản phẩm</label>
+              <textarea
+                name="description"
+                rows="4"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Mô tả chi tiết về sản phẩm..."
+              ></textarea>
+            </div>
+          </div>
+        </Card>
+
+        <!-- Pricing & Inventory -->
+        <Card>
+          <div class="p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Giá & Tồn kho</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Giá nhập *</label>
+                <input
+                  type="number"
+                  name="cost_price"
+                  required
+                  min="0"
+                  max="999999999"
+                  step="1000"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="0"
+                />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Giá bán *</label>
+                <input
+                  type="number"
+                  name="selling_price"
+                  required
+                  min="0"
+                  max="999999999"
+                  step="1000"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="0"
+                />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Số lượng tồn kho *</label>
+                <input
+                  type="number"
+                  name="stock_quantity"
+                  required
+                  min="0"
+                  max="999999"
+                  step="1"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="0"
+                />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Mức cảnh báo tồn kho</label>
+                <input
+                  type="number"
+                  name="low_stock_alert"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="5"
+                />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Đơn vị</label>
+                <select
+                  name="unit"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="piece">Cái</option>
+                  <option value="set">Bộ</option>
+                  <option value="box">Hộp</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Trạng thái</label>
+                <select
+                  name="status"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="active">Đang bán</option>
+                  <option value="inactive">Ngừng bán</option>
+                  <option value="out_of_stock">Hết hàng</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <!-- Technical Specifications -->
+        <Card>
+          <div class="p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Thông số kỹ thuật</h3>
+            <div id="specifications" class="space-y-4">
+              <div class="flex space-x-4">
+                <input
+                  type="text"
+                  placeholder="Tên thông số (VD: Socket)"
+                  class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+                <input
+                  type="text"
+                  placeholder="Giá trị (VD: LGA1700)"
+                  class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+                <button type="button" class="px-3 py-2 text-red-600 hover:text-red-800">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <button type="button" id="add-specification" class="mt-4 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+              + Thêm thông số
+            </button>
+          </div>
+        </Card>
+      </form>
+    </main>
+  </DashboardLayout>
+</BaseLayout>
+
+<script>
+  // Product form functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('product-form');
+    const saveButton = document.getElementById('save-product');
+    const addSpecButton = document.getElementById('add-specification');
+    const specificationsContainer = document.getElementById('specifications');
+
+    // Add specification row
+    addSpecButton?.addEventListener('click', function() {
+      const specRow = document.createElement('div');
+      specRow.className = 'flex space-x-4';
+      specRow.innerHTML = `
+        <input
+          type="text"
+          placeholder="Tên thông số"
+          class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        />
+        <input
+          type="text"
+          placeholder="Giá trị"
+          class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        />
+        <button type="button" class="px-3 py-2 text-red-600 hover:text-red-800 remove-spec">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+          </svg>
+        </button>
+      `;
+
+      specificationsContainer?.appendChild(specRow);
+
+      // Add remove functionality
+      specRow.querySelector('.remove-spec')?.addEventListener('click', function() {
+        specRow.remove();
+      });
+    });
+
+    // Remove specification rows
+    document.addEventListener('click', function(e) {
+      if (e.target.closest('.remove-spec')) {
+        e.target.closest('.flex').remove();
+      }
+    });
+
+    // Save product
+    saveButton?.addEventListener('click', function(e) {
+      e.preventDefault();
+
+      if (!form?.checkValidity()) {
+        form?.reportValidity();
+        return;
+      }
+
+      // Collect form data
+      const formData = new FormData(form);
+      const productData = Object.fromEntries(formData.entries());
+
+      // Collect specifications
+      const specRows = specificationsContainer?.querySelectorAll('.flex');
+      const specifications = [];
+      specRows?.forEach(row => {
+        const inputs = row.querySelectorAll('input');
+        if (inputs[0]?.value && inputs[1]?.value) {
+          specifications.push({
+            name: inputs[0].value,
+            value: inputs[1].value
+          });
+        }
+      });
+
+      productData.specifications = specifications;
+
+      // Show loading state
+      saveButton.disabled = true;
+      saveButton.innerHTML = `
+        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        Đang lưu...
+      `;
+
+      // Simulate API call with error handling
+      setTimeout(() => {
+        try {
+          console.log('Product data:', productData);
+
+          // Simulate random error (10% chance)
+          if (Math.random() < 0.1) {
+            throw new Error('Lỗi kết nối server');
+          }
+
+          alert('Sản phẩm đã được lưu thành công!');
+
+          // Redirect to products list
+          window.location.href = '/products';
+        } catch (error) {
+          // Reset button
+          saveButton.disabled = false;
+          saveButton.innerHTML = `
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+            </svg>
+            Lưu sản phẩm
+          `;
+
+          alert(`Lỗi: ${error.message}. Vui lòng thử lại.`);
+        }
+      }, 2000); // Simulate 2s processing time
+    });
+
+    // Auto-generate SKU based on name and category
+    const nameInput = form?.querySelector('input[name="name"]');
+    const categorySelect = form?.querySelector('select[name="category"]');
+    const skuInput = form?.querySelector('input[name="sku"]');
+
+    function generateSKU() {
+      const name = nameInput?.value || '';
+      const category = categorySelect?.value || '';
+
+      if (name && category) {
+        const nameWords = name.split(' ').slice(0, 2).map(word => word.substring(0, 3).toUpperCase());
+        const categoryCode = category.toUpperCase();
+        const sku = `${categoryCode}-${nameWords.join('')}-${Date.now().toString().slice(-4)}`;
+        if (skuInput) skuInput.value = sku;
+      }
+    }
+
+    nameInput?.addEventListener('blur', generateSKU);
+    categorySelect?.addEventListener('change', generateSKU);
+  });
+</script>

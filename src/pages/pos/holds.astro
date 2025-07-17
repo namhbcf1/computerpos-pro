@@ -1,0 +1,990 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import DashboardLayout from '../../layouts/DashboardLayout.astro';
+import Card from '../../components/ui/Card.astro';
+import Button from '../../components/ui/Button.astro';
+---
+
+<BaseLayout title="POS Holds - ComputerPOS Pro">
+  <DashboardLayout>
+    <main class="p-6 space-y-6">
+      <!-- Header -->
+      <div class="flex justify-between items-center">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">POS Holds</h1>
+          <p class="text-gray-600 mt-1">Quản lý đơn hàng tạm giữ và phục hồi giao dịch</p>
+        </div>
+        <div class="flex space-x-3">
+          <Button href="/pos" variant="secondary">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Quay lại POS
+          </Button>
+          <Button href="/pos/sales" variant="primary">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            Tạo đơn mới
+          </Button>
+        </div>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Tổng đơn giữ</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="total-holds">0</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-yellow-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Hôm nay</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="today-holds">0</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-green-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Tổng giá trị</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="total-value">0₫</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-red-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Quá hạn</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="expired-holds">0</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      <!-- Filters and Search -->
+      <Card>
+        <div class="p-6">
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div>
+              <label class="form-label">Tìm kiếm</label>
+              <input type="text" class="form-input" id="search-input" placeholder="Mã giữ đơn, khách hàng...">
+            </div>
+            <div>
+              <label class="form-label">Trạng thái</label>
+              <select class="form-select" id="status-filter">
+                <option value="all">Tất cả</option>
+                <option value="active">Đang giữ</option>
+                <option value="expired">Quá hạn</option>
+                <option value="recovered">Đã phục hồi</option>
+                <option value="deleted">Đã xóa</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label">Khoảng thời gian</label>
+              <select class="form-select" id="date-filter">
+                <option value="today">Hôm nay</option>
+                <option value="yesterday">Hôm qua</option>
+                <option value="week">7 ngày qua</option>
+                <option value="month">30 ngày qua</option>
+                <option value="all">Tất cả</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label">Sắp xếp</label>
+              <select class="form-select" id="sort-by">
+                <option value="newest">Mới nhất</option>
+                <option value="oldest">Cũ nhất</option>
+                <option value="value-desc">Giá trị cao nhất</option>
+                <option value="value-asc">Giá trị thấp nhất</option>
+                <option value="customer">Theo khách hàng</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      <!-- Holds List -->
+      <Card>
+        <div class="p-6">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-lg font-medium text-gray-900">Danh sách đơn hàng giữ</h2>
+            <div class="flex space-x-3">
+              <Button onclick="exportHolds()" variant="secondary">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Xuất báo cáo
+              </Button>
+              <Button onclick="cleanupExpired()" variant="secondary">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                Dọn dẹp quá hạn
+              </Button>
+              <Button onclick="refreshHolds()" variant="secondary">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                Làm mới
+              </Button>
+            </div>
+          </div>
+
+          <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+            <table class="min-w-full divide-y divide-gray-300">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mã giữ đơn</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Khách hàng</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sản phẩm</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tổng tiền</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Thời gian tạo</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hết hạn</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Trạng thái</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200" id="holds-tbody">
+                <!-- Holds will be populated here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </Card>
+    </main>
+
+    <!-- Hold Detail Modal -->
+    <div id="hold-detail-modal" class="modal-overlay hidden">
+      <div class="modal-content max-w-4xl">
+        <div class="modal-header">
+          <h3 class="modal-title" id="hold-detail-title">Chi tiết đơn hàng giữ</h3>
+          <button class="modal-close" onclick="closeModal('hold-detail-modal')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div id="hold-detail-content">
+            <!-- Hold details will be populated here -->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('hold-detail-modal')">Đóng</button>
+          <button type="button" class="btn btn-success" id="recover-hold-btn" onclick="recoverHold()">Phục hồi đơn hàng</button>
+          <button type="button" class="btn btn-danger" id="delete-hold-btn" onclick="deleteHold()">Xóa đơn giữ</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bulk Actions Modal -->
+    <div id="bulk-actions-modal" class="modal-overlay hidden">
+      <div class="modal-content max-w-md">
+        <div class="modal-header">
+          <h3 class="modal-title">Thao tác hàng loạt</h3>
+          <button class="modal-close" onclick="closeModal('bulk-actions-modal')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="space-y-4">
+            <div>
+              <p class="text-sm text-gray-600 mb-4">Chọn thao tác cho <span id="selected-count">0</span> đơn giữ đã chọn:</p>
+              <div class="space-y-2">
+                <button onclick="bulkRecover()" class="w-full btn btn-success">
+                  <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                  Phục hồi tất cả
+                </button>
+                <button onclick="bulkDelete()" class="w-full btn btn-danger">
+                  <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                  Xóa tất cả
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('bulk-actions-modal')">Hủy</button>
+        </div>
+      </div>
+    </div>
+  </DashboardLayout>
+</BaseLayout>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  let holds = [];
+  let currentHold = null;
+  let selectedHolds = new Set();
+
+  // Load data from localStorage
+  function loadHoldsData() {
+    holds = JSON.parse(localStorage.getItem('posHolds') || '[]');
+    
+    // Add sample data if empty
+    if (holds.length === 0) {
+      holds = [
+        {
+          id: 'HOLD-001',
+          customerName: 'Nguyễn Văn An',
+          customerPhone: '0987654321',
+          items: [
+            { id: 'cpu_001', name: 'Intel Core i5-13400F', price: 4500000, quantity: 1, total: 4500000 },
+            { id: 'ram_001', name: 'RAM DDR4 16GB 3200MHz', price: 1800000, quantity: 2, total: 3600000 }
+          ],
+          subtotal: 8100000,
+          discount: 0,
+          tax: 810000,
+          total: 8910000,
+          status: 'active',
+          createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+          expiresAt: new Date(Date.now() + 22 * 60 * 60 * 1000).toISOString(),
+          notes: 'Khách hàng cần suy nghĩ thêm về việc nâng cấp',
+          cashier: 'Admin User'
+        },
+        {
+          id: 'HOLD-002',
+          customerName: 'Trần Thị Bình',
+          customerPhone: '0912345678',
+          items: [
+            { id: 'gpu_001', name: 'RTX 4060 8GB', price: 12000000, quantity: 1, total: 12000000 }
+          ],
+          subtotal: 12000000,
+          discount: 600000,
+          tax: 1140000,
+          total: 12540000,
+          status: 'active',
+          createdAt: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
+          expiresAt: new Date(Date.now() + 18 * 60 * 60 * 1000).toISOString(),
+          notes: 'Chờ khách hàng xác nhận thông tin vận chuyển',
+          cashier: 'Staff User'
+        },
+        {
+          id: 'HOLD-003',
+          customerName: 'Lê Minh Cường',
+          customerPhone: '0923456789',
+          items: [
+            { id: 'storage_001', name: 'SSD Samsung 980 Pro 1TB', price: 3200000, quantity: 2, total: 6400000 },
+            { id: 'ram_002', name: 'RAM DDR5 16GB 5600MHz', price: 2600000, quantity: 1, total: 2600000 }
+          ],
+          subtotal: 9000000,
+          discount: 450000,
+          tax: 855000,
+          total: 9405000,
+          status: 'expired',
+          createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+          expiresAt: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
+          notes: 'Đơn hàng quá thời hạn giữ 24 giờ',
+          cashier: 'Admin User'
+        },
+        {
+          id: 'HOLD-004',
+          customerName: 'Phạm Thị Dung',
+          customerPhone: '0934567890',
+          items: [
+            { id: 'cpu_002', name: 'AMD Ryzen 5 7600X', price: 5200000, quantity: 1, total: 5200000 }
+          ],
+          subtotal: 5200000,
+          discount: 0,
+          tax: 520000,
+          total: 5720000,
+          status: 'recovered',
+          createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+          expiresAt: new Date(Date.now() + 23 * 60 * 60 * 1000).toISOString(),
+          recoveredAt: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(),
+          notes: 'Đã hoàn thành thanh toán và xuất hóa đơn',
+          cashier: 'Staff User'
+        }
+      ];
+      
+      saveHoldsData();
+    }
+  }
+
+  function saveHoldsData() {
+    localStorage.setItem('posHolds', JSON.stringify(holds));
+  }
+
+  function renderHolds() {
+    const tbody = document.getElementById('holds-tbody');
+    const searchTerm = document.getElementById('search-input').value.toLowerCase();
+    const statusFilter = document.getElementById('status-filter').value;
+    const dateFilter = document.getElementById('date-filter').value;
+    const sortBy = document.getElementById('sort-by').value;
+
+    let filteredHolds = holds.filter(hold => {
+      const matchesSearch = hold.id.toLowerCase().includes(searchTerm) ||
+                           hold.customerName.toLowerCase().includes(searchTerm) ||
+                           hold.customerPhone.includes(searchTerm);
+      const matchesStatus = statusFilter === 'all' || hold.status === statusFilter;
+      
+      let matchesDate = true;
+      if (dateFilter !== 'all') {
+        const now = new Date();
+        const holdDate = new Date(hold.createdAt);
+        switch (dateFilter) {
+          case 'today':
+            matchesDate = holdDate.toDateString() === now.toDateString();
+            break;
+          case 'yesterday':
+            const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+            matchesDate = holdDate.toDateString() === yesterday.toDateString();
+            break;
+          case 'week':
+            const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+            matchesDate = holdDate >= weekAgo;
+            break;
+          case 'month':
+            const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+            matchesDate = holdDate >= monthAgo;
+            break;
+        }
+      }
+
+      return matchesSearch && matchesStatus && matchesDate;
+    });
+
+    // Sort filtered results
+    filteredHolds.sort((a, b) => {
+      switch (sortBy) {
+        case 'newest':
+          return new Date(b.createdAt) - new Date(a.createdAt);
+        case 'oldest':
+          return new Date(a.createdAt) - new Date(b.createdAt);
+        case 'value-desc':
+          return b.total - a.total;
+        case 'value-asc':
+          return a.total - b.total;
+        case 'customer':
+          return a.customerName.localeCompare(b.customerName);
+        default:
+          return 0;
+      }
+    });
+
+    if (filteredHolds.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="8" class="px-6 py-12 text-center text-gray-500">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            <h3 class="mt-2 text-sm font-medium text-gray-900">Không tìm thấy đơn giữ nào</h3>
+            <p class="mt-1 text-sm text-gray-500">Thử thay đổi bộ lọc hoặc tạo đơn hàng mới.</p>
+          </td>
+        </tr>
+      `;
+      updateStats(filteredHolds);
+      return;
+    }
+
+    let html = '';
+    filteredHolds.forEach(hold => {
+      const isExpired = new Date() > new Date(hold.expiresAt) && hold.status === 'active';
+      const actualStatus = isExpired ? 'expired' : hold.status;
+      
+      const statusColors = {
+        active: 'bg-green-100 text-green-800',
+        expired: 'bg-red-100 text-red-800',
+        recovered: 'bg-blue-100 text-blue-800',
+        deleted: 'bg-gray-100 text-gray-800'
+      };
+
+      const statusNames = {
+        active: 'Đang giữ',
+        expired: 'Quá hạn',
+        recovered: 'Đã phục hồi',
+        deleted: 'Đã xóa'
+      };
+
+      const itemsCount = hold.items.length;
+      const itemsSummary = itemsCount === 1 
+        ? hold.items[0].name
+        : `${hold.items[0].name} +${itemsCount - 1} SP khác`;
+
+      const timeRemaining = getTimeRemaining(hold.expiresAt, hold.status);
+
+      html += `
+        <tr class="hover:bg-gray-50 ${actualStatus === 'expired' ? 'bg-red-50' : ''}">
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex items-center">
+              <input type="checkbox" class="form-checkbox mr-3" onchange="toggleHoldSelection('${hold.id}')" ${selectedHolds.has(hold.id) ? 'checked' : ''}>
+              <div>
+                <div class="text-sm font-medium text-gray-900">${hold.id}</div>
+                <div class="text-sm text-gray-500">${hold.cashier}</div>
+              </div>
+            </div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm font-medium text-gray-900">${hold.customerName}</div>
+            <div class="text-sm text-gray-500">${hold.customerPhone}</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm text-gray-900">${itemsSummary}</div>
+            <div class="text-sm text-gray-500">${itemsCount} sản phẩm</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm font-medium text-gray-900">${formatVND(hold.total)}</div>
+            ${hold.discount > 0 ? `<div class="text-sm text-green-600">Giảm: ${formatVND(hold.discount)}</div>` : ''}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            ${new Date(hold.createdAt).toLocaleString('vi-VN')}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm text-gray-900">${new Date(hold.expiresAt).toLocaleString('vi-VN')}</div>
+            <div class="text-sm ${actualStatus === 'expired' ? 'text-red-600' : 'text-gray-500'}">${timeRemaining}</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="px-2 py-1 text-xs font-medium rounded-full ${statusColors[actualStatus]}">${statusNames[actualStatus]}</span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+            <div class="flex space-x-2">
+              <button onclick="viewHoldDetail('${hold.id}')" class="text-blue-600 hover:text-blue-900">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+              </button>
+              ${(actualStatus === 'active' || actualStatus === 'expired') ? `
+                <button onclick="recoverHoldQuick('${hold.id}')" class="text-green-600 hover:text-green-900">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                </button>
+              ` : ''}
+              ${actualStatus !== 'recovered' ? `
+                <button onclick="deleteHoldQuick('${hold.id}')" class="text-red-600 hover:text-red-900">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                </button>
+              ` : ''}
+            </div>
+          </td>
+        </tr>
+      `;
+    });
+
+    tbody.innerHTML = html;
+    updateStats(filteredHolds);
+  }
+
+  function getTimeRemaining(expiresAt, status) {
+    if (status === 'recovered' || status === 'deleted') return '';
+    
+    const now = new Date();
+    const expires = new Date(expiresAt);
+    const diff = expires - now;
+
+    if (diff <= 0) {
+      return 'Đã quá hạn';
+    }
+
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+    if (hours > 0) {
+      return `Còn ${hours}h ${minutes}m`;
+    } else {
+      return `Còn ${minutes}m`;
+    }
+  }
+
+  function updateStats(filtered = holds) {
+    const totalHolds = filtered.filter(h => h.status !== 'deleted').length;
+    const todayHolds = filtered.filter(h => {
+      const today = new Date().toDateString();
+      const holdDate = new Date(h.createdAt).toDateString();
+      return holdDate === today && h.status !== 'deleted';
+    }).length;
+    const totalValue = filtered.filter(h => h.status !== 'deleted').reduce((sum, h) => sum + h.total, 0);
+    const expiredHolds = filtered.filter(h => {
+      const isExpired = new Date() > new Date(h.expiresAt) && h.status === 'active';
+      return isExpired;
+    }).length;
+
+    document.getElementById('total-holds').textContent = totalHolds;
+    document.getElementById('today-holds').textContent = todayHolds;
+    document.getElementById('total-value').textContent = formatVND(totalValue);
+    document.getElementById('expired-holds').textContent = expiredHolds;
+  }
+
+  window.toggleHoldSelection = function(holdId) {
+    if (selectedHolds.has(holdId)) {
+      selectedHolds.delete(holdId);
+    } else {
+      selectedHolds.add(holdId);
+    }
+    
+    updateBulkActionsButton();
+  };
+
+  function updateBulkActionsButton() {
+    const count = selectedHolds.size;
+    document.getElementById('selected-count').textContent = count;
+    
+    if (count > 0) {
+      // Show bulk actions button or enable it
+      console.log(`${count} holds selected`);
+    }
+  }
+
+  window.viewHoldDetail = function(holdId) {
+    const hold = holds.find(h => h.id === holdId);
+    if (!hold) return;
+
+    currentHold = hold;
+    const isExpired = new Date() > new Date(hold.expiresAt) && hold.status === 'active';
+    const actualStatus = isExpired ? 'expired' : hold.status;
+
+    let itemsHtml = '';
+    hold.items.forEach(item => {
+      itemsHtml += `
+        <div class="flex justify-between py-2 border-b">
+          <div class="flex-1">
+            <div class="font-medium">${item.name}</div>
+            <div class="text-sm text-gray-500">${formatVND(item.price)} x ${item.quantity}</div>
+          </div>
+          <div class="font-medium">${formatVND(item.total)}</div>
+        </div>
+      `;
+    });
+
+    const timeRemaining = getTimeRemaining(hold.expiresAt, hold.status);
+
+    const html = `
+      <div class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <h4 class="font-semibold text-gray-900 mb-3">Thông tin đơn giữ</h4>
+            <div class="space-y-2 text-sm">
+              <div><strong>Mã giữ đơn:</strong> ${hold.id}</div>
+              <div><strong>Trạng thái:</strong> <span class="px-2 py-1 text-xs rounded-full ${getStatusColor(actualStatus)}">${getStatusName(actualStatus)}</span></div>
+              <div><strong>Thời gian tạo:</strong> ${new Date(hold.createdAt).toLocaleString('vi-VN')}</div>
+              <div><strong>Hết hạn:</strong> ${new Date(hold.expiresAt).toLocaleString('vi-VN')}</div>
+              <div><strong>Thời gian còn lại:</strong> <span class="${actualStatus === 'expired' ? 'text-red-600' : ''}">${timeRemaining}</span></div>
+              <div><strong>Nhân viên:</strong> ${hold.cashier}</div>
+            </div>
+          </div>
+          <div>
+            <h4 class="font-semibold text-gray-900 mb-3">Thông tin khách hàng</h4>
+            <div class="space-y-2 text-sm">
+              <div><strong>Tên khách hàng:</strong> ${hold.customerName}</div>
+              <div><strong>Điện thoại:</strong> <a href="tel:${hold.customerPhone}" class="text-blue-600">${hold.customerPhone}</a></div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="font-semibold text-gray-900 mb-3">Chi tiết sản phẩm</h4>
+          <div class="border border-gray-200 rounded-md">
+            <div class="p-4">
+              ${itemsHtml}
+            </div>
+            <div class="bg-gray-50 p-4 border-t space-y-2">
+              <div class="flex justify-between text-sm">
+                <span>Tạm tính:</span>
+                <span>${formatVND(hold.subtotal)}</span>
+              </div>
+              ${hold.discount > 0 ? `
+                <div class="flex justify-between text-sm text-green-600">
+                  <span>Giảm giá:</span>
+                  <span>-${formatVND(hold.discount)}</span>
+                </div>
+              ` : ''}
+              <div class="flex justify-between text-sm">
+                <span>Thuế (10%):</span>
+                <span>${formatVND(hold.tax)}</span>
+              </div>
+              <div class="border-t pt-2 flex justify-between font-bold text-lg">
+                <span>Tổng cộng:</span>
+                <span class="text-blue-600">${formatVND(hold.total)}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        ${hold.notes ? `
+          <div>
+            <h4 class="font-semibold text-gray-900 mb-2">Ghi chú</h4>
+            <p class="text-sm text-gray-600 bg-gray-50 p-3 rounded-md">${hold.notes}</p>
+          </div>
+        ` : ''}
+
+        ${hold.recoveredAt ? `
+          <div class="bg-blue-50 p-4 rounded-md">
+            <h4 class="font-semibold text-blue-900 mb-2">Thông tin phục hồi</h4>
+            <p class="text-sm text-blue-700">Đã phục hồi vào: ${new Date(hold.recoveredAt).toLocaleString('vi-VN')}</p>
+          </div>
+        ` : ''}
+      </div>
+    `;
+
+    document.getElementById('hold-detail-title').textContent = `Chi tiết đơn giữ ${hold.id}`;
+    document.getElementById('hold-detail-content').innerHTML = html;
+    
+    // Show/hide action buttons based on status
+    const recoverBtn = document.getElementById('recover-hold-btn');
+    const deleteBtn = document.getElementById('delete-hold-btn');
+    
+    if (actualStatus === 'active' || actualStatus === 'expired') {
+      recoverBtn.classList.remove('hidden');
+      deleteBtn.classList.remove('hidden');
+    } else {
+      recoverBtn.classList.add('hidden');
+      if (actualStatus === 'recovered') {
+        deleteBtn.classList.add('hidden');
+      } else {
+        deleteBtn.classList.remove('hidden');
+      }
+    }
+    
+    document.getElementById('hold-detail-modal').classList.remove('hidden');
+  };
+
+  window.recoverHold = function() {
+    if (!currentHold) return;
+    recoverHoldQuick(currentHold.id);
+    closeModal('hold-detail-modal');
+  };
+
+  window.deleteHold = function() {
+    if (!currentHold) return;
+    deleteHoldQuick(currentHold.id);
+    closeModal('hold-detail-modal');
+  };
+
+  window.recoverHoldQuick = function(holdId) {
+    const hold = holds.find(h => h.id === holdId);
+    if (!hold) return;
+
+    if (confirm(`Phục hồi đơn giữ ${holdId} và chuyển về trang bán hàng?`)) {
+      // Store hold data in sessionStorage for POS to use
+      sessionStorage.setItem('recoverHoldData', JSON.stringify(hold));
+      
+      // Mark as recovered
+      hold.status = 'recovered';
+      hold.recoveredAt = new Date().toISOString();
+      
+      saveHoldsData();
+      renderHolds();
+      
+      // Redirect to POS sales page
+      window.location.href = '/pos/sales';
+    }
+  };
+
+  window.deleteHoldQuick = function(holdId) {
+    if (confirm(`Bạn có chắc chắn muốn xóa đơn giữ ${holdId}?`)) {
+      const holdIndex = holds.findIndex(h => h.id === holdId);
+      if (holdIndex !== -1) {
+        holds[holdIndex].status = 'deleted';
+        saveHoldsData();
+        renderHolds();
+        alert('Đã xóa đơn giữ thành công!');
+      }
+    }
+  };
+
+  window.cleanupExpired = function() {
+    const expiredHolds = holds.filter(h => {
+      const isExpired = new Date() > new Date(h.expiresAt) && h.status === 'active';
+      return isExpired;
+    });
+
+    if (expiredHolds.length === 0) {
+      alert('Không có đơn giữ quá hạn nào để dọn dẹp!');
+      return;
+    }
+
+    if (confirm(`Tìm thấy ${expiredHolds.length} đơn giữ quá hạn. Bạn có muốn xóa tất cả?`)) {
+      expiredHolds.forEach(hold => {
+        hold.status = 'deleted';
+      });
+      
+      saveHoldsData();
+      renderHolds();
+      alert(`Đã dọn dẹp ${expiredHolds.length} đơn giữ quá hạn!`);
+    }
+  };
+
+  window.bulkRecover = function() {
+    if (selectedHolds.size === 0) return;
+    
+    if (confirm(`Phục hồi ${selectedHolds.size} đơn giữ đã chọn?`)) {
+      let recoveredCount = 0;
+      selectedHolds.forEach(holdId => {
+        const hold = holds.find(h => h.id === holdId);
+        if (hold && (hold.status === 'active' || 
+            (new Date() > new Date(hold.expiresAt) && hold.status === 'active'))) {
+          hold.status = 'recovered';
+          hold.recoveredAt = new Date().toISOString();
+          recoveredCount++;
+        }
+      });
+      
+      selectedHolds.clear();
+      saveHoldsData();
+      renderHolds();
+      closeModal('bulk-actions-modal');
+      
+      alert(`Đã phục hồi ${recoveredCount} đơn giữ!`);
+    }
+  };
+
+  window.bulkDelete = function() {
+    if (selectedHolds.size === 0) return;
+    
+    if (confirm(`Xóa ${selectedHolds.size} đơn giữ đã chọn?`)) {
+      selectedHolds.forEach(holdId => {
+        const hold = holds.find(h => h.id === holdId);
+        if (hold) {
+          hold.status = 'deleted';
+        }
+      });
+      
+      selectedHolds.clear();
+      saveHoldsData();
+      renderHolds();
+      closeModal('bulk-actions-modal');
+      
+      alert(`Đã xóa ${selectedHolds.size} đơn giữ!`);
+    }
+  };
+
+  function getStatusColor(status) {
+    const colors = {
+      active: 'bg-green-100 text-green-800',
+      expired: 'bg-red-100 text-red-800',
+      recovered: 'bg-blue-100 text-blue-800',
+      deleted: 'bg-gray-100 text-gray-800'
+    };
+    return colors[status] || '';
+  }
+
+  function getStatusName(status) {
+    const names = {
+      active: 'Đang giữ',
+      expired: 'Quá hạn',
+      recovered: 'Đã phục hồi',
+      deleted: 'Đã xóa'
+    };
+    return names[status] || status;
+  }
+
+  window.exportHolds = function() {
+    const csvContent = generateHoldsCSV(holds);
+    downloadCSV(csvContent, `pos-holds-${new Date().toISOString().split('T')[0]}.csv`);
+  };
+
+  function generateHoldsCSV(data) {
+    const headers = ['Mã giữ đơn', 'Khách hàng', 'SĐT', 'Số SP', 'Tổng tiền', 'Trạng thái', 'Tạo lúc', 'Hết hạn', 'Nhân viên'];
+    
+    const statusNames = {
+      active: 'Đang giữ',
+      expired: 'Quá hạn',
+      recovered: 'Đã phục hồi',
+      deleted: 'Đã xóa'
+    };
+    
+    const rows = data.map(hold => {
+      const isExpired = new Date() > new Date(hold.expiresAt) && hold.status === 'active';
+      const actualStatus = isExpired ? 'expired' : hold.status;
+      
+      return [
+        hold.id,
+        hold.customerName,
+        hold.customerPhone,
+        hold.items.length,
+        hold.total,
+        statusNames[actualStatus],
+        new Date(hold.createdAt).toLocaleString('vi-VN'),
+        new Date(hold.expiresAt).toLocaleString('vi-VN'),
+        hold.cashier
+      ];
+    });
+
+    return [headers, ...rows].map(row => 
+      row.map(field => `"${field}"`).join(',')
+    ).join('\n');
+  }
+
+  function downloadCSV(content, filename) {
+    const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  window.refreshHolds = function() {
+    renderHolds();
+    alert('Đã làm mới danh sách đơn giữ!');
+  };
+
+  window.closeModal = function(modalId) {
+    document.getElementById(modalId).classList.add('hidden');
+  };
+
+  function formatVND(amount) {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND'
+    }).format(amount);
+  }
+
+  // Event listeners
+  document.getElementById('search-input').addEventListener('input', renderHolds);
+  document.getElementById('status-filter').addEventListener('change', renderHolds);
+  document.getElementById('date-filter').addEventListener('change', renderHolds);
+  document.getElementById('sort-by').addEventListener('change', renderHolds);
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey) {
+      switch (e.key) {
+        case 'f':
+          e.preventDefault();
+          document.getElementById('search-input').focus();
+          break;
+        case 'a':
+          e.preventDefault();
+          // Select all visible holds
+          const visibleCheckboxes = document.querySelectorAll('tbody input[type="checkbox"]');
+          visibleCheckboxes.forEach(cb => {
+            cb.checked = true;
+            const holdId = cb.onchange.toString().match(/'([^']+)'/)[1];
+            selectedHolds.add(holdId);
+          });
+          updateBulkActionsButton();
+          break;
+      }
+    }
+  });
+
+  // Auto-refresh every minute to update time remaining
+  setInterval(() => {
+    renderHolds();
+  }, 60000);
+
+  // Initialize
+  loadHoldsData();
+  renderHolds();
+});
+</script>
+
+<style>
+.form-input, .form-select, .form-checkbox {
+  @apply px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full;
+}
+
+.form-checkbox {
+  @apply w-4 h-4;
+}
+
+.modal-overlay {
+  @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50;
+}
+
+.modal-content {
+  @apply bg-white rounded-lg shadow-xl w-full mx-4 max-h-screen overflow-y-auto;
+}
+
+.modal-header {
+  @apply flex items-center justify-between p-6 border-b;
+}
+
+.modal-title {
+  @apply text-lg font-medium text-gray-900;
+}
+
+.modal-close {
+  @apply text-gray-400 hover:text-gray-600 text-2xl font-bold cursor-pointer;
+}
+
+.modal-body {
+  @apply p-6;
+}
+
+.modal-footer {
+  @apply flex items-center justify-end space-x-3 p-6 border-t bg-gray-50;
+}
+
+.btn {
+  @apply px-4 py-2 rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-offset-2;
+}
+
+.btn-primary {
+  @apply bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500;
+}
+
+.btn-secondary {
+  @apply bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500;
+}
+
+.btn-success {
+  @apply bg-green-600 text-white hover:bg-green-700 focus:ring-green-500;
+}
+
+.btn-danger {
+  @apply bg-red-600 text-white hover:bg-red-700 focus:ring-red-500;
+}
+
+.form-label {
+  @apply block text-sm font-medium text-gray-700 mb-1;
+}
+</style>

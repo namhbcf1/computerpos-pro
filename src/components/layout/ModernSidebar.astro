@@ -1,0 +1,486 @@
+---
+// Modern Sidebar with advanced 3D effects and neumorphic design
+const currentPath = Astro.url.pathname;
+
+const menuItems = [
+  {
+    title: 'Dashboard',
+    href: '/',
+    icon: 'home',
+    active: currentPath === '/'
+  },
+  {
+    title: 'POS Bán Hàng',
+    href: '/pos',
+    icon: 'shopping-cart',
+    active: currentPath.startsWith('/pos'),
+    badge: 'Hot'
+  },
+  {
+    title: 'Sản Phẩm',
+    href: '/products',
+    icon: 'package',
+    active: currentPath.startsWith('/products'),
+    children: [
+      { title: 'Danh sách', href: '/products' },
+      { title: 'Thêm mới', href: '/products/add' },
+      { title: 'Danh mục', href: '/products/categories' },
+      { title: 'Tương thích', href: '/products/compatibility' }
+    ]
+  },
+  {
+    title: 'Cấu Hình PC',
+    href: '/build',
+    icon: 'cpu',
+    active: currentPath.startsWith('/build'),
+    badge: 'New'
+  },
+  {
+    title: 'Đơn Hàng',
+    href: '/orders',
+    icon: 'clipboard-list',
+    active: currentPath.startsWith('/orders'),
+    notification: 5
+  },
+  {
+    title: 'Khách Hàng',
+    href: '/customers',
+    icon: 'users',
+    active: currentPath.startsWith('/customers')
+  },
+  {
+    title: 'Tồn Kho',
+    href: '/inventory',
+    icon: 'archive',
+    active: currentPath.startsWith('/inventory'),
+    children: [
+      { title: 'Tồn kho', href: '/inventory' },
+      { title: 'Kiểm kê', href: '/inventory/adjustment' },
+      { title: 'Cảnh báo', href: '/inventory/alerts' },
+      { title: 'Nhà cung cấp', href: '/inventory/suppliers' }
+    ]
+  },
+  {
+    title: 'Báo Cáo',
+    href: '/reports',
+    icon: 'chart-bar',
+    active: currentPath.startsWith('/reports'),
+    children: [
+      { title: 'Doanh thu', href: '/reports/sales' },
+      { title: 'Tồn kho', href: '/reports/inventory' },
+      { title: 'Khách hàng', href: '/reports/customers' },
+      { title: 'Sản phẩm', href: '/reports/products' }
+    ]
+  },
+  {
+    title: 'Nhân Viên',
+    href: '/staff',
+    icon: 'user-group',
+    active: currentPath.startsWith('/staff')
+  },
+  {
+    title: 'Cài Đặt',
+    href: '/settings',
+    icon: 'cog',
+    active: currentPath.startsWith('/settings')
+  }
+];
+
+function getIcon(iconName: string) {
+  const icons = {
+    'home': 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6',
+    'shopping-cart': 'M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17M17 13a2 2 0 100 4 2 2 0 000-4zM9 13a2 2 0 100 4 2 2 0 000-4z',
+    'package': 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4',
+    'cpu': 'M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z',
+    'clipboard-list': 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01',
+    'users': 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a4 4 0 11-8 0 4 4 0 018 0z',
+    'archive': 'M5 8l6 6m0 0l6-6m-6 6v8m-9-9h18a2 2 0 002-2V6a2 2 0 00-2-2H3a2 2 0 00-2 2v3a2 2 0 002 2z',
+    'chart-bar': 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z',
+    'user-group': 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z',
+    'cog': 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z'
+  };
+  return icons[iconName] || icons['package'];
+}
+---
+
+<aside class="fixed left-0 top-0 h-full w-64 sidebar-modern animate__animated animate__fadeIn z-20 pt-20">
+  <!-- Navigation Menu -->
+  <nav class="p-4 overflow-y-auto h-full sidebar-scroll pb-24">
+    <div class="space-y-1.5">
+      {menuItems.map((item, index) => (
+        <div class={`menu-item-container animate__animated animate__fadeInLeft`} style={`animation-delay: ${index * 0.1}s`}>
+          <a href={item.href} 
+             class={`menu-item-3d group ${item.active ? 'menu-active' : ''}`}>
+            <div class="flex items-center flex-1">
+              <!-- Icon -->
+              <div class="icon-container">
+                <svg class="w-5 h-5 menu-icon" 
+                     fill="none" 
+                     stroke="currentColor" 
+                     viewBox="0 0 24 24">
+                  <path stroke-linecap="round" 
+                        stroke-linejoin="round" 
+                        stroke-width="2" 
+                        d={getIcon(item.icon)}></path>
+                </svg>
+              </div>
+              
+              <!-- Title -->
+              <span class="font-medium ml-3">{item.title}</span>
+              
+              <!-- Badges and Notifications -->
+              <div class="ml-auto flex items-center space-x-2">
+                {item.notification && (
+                  <span class="notification-badge-sm">
+                    {item.notification}
+                  </span>
+                )}
+                {item.badge && (
+                  <span class={`badge-3d ${
+                    item.badge === 'Hot' ? 'badge-hot' : 'badge-new'
+                  }`}>
+                    {item.badge}
+                  </span>
+                )}
+                {item.children && (
+                  <svg class="w-4 h-4 transform group-hover:rotate-180 transition-transform duration-300" 
+                       fill="none" 
+                       stroke="currentColor" 
+                       viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                )}
+              </div>
+            </div>
+          </a>
+          
+          <!-- Submenu with 3D effect -->
+          {item.children && (
+            <div class={`ml-8 mt-2 space-y-1 submenu-container ${item.active ? 'submenu-active' : 'hidden'}`}>
+              {item.children.map((child) => (
+                <a href={child.href} 
+                   class={`submenu-item ${
+                     currentPath === child.href ? 'submenu-item-active' : ''
+                   }`}>
+                  <span class="w-1.5 h-1.5 rounded-full bg-gray-400 mr-2"></span>
+                  {child.title}
+                </a>
+              ))}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  </nav>
+  
+  <!-- Bottom Quick Stats with 3D effect -->
+  <div class="absolute bottom-0 left-0 right-0 p-4 stats-card">
+    <div class="space-y-3">
+      <!-- Today's Sales -->
+      <div class="flex items-center justify-between text-sm">
+        <div class="flex items-center">
+          <svg class="w-4 h-4 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+          </svg>
+          <span class="text-gray-300">Hôm nay</span>
+        </div>
+        <span class="text-green-400 font-semibold">+₫12.5M</span>
+      </div>
+      
+      <!-- Online Status -->
+      <div class="flex items-center justify-between text-sm">
+        <div class="flex items-center">
+          <span class="text-gray-300">Trạng thái</span>
+        </div>
+        <div class="flex items-center space-x-2">
+          <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+          <span class="text-green-400 text-xs">Online</span>
+        </div>
+      </div>
+      
+      <!-- Storage with modern progress bar -->
+      <div class="space-y-1.5">
+        <div class="flex items-center justify-between text-xs text-gray-300">
+          <span>Lưu trữ</span>
+          <span>2.1GB / 5GB</span>
+        </div>
+        <div class="h-1.5 w-full bg-gray-700/50 rounded-full overflow-hidden">
+          <div class="progress-bar h-full rounded-full" style="width: 42%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- Mobile Sidebar Overlay with advanced blur effect -->
+<div data-mobile-menu class="fixed inset-0 bg-black/40 backdrop-blur-sm z-30 lg:hidden hidden">
+  <div class="fixed left-0 top-0 h-full w-72 sidebar-modern">
+    <!-- Close button -->
+    <div class="absolute top-4 right-4">
+      <button data-mobile-menu-close class="btn-icon-3d">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+    
+    <!-- Logo Area -->
+    <div class="p-6 flex items-center space-x-3">
+      <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg">
+        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+        </svg>
+      </div>
+      <div>
+        <h2 class="text-xl font-bold text-white">ComputerPOS</h2>
+        <p class="text-xs text-gray-300">Pro Version</p>
+      </div>
+    </div>
+    
+    <!-- Mobile navigation - Same as desktop but optimized for mobile -->
+    <nav class="p-4 space-y-1.5 overflow-y-auto max-h-[70vh] sidebar-scroll">
+      {menuItems.map((item) => (
+        <a href={item.href} 
+           class={`menu-item-3d group ${item.active ? 'menu-active' : ''}`}>
+          <div class="icon-container">
+            <svg class="w-5 h-5 menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={getIcon(item.icon)}></path>
+            </svg>
+          </div>
+          <span class="font-medium ml-3">{item.title}</span>
+          
+          {/* Show indicators */}
+          <div class="ml-auto flex items-center space-x-2">
+            {item.notification && (
+              <span class="notification-badge-sm">
+                {item.notification}
+              </span>
+            )}
+            {item.badge && (
+              <span class={`badge-3d ${
+                item.badge === 'Hot' ? 'badge-hot' : 'badge-new'
+              }`}>
+                {item.badge}
+              </span>
+            )}
+          </div>
+        </a>
+      ))}
+    </nav>
+    
+    <!-- Bottom Section -->
+    <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-white/10">
+      <a href="/settings/account" class="flex items-center space-x-3 p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all duration-300 text-white">
+        <div class="w-10 h-10 bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-full flex items-center justify-center shadow-lg">
+          <span class="text-sm font-semibold">A</span>
+        </div>
+        <div class="text-sm">
+          <p class="font-medium">Admin User</p>
+          <p class="text-xs text-gray-400">Quản trị viên</p>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<style>
+  .sidebar-modern {
+    @apply pt-5;
+    background: rgba(17, 24, 39, 0.8);
+    backdrop-filter: blur(12px);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .menu-item-container {
+    perspective: 800px;
+  }
+  
+  .menu-item-3d {
+    @apply flex items-center p-3 rounded-xl text-gray-200 transition-all duration-300;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transform: translateZ(0);
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+  }
+  
+  .menu-item-3d:hover {
+    @apply text-white;
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-2px) translateZ(5px);
+    box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .menu-active {
+    @apply text-white;
+    background: linear-gradient(to right, rgba(79, 70, 229, 0.2), rgba(129, 140, 248, 0.1)) !important;
+    border-color: rgba(99, 102, 241, 0.3);
+    box-shadow: 
+      0 4px 12px -2px rgba(79, 70, 229, 0.2),
+      inset 0 0 0 1px rgba(79, 70, 229, 0.2);
+  }
+  
+  .icon-container {
+    @apply p-1.5 rounded-lg;
+    background: rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+  }
+  
+  .menu-item-3d:hover .icon-container {
+    @apply bg-indigo-500/30;
+    transform: scale(1.1);
+  }
+  
+  .menu-active .icon-container {
+    @apply bg-indigo-500/40;
+  }
+  
+  .submenu-container {
+    animation: submenu-reveal 0.3s ease-out forwards;
+    transform-origin: top;
+  }
+  
+  .submenu-active {
+    display: block;
+  }
+  
+  .submenu-item {
+    @apply flex items-center py-2 px-3 text-sm text-gray-300 rounded-lg transition-all duration-300;
+    margin-left: 0.5rem;
+    transform: translateX(0);
+  }
+  
+  .submenu-item:hover {
+    @apply text-white bg-white/5;
+    transform: translateX(5px);
+  }
+  
+  .submenu-item-active {
+    @apply text-indigo-300 bg-indigo-500/10;
+    border-left: 2px solid rgba(99, 102, 241, 0.5);
+  }
+  
+  .notification-badge-sm {
+    @apply flex items-center justify-center text-xs bg-red-500 text-white h-5 w-5 rounded-full;
+    font-size: 0.65rem;
+    box-shadow: 0 0 0 2px rgba(17, 24, 39, 0.5);
+  }
+  
+  .badge-3d {
+    @apply px-1.5 py-0.5 text-xs rounded-full font-medium;
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .badge-hot {
+    @apply bg-gradient-to-r from-red-500/80 to-orange-500/80 text-white;
+    box-shadow: 0 2px 4px -1px rgba(239, 68, 68, 0.3);
+  }
+  
+  .badge-new {
+    @apply bg-gradient-to-r from-green-500/80 to-emerald-500/80 text-white;
+    box-shadow: 0 2px 4px -1px rgba(16, 185, 129, 0.3);
+  }
+  
+  .stats-card {
+    background: rgba(17, 24, 39, 0.95);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+  }
+  
+  .progress-bar {
+    background: linear-gradient(to right, #4f46e5, #818cf8);
+    box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+    transition: width 1s ease-in-out;
+  }
+  
+  .sidebar-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(156, 163, 175, 0.3) transparent;
+  }
+  
+  .sidebar-scroll::-webkit-scrollbar {
+    width: 4px;
+  }
+  
+  .sidebar-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .sidebar-scroll::-webkit-scrollbar-thumb {
+    background-color: rgba(156, 163, 175, 0.3);
+    border-radius: 20px;
+  }
+  
+  @keyframes submenu-reveal {
+    0% {
+      opacity: 0;
+      transform: scaleY(0.8);
+    }
+    100% {
+      opacity: 1;
+      transform: scaleY(1);
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Submenu toggle functionality
+    const menuItems = document.querySelectorAll('.menu-item-3d');
+    
+    menuItems.forEach(item => {
+      item.addEventListener('click', function(e) {
+        const parent = this.parentElement;
+        const submenu = parent.querySelector('.submenu-container');
+        
+        if (submenu && !e.target.closest('.submenu-container')) {
+          e.preventDefault();
+          
+          if (submenu.classList.contains('hidden')) {
+            // Close all other submenus
+            document.querySelectorAll('.submenu-container:not(.hidden)').forEach(el => {
+              if (el !== submenu) {
+                el.classList.add('hidden');
+              }
+            });
+            
+            submenu.classList.remove('hidden');
+          } else {
+            submenu.classList.add('hidden');
+          }
+        }
+      });
+    });
+    
+    // Mobile menu functionality
+    const mobileMenuButton = document.querySelector('[data-mobile-menu-button]');
+    const mobileMenu = document.querySelector('[data-mobile-menu]');
+    const mobileMenuClose = document.querySelector('[data-mobile-menu-close]');
+    
+    if (mobileMenuButton && mobileMenu) {
+      mobileMenuButton.addEventListener('click', () => {
+        mobileMenu.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+      });
+      
+      if (mobileMenuClose) {
+        mobileMenuClose.addEventListener('click', () => {
+          mobileMenu.classList.add('hidden');
+          document.body.style.overflow = '';
+        });
+      }
+    }
+    
+    // Animate progress bar on load
+    const progressBar = document.querySelector('.progress-bar');
+    if (progressBar) {
+      progressBar.style.width = '0%';
+      setTimeout(() => {
+        progressBar.style.width = '42%';
+      }, 500);
+    }
+  });
+</script>

@@ -1,0 +1,66 @@
+---
+export interface Props {
+  class?: string;
+  padding?: boolean;
+  variant?: 'default' | 'glass' | 'gradient' | 'outline';
+  hover?: boolean;
+  elevation?: 'flat' | 'low' | 'medium' | 'high';
+  interactive?: boolean;
+  animate?: boolean;
+}
+
+const { 
+  class: className = '',
+  padding = true, 
+  variant = 'default',
+  hover = false,
+  elevation = 'medium',
+  interactive = false,
+  animate = false
+} = Astro.props;
+
+const variantClasses = {
+  default: 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700',
+  glass: 'backdrop-blur-md bg-white/10 border-white/20 text-white',
+  gradient: 'bg-gradient-to-br from-indigo-500/80 to-purple-600/80 border-indigo-500/30 text-white',
+  outline: 'bg-transparent border-slate-200 dark:border-slate-700'
+};
+
+const elevationClasses = {
+  flat: 'shadow-none',
+  low: 'shadow-sm',
+  medium: 'shadow-md',
+  high: 'shadow-xl'
+};
+
+const hoverClasses = hover ? 'hover:shadow-lg hover:shadow-blue-500/5 dark:hover:shadow-blue-500/5 transform hover:-translate-y-1 transition-all duration-300' : '';
+const interactiveClasses = interactive ? 'cursor-pointer hover:bg-opacity-80' : '';
+const animateClasses = animate ? 'animate-fade-in' : '';
+const paddingClasses = padding ? 'p-6' : '';
+
+const classes = `
+  rounded-xl border 
+  ${variantClasses[variant]} 
+  ${elevationClasses[elevation]}
+  ${hoverClasses}
+  ${interactiveClasses}
+  ${animateClasses}
+  ${paddingClasses}
+  ${className}
+`;
+---
+
+<div class={classes}>
+  <slot />
+</div>
+
+<style>
+  @keyframes fade-in {
+    0% { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  
+  .animate-fade-in {
+    animation: fade-in 0.5s ease-out forwards;
+  }
+</style>

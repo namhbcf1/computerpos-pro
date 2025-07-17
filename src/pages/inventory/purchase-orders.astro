@@ -1,0 +1,387 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import DashboardLayout from '../../layouts/DashboardLayout.astro';
+import Card from '../../components/ui/Card.astro';
+import Button from '../../components/ui/Button.astro';
+---
+
+<BaseLayout title="Đơn nhập hàng - ComputerPOS Pro">
+  <DashboardLayout>
+    <main class="p-6 space-y-6">
+      <!-- Header -->
+      <div class="flex justify-between items-center">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">Đơn nhập hàng</h1>
+          <p class="text-gray-600 mt-1">Quản lý đơn đặt hàng từ nhà cung cấp</p>
+        </div>
+        <div class="flex space-x-3">
+          <Button href="/inventory" variant="secondary">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m0 7h18" />
+            </svg>
+            Quay lại
+          </Button>
+          <Button variant="primary" id="create-purchase-order">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            Tạo đơn nhập hàng
+          </Button>
+        </div>
+      </div>
+
+      <!-- Summary Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Tổng đơn hàng</dt>
+                  <dd class="text-lg font-medium text-gray-900">47</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-yellow-500 rounded-lg flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Đang chờ</dt>
+                  <dd class="text-lg font-medium text-gray-900">12</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Đã nhận</dt>
+                  <dd class="text-lg font-medium text-gray-900">28</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Tổng giá trị</dt>
+                  <dd class="text-lg font-medium text-gray-900">2.8 tỷ</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      <!-- Filters -->
+      <Card>
+        <div class="p-6">
+          <div class="flex flex-col sm:flex-row gap-4">
+            <div class="flex-1">
+              <input
+                type="text"
+                placeholder="Tìm kiếm đơn hàng..."
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+            <div class="flex gap-2">
+              <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <option value="">Tất cả trạng thái</option>
+                <option value="pending">Đang chờ</option>
+                <option value="approved">Đã duyệt</option>
+                <option value="received">Đã nhận</option>
+                <option value="cancelled">Đã hủy</option>
+              </select>
+              <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <option value="">Tất cả nhà cung cấp</option>
+                <option value="intel">Intel Vietnam</option>
+                <option value="asus">ASUS Vietnam</option>
+                <option value="msi">MSI Vietnam</option>
+                <option value="gigabyte">Gigabyte Vietnam</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      <!-- Purchase Orders Table -->
+      <Card>
+        <div class="overflow-hidden">
+          <div class="px-6 py-4 border-b border-gray-200">
+            <h3 class="text-lg font-medium text-gray-900">Danh sách đơn nhập hàng</h3>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Mã đơn hàng
+                  </th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Nhà cung cấp
+                  </th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Ngày tạo
+                  </th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Tổng tiền
+                  </th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Trạng thái
+                  </th>
+                  <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Thao tác
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm font-medium text-gray-900">#PO001</div>
+                    <div class="text-sm text-gray-500">25 sản phẩm</div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex items-center">
+                      <div class="flex-shrink-0 h-10 w-10">
+                        <div class="h-10 w-10 rounded-lg bg-blue-100 flex items-center justify-center">
+                          <span class="text-blue-600 font-medium text-sm">IN</span>
+                        </div>
+                      </div>
+                      <div class="ml-4">
+                        <div class="text-sm font-medium text-gray-900">Intel Vietnam</div>
+                        <div class="text-sm text-gray-500">intel@vietnam.com</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    15/12/2024
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm font-semibold text-gray-900">850,000,000₫</div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                      Đang chờ duyệt
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <div class="flex justify-end space-x-2">
+                      <button class="text-indigo-600 hover:text-indigo-900">Xem</button>
+                      <button class="text-green-600 hover:text-green-900">Duyệt</button>
+                      <button class="text-red-600 hover:text-red-900">Hủy</button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm font-medium text-gray-900">#PO002</div>
+                    <div class="text-sm text-gray-500">18 sản phẩm</div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex items-center">
+                      <div class="flex-shrink-0 h-10 w-10">
+                        <div class="h-10 w-10 rounded-lg bg-red-100 flex items-center justify-center">
+                          <span class="text-red-600 font-medium text-sm">AS</span>
+                        </div>
+                      </div>
+                      <div class="ml-4">
+                        <div class="text-sm font-medium text-gray-900">ASUS Vietnam</div>
+                        <div class="text-sm text-gray-500">asus@vietnam.com</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    12/12/2024
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm font-semibold text-gray-900">1,200,000,000₫</div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      Đã nhận hàng
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <div class="flex justify-end space-x-2">
+                      <button class="text-indigo-600 hover:text-indigo-900">Xem</button>
+                      <button class="text-blue-600 hover:text-blue-900">In phiếu</button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm font-medium text-gray-900">#PO003</div>
+                    <div class="text-sm text-gray-500">32 sản phẩm</div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex items-center">
+                      <div class="flex-shrink-0 h-10 w-10">
+                        <div class="h-10 w-10 rounded-lg bg-orange-100 flex items-center justify-center">
+                          <span class="text-orange-600 font-medium text-sm">MS</span>
+                        </div>
+                      </div>
+                      <div class="ml-4">
+                        <div class="text-sm font-medium text-gray-900">MSI Vietnam</div>
+                        <div class="text-sm text-gray-500">msi@vietnam.com</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    10/12/2024
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm font-semibold text-gray-900">750,000,000₫</div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                      Đã duyệt
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <div class="flex justify-end space-x-2">
+                      <button class="text-indigo-600 hover:text-indigo-900">Xem</button>
+                      <button class="text-green-600 hover:text-green-900">Nhận hàng</button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </Card>
+    </main>
+  </DashboardLayout>
+</BaseLayout>
+
+<script>
+  // Purchase orders functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    // Create purchase order button
+    document.getElementById('create-purchase-order')?.addEventListener('click', function() {
+      alert('Chức năng tạo đơn nhập hàng sẽ được phát triển trong phiên bản tiếp theo');
+    });
+
+    // Action buttons
+    document.addEventListener('click', function(e) {
+      const buttonText = e.target.textContent;
+      const row = e.target.closest('tr');
+
+      if (buttonText === 'Xem') {
+        const orderId = row.querySelector('td:first-child .font-medium').textContent;
+        alert(`Xem chi tiết đơn hàng ${orderId}`);
+      }
+
+      if (buttonText === 'Duyệt') {
+        const orderId = row.querySelector('td:first-child .font-medium').textContent;
+        if (confirm(`Duyệt đơn hàng ${orderId}?`)) {
+          const statusBadge = row.querySelector('.bg-yellow-100');
+          statusBadge.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800';
+          statusBadge.textContent = 'Đã duyệt';
+
+          const actionCell = row.querySelector('td:last-child .flex');
+          actionCell.innerHTML = `
+            <button class="text-indigo-600 hover:text-indigo-900">Xem</button>
+            <button class="text-green-600 hover:text-green-900">Nhận hàng</button>
+          `;
+
+          alert('Đã duyệt đơn hàng!');
+        }
+      }
+
+      if (buttonText === 'Nhận hàng') {
+        const orderId = row.querySelector('td:first-child .font-medium').textContent;
+        if (confirm(`Xác nhận nhận hàng ${orderId}?`)) {
+          const statusBadge = row.querySelector('.bg-blue-100');
+          statusBadge.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800';
+          statusBadge.textContent = 'Đã nhận hàng';
+
+          const actionCell = row.querySelector('td:last-child .flex');
+          actionCell.innerHTML = `
+            <button class="text-indigo-600 hover:text-indigo-900">Xem</button>
+            <button class="text-blue-600 hover:text-blue-900">In phiếu</button>
+          `;
+
+          alert('Đã xác nhận nhận hàng!');
+        }
+      }
+
+      if (buttonText === 'Hủy') {
+        const orderId = row.querySelector('td:first-child .font-medium').textContent;
+        if (confirm(`Hủy đơn hàng ${orderId}?`)) {
+          row.style.opacity = '0.5';
+          setTimeout(() => {
+            row.remove();
+            alert('Đã hủy đơn hàng!');
+          }, 500);
+        }
+      }
+
+      if (buttonText === 'In phiếu') {
+        const orderId = row.querySelector('td:first-child .font-medium').textContent;
+        alert(`In phiếu nhập kho cho ${orderId}`);
+      }
+    });
+
+    // Search functionality
+    const searchInput = document.querySelector('input[placeholder*="Tìm kiếm"]');
+    if (searchInput) {
+      searchInput.addEventListener('input', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        const rows = document.querySelectorAll('tbody tr');
+
+        rows.forEach(row => {
+          const orderId = row.querySelector('td:first-child .font-medium').textContent.toLowerCase();
+          const supplier = row.querySelector('td:nth-child(2) .font-medium').textContent.toLowerCase();
+
+          if (orderId.includes(searchTerm) || supplier.includes(searchTerm)) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        });
+      });
+    }
+  });
+</script>

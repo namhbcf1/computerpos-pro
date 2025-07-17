@@ -1,0 +1,122 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import DashboardStats from '../components/dashboard/DashboardStats.astro';
+import RecentOrders from '../components/dashboard/RecentOrders.astro';
+import TopProducts from '../components/dashboard/TopProducts.astro';
+import SalesChart from '../components/dashboard/SalesChart.astro';
+---
+
+<BaseLayout title="Dashboard - ComputerPOS Pro">
+  <div class="min-h-screen bg-gray-50">
+    <!-- Header -->
+    <div class="bg-white shadow-sm border-b">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center py-6">
+          <div>
+            <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
+            <p class="text-gray-600 mt-1">Chào mừng bạn đến với ComputerPOS Pro</p>
+          </div>
+          <div class="flex items-center space-x-4">
+            <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+              Tạo đơn hàng mới
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <!-- Stats Cards -->
+      <DashboardStats />
+
+      <!-- Charts and Tables Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+        <!-- Sales Chart -->
+        <div class="bg-white rounded-lg shadow p-6">
+          <h2 class="text-xl font-semibold text-gray-900 mb-4">Doanh thu theo tháng</h2>
+          <SalesChart />
+        </div>
+
+        <!-- Recent Orders -->
+        <div class="bg-white rounded-lg shadow p-6">
+          <h2 class="text-xl font-semibold text-gray-900 mb-4">Đơn hàng gần đây</h2>
+          <RecentOrders />
+        </div>
+      </div>
+
+      <!-- Top Products -->
+      <div class="bg-white rounded-lg shadow p-6 mt-8">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">Sản phẩm bán chạy</h2>
+        <TopProducts />
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+        <a href="/products" class="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="ml-4">
+              <h3 class="text-lg font-medium text-gray-900">Sản phẩm</h3>
+              <p class="text-sm text-gray-500">Quản lý kho hàng</p>
+            </div>
+          </div>
+        </a>
+
+        <a href="/orders" class="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="ml-4">
+              <h3 class="text-lg font-medium text-gray-900">Đơn hàng</h3>
+              <p class="text-sm text-gray-500">Quản lý bán hàng</p>
+            </div>
+          </div>
+        </a>
+
+        <a href="/customers" class="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="ml-4">
+              <h3 class="text-lg font-medium text-gray-900">Khách hàng</h3>
+              <p class="text-sm text-gray-500">Quản lý khách hàng</p>
+            </div>
+          </div>
+        </a>
+
+        <a href="/reports" class="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <div class="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
+                <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="ml-4">
+              <h3 class="text-lg font-medium text-gray-900">Báo cáo</h3>
+              <p class="text-sm text-gray-500">Thống kê doanh thu</p>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

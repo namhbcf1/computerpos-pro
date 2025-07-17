@@ -1,0 +1,313 @@
+---
+// Modern Header with neumorphic design and 3D effects
+---
+
+<header class="fixed top-0 left-0 right-0 z-30 px-6 py-3">
+  <div class="backdrop-blur-xl bg-slate-900/70 border border-white/10 rounded-2xl shadow-2xl px-4 py-2 flex items-center justify-between">
+    <div class="flex items-center space-x-6">
+      <!-- Logo with 3D effect -->
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center shadow-lg transform hover:scale-105 transition-all duration-300">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+          </svg>
+        </div>
+        <h1 class="text-xl font-bold bg-gradient-to-r from-white to-gray-300 text-transparent bg-clip-text">ComputerPOS</h1>
+      </div>
+      
+      <!-- Modern Search Bar -->
+      <div class="hidden md:flex flex-1 max-w-xl relative group">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+        </div>
+        <input type="text" 
+               class="w-full py-2 pl-10 pr-4 bg-slate-800/50 border border-white/5 rounded-xl text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all duration-300"
+               placeholder="Tìm kiếm sản phẩm, đơn hàng, khách hàng..."
+               id="global-search">
+        
+        <!-- Keyboard shortcut badge -->
+        <div class="absolute right-3 top-1/2 -translate-y-1/2 hidden group-focus-within:flex items-center space-x-1">
+          <span class="text-xs bg-white/10 text-gray-400 px-1.5 py-0.5 rounded">Ctrl</span>
+          <span class="text-xs bg-white/10 text-gray-400 px-1.5 py-0.5 rounded">K</span>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Right side - Quick Actions, Notifications, User menu -->
+    <div class="flex items-center space-x-3">
+      <!-- Quick Actions -->
+      <div class="hidden lg:flex items-center space-x-2">
+        <button class="btn-3d bg-gradient-to-br from-green-500 to-emerald-600 text-white">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+          </svg>
+          <span>Bán hàng</span>
+        </button>
+        <button class="btn-3d bg-gradient-to-br from-blue-500 to-indigo-600 text-white">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+          </svg>
+          <span>Thêm SP</span>
+        </button>
+      </div>
+      
+      <!-- Notifications -->
+      <div class="relative" data-dropdown-toggle>
+        <button data-dropdown-button class="btn-icon-3d">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+          </svg>
+          <span class="notification-badge">3</span>
+        </button>
+        
+        <div data-dropdown-menu class="hidden absolute right-0 mt-3 w-80 dropdown-panel">
+          <div class="p-4">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-white font-medium text-sm flex items-center">
+                <svg class="w-4 h-4 mr-2 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                </svg>
+                Thông báo
+              </h3>
+              <button class="text-xs text-indigo-400 hover:text-indigo-300">Đánh dấu đã đọc</button>
+            </div>
+            
+            <div class="space-y-2.5 max-h-80 overflow-y-auto sidebar-scroll pr-1">
+              <div class="notification-item bg-red-500/10 border-l-2 border-red-500">
+                <div class="w-8 h-8 bg-red-500/20 text-red-500 rounded-full flex items-center justify-center">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5l-6.928-12c-.77-.833-2.694-.833-3.464 0l-6.928 12c-.77.833.192 2.5 1.732 2.5z"></path>
+                  </svg>
+                </div>
+                <div class="flex-1">
+                  <p class="text-white text-sm font-medium">Hết hàng!</p>
+                  <p class="text-gray-300 text-xs">CPU Intel i5-12400F chỉ còn 2 sản phẩm</p>
+                  <p class="text-gray-400 text-xs mt-1">5 phút trước</p>
+                </div>
+              </div>
+              
+              <div class="notification-item bg-green-500/10 border-l-2 border-green-500">
+                <div class="w-8 h-8 bg-green-500/20 text-green-500 rounded-full flex items-center justify-center">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                </div>
+                <div class="flex-1">
+                  <p class="text-white text-sm font-medium">Đơn hàng mới</p>
+                  <p class="text-gray-300 text-xs">Khách hàng Nguyễn Văn A đặt mua PC Gaming</p>
+                  <p class="text-gray-400 text-xs mt-1">10 phút trước</p>
+                </div>
+              </div>
+              
+              <div class="notification-item bg-blue-500/10 border-l-2 border-blue-500">
+                <div class="w-8 h-8 bg-blue-500/20 text-blue-500 rounded-full flex items-center justify-center">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                </div>
+                <div class="flex-1">
+                  <p class="text-white text-sm font-medium">Cập nhật giá</p>
+                  <p class="text-gray-300 text-xs">Giá CPU AMD Ryzen 7 đã được cập nhật</p>
+                  <p class="text-gray-400 text-xs mt-1">1 giờ trước</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mt-4 pt-3 border-t border-white/10">
+              <a href="#" class="text-indigo-400 text-sm hover:text-indigo-300 transition-all duration-300 flex items-center justify-center">
+                Xem tất cả
+                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- User Profile -->
+      <div class="relative" data-dropdown-toggle>
+        <button data-dropdown-button class="flex items-center space-x-3 p-1.5 rounded-xl bg-white/5 text-white hover:bg-white/10 border border-white/5 transition-all duration-300">
+          <div class="w-8 h-8 bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-full flex items-center justify-center shadow-md">
+            <span class="text-sm font-semibold">A</span>
+          </div>
+          <div class="hidden md:block text-left pr-1">
+            <p class="text-sm font-medium">Admin</p>
+            <p class="text-xs text-gray-400">Quản trị viên</p>
+          </div>
+          <svg class="w-4 h-4 text-gray-400 hidden md:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+        
+        <div data-dropdown-menu class="hidden absolute right-0 mt-3 w-64 dropdown-panel">
+          <div class="p-4">
+            <div class="flex items-center space-x-3 mb-4 pb-4 border-b border-white/10">
+              <div class="w-12 h-12 bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-full flex items-center justify-center shadow-lg">
+                <span class="text-lg font-semibold text-white">A</span>
+              </div>
+              <div>
+                <p class="text-white font-medium">Admin User</p>
+                <p class="text-gray-400 text-sm">admin@computerpos.com</p>
+              </div>
+            </div>
+            
+            <div class="space-y-1.5">
+              <a href="/profile" class="dropdown-item">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                </svg>
+                <span>Hồ sơ cá nhân</span>
+              </a>
+              
+              <a href="/settings" class="dropdown-item">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+                <span>Cài đặt</span>
+              </a>
+              
+              <a href="/help" class="dropdown-item">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span>Trợ giúp</span>
+              </a>
+              
+              <div class="pt-2 mt-2 border-t border-white/10">
+                <a href="/logout" class="dropdown-item text-red-400 hover:text-red-300 hover:bg-red-500/10">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                  </svg>
+                  <span>Đăng xuất</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Mobile menu button -->
+      <button class="lg:hidden btn-icon-3d" data-mobile-menu-button>
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<style>
+  .btn-3d {
+    @apply flex items-center space-x-2 px-3 py-1.5 text-sm rounded-xl shadow-lg border border-white/10 transform hover:-translate-y-0.5 transition-all duration-300;
+  }
+  
+  .btn-icon-3d {
+    @apply relative flex items-center justify-center w-9 h-9 rounded-full bg-white/5 border border-white/10 text-white shadow-lg hover:bg-white/10 transform hover:-translate-y-0.5 transition-all duration-300;
+  }
+  
+  .notification-badge {
+    @apply absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full text-xs text-white flex items-center justify-center;
+    box-shadow: 0 0 0 2px rgb(17 24 39);
+  }
+  
+  .dropdown-panel {
+    @apply rounded-xl overflow-hidden border border-white/10 shadow-2xl;
+    background: rgba(17, 24, 39, 0.95);
+    backdrop-filter: blur(12px);
+    transform-origin: top right;
+    animation: dropdown-reveal 0.2s ease-out forwards;
+  }
+  
+  .dropdown-item {
+    @apply flex items-center space-x-3 p-2.5 rounded-lg text-gray-200 hover:text-white hover:bg-white/10 transition-all duration-300;
+  }
+  
+  .notification-item {
+    @apply flex items-start space-x-3 p-2.5 rounded-lg transition-all duration-300;
+  }
+  
+  .sidebar-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(156, 163, 175, 0.3) transparent;
+  }
+  
+  .sidebar-scroll::-webkit-scrollbar {
+    width: 4px;
+  }
+  
+  .sidebar-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .sidebar-scroll::-webkit-scrollbar-thumb {
+    background-color: rgba(156, 163, 175, 0.3);
+    border-radius: 20px;
+  }
+  
+  @keyframes dropdown-reveal {
+    0% {
+      opacity: 0;
+      transform: scale(0.95) translateY(-0.5rem);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Keyboard shortcut for search
+    document.addEventListener('keydown', function(e) {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        document.getElementById('global-search')?.focus();
+      }
+    });
+    
+    // Dropdown functionality
+    const dropdownToggles = document.querySelectorAll('[data-dropdown-toggle]');
+    
+    dropdownToggles.forEach(toggle => {
+      const button = toggle.querySelector('[data-dropdown-button]');
+      const menu = toggle.querySelector('[data-dropdown-menu]');
+      
+      if (button && menu) {
+        button.addEventListener('click', function(e) {
+          e.stopPropagation();
+          
+          // Close other menus
+          document.querySelectorAll('[data-dropdown-menu]:not(.hidden)').forEach(el => {
+            if (el !== menu) {
+              el.classList.add('hidden');
+            }
+          });
+          
+          menu.classList.toggle('hidden');
+        });
+      }
+    });
+    
+    // Close dropdown when clicking elsewhere
+    document.addEventListener('click', function() {
+      document.querySelectorAll('[data-dropdown-menu]').forEach(menu => {
+        menu.classList.add('hidden');
+      });
+    });
+    
+    // Global search functionality
+    const searchInput = document.getElementById('global-search');
+    if (searchInput) {
+      searchInput.addEventListener('input', function(e) {
+        const query = e.target.value.toLowerCase();
+        // Implement real-time search logic here
+        console.log('Search query:', query);
+      });
+    }
+  });
+</script>

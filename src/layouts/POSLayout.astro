@@ -1,0 +1,164 @@
+---
+// POS Layout - Full screen layout without navigation
+---
+
+<div class="h-screen overflow-hidden">
+  <slot />
+</div>
+
+<style>
+  /* Hide scrollbars in POS mode for cleaner interface */
+  .pos-container {
+    overflow-y: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .pos-container::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* POS specific styles */
+  .pos-product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .pos-product-card {
+    background: white;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+  }
+
+  .pos-product-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .pos-cart-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .pos-cart-item:last-child {
+    border-bottom: none;
+  }
+
+  /* Receipt printer styles */
+  .pos-receipt {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    line-height: 1.4;
+    max-width: 300px;
+  }
+
+  /* Payment modal styles */
+  .pos-payment-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+
+  .pos-payment-content {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  /* Keypad styles */
+  .pos-keypad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    max-width: 200px;
+  }
+
+  .pos-keypad button {
+    padding: 16px;
+    font-size: 18px;
+    font-weight: 600;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .pos-keypad button:hover {
+    background: #f3f4f6;
+    border-color: #d1d5db;
+  }
+
+  .pos-keypad button:active {
+    transform: scale(0.95);
+  }
+
+  .pos-keypad button.wide {
+    grid-column: span 2;
+  }
+
+  .pos-keypad button.tall {
+    grid-row: span 2;
+  }
+
+  /* Customer display styles */
+  .pos-customer-display {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #1f2937;
+    color: white;
+    padding: 40px;
+    border-radius: 16px;
+    text-align: center;
+    min-width: 400px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .pos-product-grid {
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 12px;
+      padding: 12px;
+    }
+
+    .pos-product-card {
+      padding: 12px;
+    }
+
+    .pos-payment-content {
+      padding: 16px;
+      margin: 16px;
+    }
+
+    .pos-keypad {
+      max-width: 180px;
+    }
+
+    .pos-keypad button {
+      padding: 12px;
+      font-size: 16px;
+    }
+  }
+</style>

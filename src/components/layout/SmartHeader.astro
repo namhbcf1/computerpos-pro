@@ -1,0 +1,193 @@
+---
+// Smart Header with compact design and better UX
+---
+
+<header class="smart-header">
+  <div class="smart-header-content">
+    <!-- Logo -->
+    <div class="smart-logo">
+      <div class="smart-logo-icon">
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+        </svg>
+      </div>
+      <span>ComputerPOS Pro</span>
+    </div>
+
+    <!-- Search -->
+    <div class="smart-search">
+      <svg class="smart-search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+      </svg>
+      <input type="text" class="smart-search-input" placeholder="Tìm sản phẩm, đơn hàng, khách hàng...">
+    </div>
+
+    <!-- Right Section -->
+    <div class="smart-flex smart-gap-3">
+      <!-- Quick POS Button -->
+      <button class="smart-btn smart-btn-primary">
+        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+        </svg>
+        Bán hàng
+      </button>
+
+      <!-- Notifications -->
+      <div class="smart-notification-container" style="position: relative;">
+        <button class="smart-btn smart-btn-secondary" id="notificationBtn">
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5zM4 8h16v9a2 2 0 01-2 2H6a2 2 0 01-2-2V8z"/>
+          </svg>
+          <span class="smart-badge smart-badge-danger" style="position: absolute; top: -8px; right: -8px; min-width: 18px; height: 18px; border-radius: 50%; font-size: 10px; display: flex; align-items: center; justify-content: center;">3</span>
+        </button>
+        
+        <!-- Notification Dropdown -->
+        <div id="notificationDropdown" class="smart-dropdown" style="display: none; position: absolute; top: 100%; right: 0; margin-top: 8px; width: 320px; background: white; border-radius: 8px; box-shadow: var(--shadow-lg); border: 1px solid var(--gray-200); z-index: 1000;">
+          <div style="padding: 16px; border-bottom: 1px solid var(--gray-200);">
+            <h3 style="font-size: 14px; font-weight: 600; margin: 0;">Thông báo</h3>
+          </div>
+          <div style="max-height: 300px; overflow-y: auto;">
+            <div style="padding: 12px 16px; border-bottom: 1px solid var(--gray-100); display: flex; gap: 12px;">
+              <div style="width: 8px; height: 8px; background: var(--danger); border-radius: 50%; margin-top: 4px; flex-shrink: 0;"></div>
+              <div>
+                <p style="font-size: 13px; font-weight: 500; margin: 0 0 4px 0;">Hết hàng: RTX 4070</p>
+                <p style="font-size: 12px; color: var(--gray-600); margin: 0;">Chỉ còn 2 sản phẩm trong kho</p>
+                <p style="font-size: 11px; color: var(--gray-500); margin: 4px 0 0 0;">5 phút trước</p>
+              </div>
+            </div>
+            <div style="padding: 12px 16px; border-bottom: 1px solid var(--gray-100); display: flex; gap: 12px;">
+              <div style="width: 8px; height: 8px; background: var(--success); border-radius: 50%; margin-top: 4px; flex-shrink: 0;"></div>
+              <div>
+                <p style="font-size: 13px; font-weight: 500; margin: 0 0 4px 0;">Đơn hàng mới #DH156</p>
+                <p style="font-size: 12px; color: var(--gray-600); margin: 0;">Nguyễn Văn A - PC Gaming</p>
+                <p style="font-size: 11px; color: var(--gray-500); margin: 4px 0 0 0;">10 phút trước</p>
+              </div>
+            </div>
+            <div style="padding: 12px 16px; display: flex; gap: 12px;">
+              <div style="width: 8px; height: 8px; background: var(--info); border-radius: 50%; margin-top: 4px; flex-shrink: 0;"></div>
+              <div>
+                <p style="font-size: 13px; font-weight: 500; margin: 0 0 4px 0;">Cập nhật giá CPU Intel</p>
+                <p style="font-size: 12px; color: var(--gray-600); margin: 0;">15 sản phẩm đã được cập nhật</p>
+                <p style="font-size: 11px; color: var(--gray-500); margin: 4px 0 0 0;">1 giờ trước</p>
+              </div>
+            </div>
+          </div>
+          <div style="padding: 12px 16px; border-top: 1px solid var(--gray-200); text-align: center;">
+            <a href="/notifications" style="font-size: 12px; color: var(--primary); text-decoration: none; font-weight: 500;">Xem tất cả</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- User Menu -->
+      <div class="smart-user-container" style="position: relative;">
+        <button class="smart-btn smart-btn-secondary" id="userMenuBtn" style="padding: 6px 8px;">
+          <div style="width: 24px; height: 24px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: 600;">A</div>
+        </button>
+        
+        <!-- User Dropdown -->
+        <div id="userDropdown" class="smart-dropdown" style="display: none; position: absolute; top: 100%; right: 0; margin-top: 8px; width: 200px; background: white; border-radius: 8px; box-shadow: var(--shadow-lg); border: 1px solid var(--gray-200); z-index: 1000;">
+          <div style="padding: 16px; border-bottom: 1px solid var(--gray-200);">
+            <p style="font-size: 13px; font-weight: 600; margin: 0;">Admin User</p>
+            <p style="font-size: 11px; color: var(--gray-600); margin: 0;">admin@computerpos.com</p>
+          </div>
+          <div style="padding: 8px;">
+            <a href="/profile" style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 4px; font-size: 13px; color: var(--gray-700); text-decoration: none; transition: background 0.15s ease;">
+              <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+              </svg>
+              Hồ sơ
+            </a>
+            <a href="/settings" style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 4px; font-size: 13px; color: var(--gray-700); text-decoration: none; transition: background 0.15s ease;">
+              <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+              </svg>
+              Cài đặt
+            </a>
+          </div>
+          <div style="padding: 8px; border-top: 1px solid var(--gray-200);">
+            <a href="/logout" style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 4px; font-size: 13px; color: var(--danger); text-decoration: none; transition: background 0.15s ease;">
+              <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+              </svg>
+              Đăng xuất
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile Menu Toggle -->
+      <button class="smart-btn smart-btn-secondary" id="mobileMenuBtn" style="display: none;">
+        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Notification dropdown
+    const notificationBtn = document.getElementById('notificationBtn');
+    const notificationDropdown = document.getElementById('notificationDropdown');
+    
+    notificationBtn?.addEventListener('click', function() {
+      notificationDropdown.style.display = notificationDropdown.style.display === 'none' ? 'block' : 'none';
+    });
+
+    // User dropdown
+    const userMenuBtn = document.getElementById('userMenuBtn');
+    const userDropdown = document.getElementById('userDropdown');
+    
+    userMenuBtn?.addEventListener('click', function() {
+      userDropdown.style.display = userDropdown.style.display === 'none' ? 'block' : 'none';
+    });
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!notificationBtn?.contains(e.target) && !notificationDropdown?.contains(e.target)) {
+        notificationDropdown.style.display = 'none';
+      }
+      if (!userMenuBtn?.contains(e.target) && !userDropdown?.contains(e.target)) {
+        userDropdown.style.display = 'none';
+      }
+    });
+
+    // Search functionality
+    const searchInput = document.querySelector('.smart-search-input');
+    searchInput?.addEventListener('input', function(e) {
+      // Implement search logic here
+      console.log('Search:', e.target.value);
+    });
+
+    // Mobile responsive
+    function handleResize() {
+      const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+      if (window.innerWidth <= 1024) {
+        mobileMenuBtn.style.display = 'flex';
+      } else {
+        mobileMenuBtn.style.display = 'none';
+      }
+    }
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+  });
+</script>
+
+<style>
+  .smart-dropdown a:hover {
+    background: var(--gray-100) !important;
+  }
+  
+  @media (max-width: 768px) {
+    .smart-search {
+      display: none;
+    }
+    
+    .smart-header-content {
+      padding: 0 16px;
+    }
+  }
+</style>

@@ -1,0 +1,972 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import DashboardLayout from '../../layouts/DashboardLayout.astro';
+import Card from '../../components/ui/Card.astro';
+import Button from '../../components/ui/Button.astro';
+---
+
+<BaseLayout title="Customer Segments - ComputerPOS Pro">
+  <DashboardLayout>
+    <main class="p-6 space-y-6">
+      <!-- Header -->
+      <div class="flex justify-between items-center">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">Customer Segments</h1>
+          <p class="text-gray-600 mt-1">Phân khúc và phân tích nhóm khách hàng</p>
+        </div>
+        <div class="flex space-x-3">
+          <Button href="/customers" variant="secondary">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Quay lại Khách hàng
+          </Button>
+          <Button variant="primary" onclick="createNewSegment()">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            Tạo phân khúc mới
+          </Button>
+        </div>
+      </div>
+
+      <!-- Segment Overview Stats -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Tổng phân khúc</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="total-segments">0</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-green-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Khách hàng VIP</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="vip-customers">0</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-purple-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Khách hoạt động</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="active-customers">0</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-orange-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Doanh thu trung bình</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="avg-revenue">0₫</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      <!-- Segment Analysis Chart -->
+      <Card>
+        <div class="p-6">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-lg font-medium text-gray-900">Phân tích phân khúc khách hàng</h2>
+            <div class="flex space-x-3">
+              <select class="form-select w-40" id="chart-metric">
+                <option value="customers">Số lượng khách hàng</option>
+                <option value="revenue">Doanh thu</option>
+                <option value="orders">Số đơn hàng</option>
+              </select>
+              <Button onclick="exportSegmentData()" variant="secondary">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Xuất dữ liệu
+              </Button>
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Chart Placeholder -->
+            <div class="bg-gray-50 rounded-lg p-6">
+              <canvas id="segment-chart" width="400" height="300"></canvas>
+            </div>
+            
+            <!-- Top Segments -->
+            <div>
+              <h3 class="text-md font-medium text-gray-900 mb-4">Top phân khúc theo doanh thu</h3>
+              <div class="space-y-3" id="top-segments">
+                <!-- Top segments will be populated here -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      <!-- Segments List -->
+      <Card>
+        <div class="p-6">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-lg font-medium text-gray-900">Danh sách phân khúc</h2>
+            <div class="flex space-x-3">
+              <select class="form-select w-40" id="segment-filter">
+                <option value="all">Tất cả phân khúc</option>
+                <option value="active">Đang hoạt động</option>
+                <option value="inactive">Tạm dừng</option>
+                <option value="automated">Tự động</option>
+                <option value="manual">Thủ công</option>
+              </select>
+              <Button onclick="refreshSegments()" variant="secondary">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                Làm mới
+              </Button>
+            </div>
+          </div>
+
+          <div class="space-y-4" id="segments-list">
+            <!-- Segments will be populated here -->
+          </div>
+        </div>
+      </Card>
+    </main>
+
+    <!-- Create Segment Modal -->
+    <div id="segment-modal" class="modal-overlay hidden">
+      <div class="modal-content max-w-4xl">
+        <div class="modal-header">
+          <h3 class="modal-title">Tạo phân khúc khách hàng</h3>
+          <button class="modal-close" onclick="closeModal('segment-modal')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="space-y-6">
+            <!-- Basic Information -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="form-label">Tên phân khúc *</label>
+                <input type="text" class="form-input" id="segment-name" placeholder="Khách hàng VIP">
+              </div>
+              <div>
+                <label class="form-label">Loại phân khúc *</label>
+                <select class="form-select" id="segment-type">
+                  <option value="automated">Tự động (theo điều kiện)</option>
+                  <option value="manual">Thủ công (chọn khách hàng)</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label class="form-label">Mô tả</label>
+              <textarea class="form-textarea" id="segment-description" rows="2" placeholder="Mô tả về phân khúc này..."></textarea>
+            </div>
+
+            <!-- Automated Conditions -->
+            <div id="automated-conditions" class="space-y-4">
+              <h4 class="text-md font-medium text-gray-900">Điều kiện phân khúc</h4>
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="form-label">Tổng chi tiêu</label>
+                  <div class="flex space-x-2">
+                    <select class="form-select" id="spending-operator">
+                      <option value="gte">≥ Lớn hơn hoặc bằng</option>
+                      <option value="lte">≤ Nhỏ hơn hoặc bằng</option>
+                      <option value="between">Trong khoảng</option>
+                    </select>
+                    <input type="number" class="form-input" id="spending-value" placeholder="10000000">
+                  </div>
+                </div>
+                <div id="spending-max-container" class="hidden">
+                  <label class="form-label">Đến</label>
+                  <input type="number" class="form-input" id="spending-max" placeholder="50000000">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="form-label">Số đơn hàng</label>
+                  <div class="flex space-x-2">
+                    <select class="form-select" id="orders-operator">
+                      <option value="gte">≥ Lớn hơn hoặc bằng</option>
+                      <option value="lte">≤ Nhỏ hơn hoặc bằng</option>
+                      <option value="between">Trong khoảng</option>
+                    </select>
+                    <input type="number" class="form-input" id="orders-value" placeholder="5">
+                  </div>
+                </div>
+                <div id="orders-max-container" class="hidden">
+                  <label class="form-label">Đến</label>
+                  <input type="number" class="form-input" id="orders-max" placeholder="20">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="form-label">Mua hàng lần cuối</label>
+                  <select class="form-select" id="last-purchase">
+                    <option value="">Không giới hạn</option>
+                    <option value="7">Trong 7 ngày</option>
+                    <option value="30">Trong 30 ngày</option>
+                    <option value="90">Trong 3 tháng</option>
+                    <option value="365">Trong 1 năm</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="form-label">Khu vực</label>
+                  <select class="form-select" id="location-filter">
+                    <option value="">Tất cả khu vực</option>
+                    <option value="hanoi">Hà Nội</option>
+                    <option value="hcm">Hồ Chí Minh</option>
+                    <option value="danang">Đà Nẵng</option>
+                    <option value="other">Khác</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label class="form-label">Sản phẩm quan tâm</label>
+                <select class="form-select" id="product-category">
+                  <option value="">Tất cả danh mục</option>
+                  <option value="laptop">Laptop</option>
+                  <option value="pc">PC Desktop</option>
+                  <option value="components">Linh kiện</option>
+                  <option value="accessories">Phụ kiện</option>
+                  <option value="gaming">Gaming</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Manual Selection -->
+            <div id="manual-selection" class="hidden space-y-4">
+              <h4 class="text-md font-medium text-gray-900">Chọn khách hàng</h4>
+              <div>
+                <input type="text" class="form-input" id="customer-search" placeholder="Tìm khách hàng...">
+              </div>
+              <div class="max-h-64 overflow-y-auto border border-gray-200 rounded-md">
+                <div id="customer-list" class="p-4">
+                  <!-- Customer list will be populated here -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Segment Preview -->
+            <div class="border-t pt-4">
+              <h4 class="text-md font-medium text-gray-900 mb-2">Xem trước phân khúc</h4>
+              <div class="bg-gray-50 rounded-lg p-4">
+                <div class="flex items-center space-x-4 text-sm">
+                  <span class="font-medium">Ước tính số khách hàng:</span>
+                  <span id="estimated-count" class="text-blue-600 font-bold">0</span>
+                  <span class="font-medium">Doanh thu tiềm năng:</span>
+                  <span id="estimated-revenue" class="text-green-600 font-bold">0₫</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('segment-modal')">Hủy</button>
+          <button type="button" class="btn btn-primary" onclick="saveSegment()">Tạo phân khúc</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Segment Detail Modal -->
+    <div id="segment-detail-modal" class="modal-overlay hidden">
+      <div class="modal-content max-w-5xl">
+        <div class="modal-header">
+          <h3 class="modal-title" id="segment-detail-title">Chi tiết phân khúc</h3>
+          <button class="modal-close" onclick="closeModal('segment-detail-modal')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div id="segment-detail-content">
+            <!-- Segment details will be populated here -->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('segment-detail-modal')">Đóng</button>
+          <button type="button" class="btn btn-primary" onclick="exportSegmentCustomers()">Xuất danh sách</button>
+        </div>
+      </div>
+    </div>
+  </DashboardLayout>
+</BaseLayout>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  let segments = [];
+  let customers = [];
+
+  // Load sample data
+  function loadSampleData() {
+    segments = JSON.parse(localStorage.getItem('customerSegments') || '[]');
+    customers = JSON.parse(localStorage.getItem('customers') || '[]');
+
+    // Initialize with sample data if empty
+    if (segments.length === 0) {
+      segments = [
+        {
+          id: 'seg_1',
+          name: 'Khách hàng VIP',
+          type: 'automated',
+          description: 'Khách hàng có tổng chi tiêu trên 20 triệu và từ 5 đơn hàng',
+          conditions: {
+            spending: { operator: 'gte', value: 20000000 },
+            orders: { operator: 'gte', value: 5 }
+          },
+          status: 'active',
+          customerCount: 23,
+          totalRevenue: 847500000,
+          createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+          lastUpdated: new Date().toISOString()
+        },
+        {
+          id: 'seg_2',
+          name: 'Khách hàng Gaming',
+          type: 'automated',
+          description: 'Khách hàng quan tâm đến sản phẩm gaming',
+          conditions: {
+            productCategory: 'gaming',
+            spending: { operator: 'gte', value: 5000000 }
+          },
+          status: 'active',
+          customerCount: 67,
+          totalRevenue: 512300000,
+          createdAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
+          lastUpdated: new Date().toISOString()
+        },
+        {
+          id: 'seg_3',
+          name: 'Khách hàng mới',
+          type: 'automated',
+          description: 'Khách hàng mua lần đầu trong 30 ngày qua',
+          conditions: {
+            orders: { operator: 'lte', value: 2 },
+            lastPurchase: 30
+          },
+          status: 'active',
+          customerCount: 134,
+          totalRevenue: 289700000,
+          createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+          lastUpdated: new Date().toISOString()
+        },
+        {
+          id: 'seg_4',
+          name: 'Khách hàng không hoạt động',
+          type: 'automated',
+          description: 'Khách hàng không mua hàng trong 6 tháng',
+          conditions: {
+            lastPurchase: -180
+          },
+          status: 'active',
+          customerCount: 89,
+          totalRevenue: 0,
+          createdAt: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000).toISOString(),
+          lastUpdated: new Date().toISOString()
+        },
+        {
+          id: 'seg_5',
+          name: 'Khách hàng doanh nghiệp',
+          type: 'manual',
+          description: 'Danh sách khách hàng doanh nghiệp được chọn thủ công',
+          customerIds: ['cust_b1', 'cust_b2', 'cust_b3'],
+          status: 'active',
+          customerCount: 12,
+          totalRevenue: 450000000,
+          createdAt: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString(),
+          lastUpdated: new Date().toISOString()
+        }
+      ];
+      
+      // Sample customers data
+      customers = [
+        {
+          id: 'cust_1',
+          name: 'Nguyễn Văn A',
+          phone: '0901234567',
+          email: 'nguyenvana@email.com',
+          totalSpending: 25000000,
+          orderCount: 8,
+          lastPurchase: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+          location: 'hanoi',
+          preferredCategory: 'gaming'
+        },
+        {
+          id: 'cust_2',
+          name: 'Trần Thị B',
+          phone: '0912345678',
+          email: 'tranthib@email.com',
+          totalSpending: 8500000,
+          orderCount: 3,
+          lastPurchase: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+          location: 'hcm',
+          preferredCategory: 'laptop'
+        }
+      ];
+
+      saveData();
+    }
+  }
+
+  function saveData() {
+    localStorage.setItem('customerSegments', JSON.stringify(segments));
+    localStorage.setItem('customers', JSON.stringify(customers));
+  }
+
+  function renderSegments() {
+    const container = document.getElementById('segments-list');
+    const filter = document.getElementById('segment-filter').value;
+    
+    let filteredSegments = segments;
+    if (filter !== 'all') {
+      filteredSegments = segments.filter(s => {
+        if (filter === 'active' || filter === 'inactive') {
+          return s.status === filter;
+        }
+        return s.type === filter;
+      });
+    }
+
+    if (filteredSegments.length === 0) {
+      container.innerHTML = `
+        <div class="text-center py-12">
+          <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+          <h3 class="mt-2 text-sm font-medium text-gray-900">Chưa có phân khúc nào</h3>
+          <p class="mt-1 text-sm text-gray-500">Bắt đầu bằng cách tạo phân khúc khách hàng đầu tiên.</p>
+          <div class="mt-6">
+            <button onclick="createNewSegment()" class="btn btn-primary">Tạo phân khúc</button>
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    let html = '';
+    filteredSegments.forEach(segment => {
+      const statusColors = {
+        active: 'bg-green-100 text-green-800',
+        inactive: 'bg-gray-100 text-gray-800'
+      };
+
+      const typeColors = {
+        automated: 'bg-blue-100 text-blue-800',
+        manual: 'bg-purple-100 text-purple-800'
+      };
+
+      html += `
+        <div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow cursor-pointer" onclick="viewSegmentDetail('${segment.id}')">
+          <div class="flex items-center justify-between">
+            <div class="flex-1">
+              <div class="flex items-center space-x-3 mb-2">
+                <h3 class="text-lg font-medium text-gray-900">${segment.name}</h3>
+                <span class="px-2 py-1 text-xs font-medium rounded-full ${statusColors[segment.status]}">${segment.status === 'active' ? 'Hoạt động' : 'Tạm dừng'}</span>
+                <span class="px-2 py-1 text-xs font-medium rounded-full ${typeColors[segment.type]}">${segment.type === 'automated' ? 'Tự động' : 'Thủ công'}</span>
+              </div>
+              <p class="text-sm text-gray-600 mb-3">${segment.description}</p>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                <div class="flex items-center space-x-2">
+                  <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                  <span class="text-gray-500">Khách hàng:</span>
+                  <span class="font-medium text-blue-600">${segment.customerCount}</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span class="text-gray-500">Doanh thu:</span>
+                  <span class="font-medium text-green-600">${formatVND(segment.totalRevenue)}</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span class="text-gray-500">Cập nhật:</span>
+                  <span class="font-medium">${new Date(segment.lastUpdated).toLocaleDateString('vi-VN')}</span>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center space-x-2">
+              <button onclick="event.stopPropagation(); editSegment('${segment.id}')" class="text-blue-600 hover:text-blue-800">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+              </button>
+              <button onclick="event.stopPropagation(); toggleSegmentStatus('${segment.id}')" class="text-gray-400 hover:text-gray-600">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${segment.status === 'active' ? 'M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z' : 'M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'}" />
+                </svg>
+              </button>
+              <button onclick="event.stopPropagation(); deleteSegment('${segment.id}')" class="text-red-400 hover:text-red-600">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    });
+
+    container.innerHTML = html;
+  }
+
+  function renderTopSegments() {
+    const container = document.getElementById('top-segments');
+    const topSegments = segments
+      .slice()
+      .sort((a, b) => b.totalRevenue - a.totalRevenue)
+      .slice(0, 5);
+
+    let html = '';
+    topSegments.forEach((segment, index) => {
+      const percentage = segments.reduce((sum, s) => sum + s.totalRevenue, 0) > 0 
+        ? (segment.totalRevenue / segments.reduce((sum, s) => sum + s.totalRevenue, 0) * 100).toFixed(1)
+        : 0;
+
+      html += `
+        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+          <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
+              ${index + 1}
+            </div>
+            <div>
+              <p class="text-sm font-medium text-gray-900">${segment.name}</p>
+              <p class="text-xs text-gray-500">${segment.customerCount} khách hàng</p>
+            </div>
+          </div>
+          <div class="text-right">
+            <p class="text-sm font-medium text-gray-900">${formatVND(segment.totalRevenue)}</p>
+            <p class="text-xs text-gray-500">${percentage}%</p>
+          </div>
+        </div>
+      `;
+    });
+
+    container.innerHTML = html;
+  }
+
+  function updateStats() {
+    const totalSegments = segments.length;
+    const vipCustomers = segments.find(s => s.name.includes('VIP'))?.customerCount || 0;
+    const activeCustomers = segments.reduce((sum, s) => sum + (s.status === 'active' ? s.customerCount : 0), 0);
+    const avgRevenue = activeCustomers > 0 
+      ? segments.reduce((sum, s) => sum + s.totalRevenue, 0) / activeCustomers 
+      : 0;
+
+    document.getElementById('total-segments').textContent = totalSegments;
+    document.getElementById('vip-customers').textContent = vipCustomers;
+    document.getElementById('active-customers').textContent = activeCustomers;
+    document.getElementById('avg-revenue').textContent = formatVND(avgRevenue);
+  }
+
+  function renderChart() {
+    const canvas = document.getElementById('segment-chart');
+    const ctx = canvas.getContext('2d');
+    
+    // Simple bar chart representation
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    const colors = ['#3B82F6', '#10B981', '#8B5CF6', '#F59E0B', '#EF4444'];
+    const topSegments = segments.slice().sort((a, b) => b.customerCount - a.customerCount).slice(0, 5);
+    
+    if (topSegments.length === 0) {
+      ctx.fillStyle = '#9CA3AF';
+      ctx.font = '16px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Không có dữ liệu', canvas.width / 2, canvas.height / 2);
+      return;
+    }
+    
+    const maxCount = Math.max(...topSegments.map(s => s.customerCount));
+    const barWidth = canvas.width / topSegments.length * 0.8;
+    const barSpacing = canvas.width / topSegments.length * 0.2;
+    
+    topSegments.forEach((segment, index) => {
+      const barHeight = (segment.customerCount / maxCount) * (canvas.height * 0.7);
+      const x = index * (barWidth + barSpacing) + barSpacing / 2;
+      const y = canvas.height - barHeight - 50;
+      
+      // Draw bar
+      ctx.fillStyle = colors[index % colors.length];
+      ctx.fillRect(x, y, barWidth, barHeight);
+      
+      // Draw label
+      ctx.fillStyle = '#374151';
+      ctx.font = '12px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(segment.name.substring(0, 15) + '...', x + barWidth / 2, canvas.height - 30);
+      
+      // Draw value
+      ctx.fillStyle = '#1F2937';
+      ctx.font = 'bold 14px sans-serif';
+      ctx.fillText(segment.customerCount.toString(), x + barWidth / 2, y - 10);
+    });
+  }
+
+  window.createNewSegment = function() {
+    // Reset form
+    document.getElementById('segment-name').value = '';
+    document.getElementById('segment-type').value = 'automated';
+    document.getElementById('segment-description').value = '';
+    
+    // Show automated conditions by default
+    toggleSegmentType();
+    
+    document.getElementById('segment-modal').classList.remove('hidden');
+  };
+
+  window.saveSegment = function() {
+    const name = document.getElementById('segment-name').value;
+    const type = document.getElementById('segment-type').value;
+    const description = document.getElementById('segment-description').value;
+
+    if (!name) {
+      alert('Vui lòng nhập tên phân khúc!');
+      return;
+    }
+
+    const segment = {
+      id: 'seg_' + Date.now(),
+      name,
+      type,
+      description,
+      status: 'active',
+      customerCount: Math.floor(Math.random() * 100) + 10, // Simulated
+      totalRevenue: Math.floor(Math.random() * 500000000) + 50000000, // Simulated
+      createdAt: new Date().toISOString(),
+      lastUpdated: new Date().toISOString()
+    };
+
+    if (type === 'automated') {
+      segment.conditions = {
+        spending: {
+          operator: document.getElementById('spending-operator').value,
+          value: parseFloat(document.getElementById('spending-value').value) || 0
+        }
+      };
+    } else {
+      segment.customerIds = []; // Would be populated with selected customers
+    }
+
+    segments.push(segment);
+    saveData();
+    closeModal('segment-modal');
+    renderSegments();
+    updateStats();
+    renderTopSegments();
+    renderChart();
+    alert('Đã tạo phân khúc thành công!');
+  };
+
+  window.viewSegmentDetail = function(segmentId) {
+    const segment = segments.find(s => s.id === segmentId);
+    if (!segment) return;
+
+    // Generate sample customer list for this segment
+    const segmentCustomers = customers.slice(0, Math.min(segment.customerCount, customers.length));
+    
+    let customersHtml = '';
+    segmentCustomers.forEach(customer => {
+      customersHtml += `
+        <tr class="hover:bg-gray-50">
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${customer.name}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${customer.phone}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${customer.email}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatVND(customer.totalSpending)}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${customer.orderCount}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${new Date(customer.lastPurchase).toLocaleDateString('vi-VN')}</td>
+        </tr>
+      `;
+    });
+
+    const html = `
+      <div class="space-y-6">
+        <!-- Segment Info -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <h4 class="font-semibold text-gray-900 mb-3">Thông tin phân khúc</h4>
+            <div class="space-y-2 text-sm">
+              <div><strong>Tên:</strong> ${segment.name}</div>
+              <div><strong>Loại:</strong> ${segment.type === 'automated' ? 'Tự động' : 'Thủ công'}</div>
+              <div><strong>Trạng thái:</strong> ${segment.status === 'active' ? 'Hoạt động' : 'Tạm dừng'}</div>
+              <div><strong>Mô tả:</strong> ${segment.description}</div>
+            </div>
+          </div>
+          <div>
+            <h4 class="font-semibold text-gray-900 mb-3">Thống kê</h4>
+            <div class="space-y-2 text-sm">
+              <div><strong>Số khách hàng:</strong> ${segment.customerCount}</div>
+              <div><strong>Tổng doanh thu:</strong> ${formatVND(segment.totalRevenue)}</div>
+              <div><strong>Doanh thu TB/khách:</strong> ${formatVND(segment.totalRevenue / segment.customerCount)}</div>
+              <div><strong>Tạo lúc:</strong> ${new Date(segment.createdAt).toLocaleString('vi-VN')}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Customer List -->
+        <div>
+          <h4 class="font-semibold text-gray-900 mb-3">Danh sách khách hàng (${segmentCustomers.length}/${segment.customerCount})</h4>
+          <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+            <table class="min-w-full divide-y divide-gray-300">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tên</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">SĐT</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tổng chi</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Đơn hàng</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mua cuối</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                ${customersHtml}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.getElementById('segment-detail-title').textContent = `Chi tiết: ${segment.name}`;
+    document.getElementById('segment-detail-content').innerHTML = html;
+    document.getElementById('segment-detail-modal').classList.remove('hidden');
+  };
+
+  window.toggleSegmentStatus = function(segmentId) {
+    const segment = segments.find(s => s.id === segmentId);
+    if (!segment) return;
+
+    segment.status = segment.status === 'active' ? 'inactive' : 'active';
+    segment.lastUpdated = new Date().toISOString();
+    
+    saveData();
+    renderSegments();
+    updateStats();
+  };
+
+  window.deleteSegment = function(segmentId) {
+    if (!confirm('Bạn có chắc chắn muốn xóa phân khúc này?')) return;
+
+    const index = segments.findIndex(s => s.id === segmentId);
+    if (index !== -1) {
+      segments.splice(index, 1);
+      saveData();
+      renderSegments();
+      updateStats();
+      renderTopSegments();
+      renderChart();
+    }
+  };
+
+  window.refreshSegments = function() {
+    // Simulate refreshing segment data
+    segments.forEach(segment => {
+      if (segment.type === 'automated') {
+        segment.customerCount = Math.floor(Math.random() * 100) + 10;
+        segment.totalRevenue = Math.floor(Math.random() * 500000000) + 50000000;
+        segment.lastUpdated = new Date().toISOString();
+      }
+    });
+    
+    saveData();
+    renderSegments();
+    updateStats();
+    renderTopSegments();
+    renderChart();
+  };
+
+  window.exportSegmentData = function() {
+    const csvContent = generateSegmentCSV(segments);
+    downloadCSV(csvContent, `customer-segments-${new Date().toISOString().split('T')[0]}.csv`);
+  };
+
+  function generateSegmentCSV(data) {
+    const headers = ['Tên phân khúc', 'Loại', 'Trạng thái', 'Số khách hàng', 'Tổng doanh thu', 'Doanh thu TB', 'Ngày tạo', 'Cập nhật cuối'];
+    
+    const rows = data.map(segment => [
+      segment.name,
+      segment.type === 'automated' ? 'Tự động' : 'Thủ công',
+      segment.status === 'active' ? 'Hoạt động' : 'Tạm dừng',
+      segment.customerCount,
+      segment.totalRevenue,
+      Math.round(segment.totalRevenue / segment.customerCount),
+      new Date(segment.createdAt).toLocaleDateString('vi-VN'),
+      new Date(segment.lastUpdated).toLocaleDateString('vi-VN')
+    ]);
+
+    return [headers, ...rows].map(row => 
+      row.map(field => `"${field}"`).join(',')
+    ).join('\n');
+  }
+
+  function downloadCSV(content, filename) {
+    const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  function toggleSegmentType() {
+    const type = document.getElementById('segment-type').value;
+    const automatedConditions = document.getElementById('automated-conditions');
+    const manualSelection = document.getElementById('manual-selection');
+    
+    if (type === 'automated') {
+      automatedConditions.classList.remove('hidden');
+      manualSelection.classList.add('hidden');
+    } else {
+      automatedConditions.classList.add('hidden');
+      manualSelection.classList.remove('hidden');
+    }
+  }
+
+  window.closeModal = function(modalId) {
+    document.getElementById(modalId).classList.add('hidden');
+  };
+
+  function formatVND(amount) {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND'
+    }).format(amount);
+  }
+
+  // Event listeners
+  document.getElementById('segment-filter').addEventListener('change', renderSegments);
+  document.getElementById('segment-type').addEventListener('change', toggleSegmentType);
+  document.getElementById('chart-metric').addEventListener('change', renderChart);
+  
+  // Spending operator change
+  document.getElementById('spending-operator').addEventListener('change', function() {
+    const maxContainer = document.getElementById('spending-max-container');
+    if (this.value === 'between') {
+      maxContainer.classList.remove('hidden');
+    } else {
+      maxContainer.classList.add('hidden');
+    }
+  });
+
+  // Orders operator change
+  document.getElementById('orders-operator').addEventListener('change', function() {
+    const maxContainer = document.getElementById('orders-max-container');
+    if (this.value === 'between') {
+      maxContainer.classList.remove('hidden');
+    } else {
+      maxContainer.classList.add('hidden');
+    }
+  });
+
+  // Initialize
+  loadSampleData();
+  renderSegments();
+  updateStats();
+  renderTopSegments();
+  renderChart();
+});
+</script>
+
+<style>
+.form-input, .form-select, .form-textarea {
+  @apply px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full;
+}
+
+.modal-overlay {
+  @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50;
+}
+
+.modal-content {
+  @apply bg-white rounded-lg shadow-xl w-full mx-4 max-h-screen overflow-y-auto;
+}
+
+.modal-header {
+  @apply flex items-center justify-between p-6 border-b;
+}
+
+.modal-title {
+  @apply text-lg font-medium text-gray-900;
+}
+
+.modal-close {
+  @apply text-gray-400 hover:text-gray-600 text-2xl font-bold cursor-pointer;
+}
+
+.modal-body {
+  @apply p-6;
+}
+
+.modal-footer {
+  @apply flex items-center justify-end space-x-3 p-6 border-t bg-gray-50;
+}
+
+.btn {
+  @apply px-4 py-2 rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-offset-2;
+}
+
+.btn-primary {
+  @apply bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500;
+}
+
+.btn-secondary {
+  @apply bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500;
+}
+
+.form-label {
+  @apply block text-sm font-medium text-gray-700 mb-1;
+}
+</style>

@@ -1,0 +1,1624 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import DashboardLayout from '../../layouts/DashboardLayout.astro';
+import Card from '../../components/ui/Card.astro';
+import Button from '../../components/ui/Button.astro';
+---
+
+<BaseLayout title="Order Returns - ComputerPOS Pro">
+  <DashboardLayout>
+    <main class="p-6 space-y-6">
+      <!-- Header -->
+      <div class="flex justify-between items-center">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">Order Returns</h1>
+          <p class="text-gray-600 mt-1">Quản lý trả hàng và xử lý hoàn tiền</p>
+        </div>
+        <div class="flex space-x-3">
+          <Button href="/orders" variant="secondary">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Quay lại Đơn hàng
+          </Button>
+          <Button variant="primary" onclick="createNewReturn()">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            Tạo yêu cầu trả hàng
+          </Button>
+        </div>
+      </div>
+
+      <!-- Return Stats -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Tổng yêu cầu trả</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="total-returns">0</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-yellow-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Chờ xử lý</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="pending-returns">0</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-green-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Đã hoàn tiền</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="refunded-returns">0</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-red-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Tổng tiền hoàn</dt>
+                  <dd class="text-lg font-medium text-gray-900" id="total-refund-amount">0₫</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      <!-- Return Chart -->
+      <Card>
+        <div class="p-6">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-lg font-medium text-gray-900">Thống kê trả hàng theo thời gian</h2>
+            <div class="flex space-x-3">
+              <select class="form-select w-40" id="chart-period">
+                <option value="7">7 ngày qua</option>
+                <option value="30">30 ngày qua</option>
+                <option value="90">3 tháng qua</option>
+                <option value="365">1 năm qua</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2">
+              <canvas id="returns-chart" width="600" height="300"></canvas>
+            </div>
+            <div>
+              <h3 class="text-md font-medium text-gray-900 mb-4">Lý do trả hàng phổ biến</h3>
+              <div class="space-y-3" id="top-return-reasons">
+                <!-- Top return reasons will be populated here -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      <!-- Filters and Search -->
+      <Card>
+        <div class="p-6">
+          <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+            <div>
+              <label class="form-label">Tìm kiếm</label>
+              <input type="text" class="form-input" id="search-input" placeholder="Mã đơn hàng, khách hàng...">
+            </div>
+            <div>
+              <label class="form-label">Trạng thái</label>
+              <select class="form-select" id="status-filter">
+                <option value="all">Tất cả</option>
+                <option value="pending">Chờ xử lý</option>
+                <option value="approved">Đã duyệt</option>
+                <option value="refunded">Đã hoàn tiền</option>
+                <option value="rejected">Từ chối</option>
+                <option value="cancelled">Đã hủy</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label">Lý do trả hàng</label>
+              <select class="form-select" id="reason-filter">
+                <option value="all">Tất cả</option>
+                <option value="defective">Sản phẩm lỗi</option>
+                <option value="wrong-item">Sai sản phẩm</option>
+                <option value="not-as-described">Không đúng mô tả</option>
+                <option value="changed-mind">Thay đổi ý định</option>
+                <option value="damaged-shipping">Hỏng khi vận chuyển</option>
+                <option value="duplicate-order">Đặt nhầm</option>
+                <option value="other">Lý do khác</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label">Khoảng thời gian</label>
+              <select class="form-select" id="date-filter">
+                <option value="7">7 ngày qua</option>
+                <option value="30">30 ngày qua</option>
+                <option value="90">3 tháng qua</option>
+                <option value="365">1 năm qua</option>
+                <option value="custom">Tùy chọn</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label">Sắp xếp</label>
+              <select class="form-select" id="sort-by">
+                <option value="newest">Mới nhất</option>
+                <option value="oldest">Cũ nhất</option>
+                <option value="amount-desc">Số tiền cao nhất</option>
+                <option value="amount-asc">Số tiền thấp nhất</option>
+              </select>
+            </div>
+          </div>
+          <div id="custom-date-range" class="hidden mt-4 grid grid-cols-2 gap-4">
+            <div>
+              <label class="form-label">Từ ngày</label>
+              <input type="date" class="form-input" id="start-date">
+            </div>
+            <div>
+              <label class="form-label">Đến ngày</label>
+              <input type="date" class="form-input" id="end-date">
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      <!-- Returns List -->
+      <Card>
+        <div class="p-6">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-lg font-medium text-gray-900">Danh sách yêu cầu trả hàng</h2>
+            <div class="flex space-x-3">
+              <Button onclick="exportReturns()" variant="secondary">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Xuất báo cáo
+              </Button>
+              <Button onclick="refreshReturns()" variant="secondary">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                Làm mới
+              </Button>
+            </div>
+          </div>
+
+          <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+            <table class="min-w-full divide-y divide-gray-300">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mã trả hàng</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Đơn hàng gốc</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Khách hàng</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sản phẩm</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lý do</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Số tiền</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Trạng thái</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ngày tạo</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200" id="returns-tbody">
+                <!-- Returns will be populated here -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination -->
+          <div class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
+            <div class="flex flex-1 justify-between sm:hidden">
+              <button class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                Trước
+              </button>
+              <button class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                Sau
+              </button>
+            </div>
+            <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+              <div>
+                <p class="text-sm text-gray-700">
+                  Hiển thị <span class="font-medium" id="from-item">1</span> đến <span class="font-medium" id="to-item">20</span> 
+                  trong tổng số <span class="font-medium" id="total-items">0</span> yêu cầu
+                </p>
+              </div>
+              <div>
+                <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" id="pagination">
+                  <!-- Pagination buttons will be populated here -->
+                </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Card>
+    </main>
+
+    <!-- Create Return Modal -->
+    <div id="return-modal" class="modal-overlay hidden">
+      <div class="modal-content max-w-4xl">
+        <div class="modal-header">
+          <h3 class="modal-title">Tạo yêu cầu trả hàng mới</h3>
+          <button class="modal-close" onclick="closeModal('return-modal')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="space-y-6">
+            <!-- Basic Information -->
+            <div>
+              <h4 class="text-md font-medium text-gray-900 mb-4">Thông tin cơ bản</h4>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label class="form-label">Mã trả hàng *</label>
+                  <input type="text" class="form-input" id="return-code" placeholder="RET-001" readonly>
+                </div>
+                <div>
+                  <label class="form-label">Đơn hàng gốc *</label>
+                  <input type="text" class="form-input" id="original-order" placeholder="Nhập mã đơn hàng...">
+                </div>
+                <div>
+                  <label class="form-label">Lý do trả hàng *</label>
+                  <select class="form-select" id="return-reason">
+                    <option value="defective">Sản phẩm lỗi</option>
+                    <option value="wrong-item">Sai sản phẩm</option>
+                    <option value="not-as-described">Không đúng mô tả</option>
+                    <option value="changed-mind">Thay đổi ý định</option>
+                    <option value="damaged-shipping">Hỏng khi vận chuyển</option>
+                    <option value="duplicate-order">Đặt nhầm</option>
+                    <option value="other">Lý do khác</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Customer Information -->
+            <div>
+              <h4 class="text-md font-medium text-gray-900 mb-4">Thông tin khách hàng</h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="form-label">Tên khách hàng *</label>
+                  <input type="text" class="form-input" id="customer-name" placeholder="Họ tên khách hàng...">
+                </div>
+                <div>
+                  <label class="form-label">Số điện thoại *</label>
+                  <input type="tel" class="form-input" id="customer-phone" placeholder="0123456789">
+                </div>
+                <div>
+                  <label class="form-label">Email</label>
+                  <input type="email" class="form-input" id="customer-email" placeholder="email@example.com">
+                </div>
+                <div>
+                  <label class="form-label">Địa chỉ</label>
+                  <input type="text" class="form-input" id="customer-address" placeholder="Địa chỉ khách hàng...">
+                </div>
+              </div>
+            </div>
+
+            <!-- Return Items -->
+            <div>
+              <h4 class="text-md font-medium text-gray-900 mb-4">Chi tiết sản phẩm trả hàng</h4>
+              <div id="return-items-container">
+                <div class="border border-gray-200 rounded-lg p-4 return-item" data-item-index="0">
+                  <div class="flex justify-between items-center mb-3">
+                    <h5 class="text-sm font-medium text-gray-900">Sản phẩm 1</h5>
+                    <button type="button" class="text-red-600 hover:text-red-900" onclick="removeReturnItem(0)">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    </button>
+                  </div>
+                  <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                    <div>
+                      <label class="form-label">Tên sản phẩm *</label>
+                      <input type="text" class="form-input" name="product-name" placeholder="Tìm sản phẩm...">
+                    </div>
+                    <div>
+                      <label class="form-label">Số lượng *</label>
+                      <input type="number" class="form-input" name="quantity" value="1" min="1">
+                    </div>
+                    <div>
+                      <label class="form-label">Đơn giá</label>
+                      <input type="number" class="form-input" name="unit-price" placeholder="0">
+                    </div>
+                    <div>
+                      <label class="form-label">Tổng giá trị</label>
+                      <input type="number" class="form-input" name="total-value" placeholder="0" readonly>
+                    </div>
+                  </div>
+                  <div class="mt-3">
+                    <label class="form-label">Tình trạng sản phẩm</label>
+                    <select class="form-select" name="condition">
+                      <option value="unused">Chưa sử dụng</option>
+                      <option value="lightly-used">Sử dụng ít</option>
+                      <option value="used">Đã sử dụng</option>
+                      <option value="damaged">Hỏng</option>
+                      <option value="defective">Lỗi</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <button type="button" class="mt-3 btn btn-secondary" onclick="addReturnItem()">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+                Thêm sản phẩm
+              </button>
+            </div>
+
+            <!-- Return Summary -->
+            <div>
+              <h4 class="text-md font-medium text-gray-900 mb-4">Tóm tắt trả hàng</h4>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label class="form-label">Tổng số lượng</label>
+                  <input type="number" class="form-input" id="total-quantity" readonly>
+                </div>
+                <div>
+                  <label class="form-label">Tổng giá trị trả hàng</label>
+                  <input type="number" class="form-input" id="total-return-value" readonly>
+                </div>
+                <div>
+                  <label class="form-label">Phí xử lý (%)</label>
+                  <input type="number" class="form-input" id="processing-fee" value="0" min="0" max="100" step="0.1">
+                </div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div>
+                  <label class="form-label">Số tiền hoàn trả</label>
+                  <input type="number" class="form-input" id="refund-amount" readonly>
+                </div>
+                <div>
+                  <label class="form-label">Phương thức hoàn tiền</label>
+                  <select class="form-select" id="refund-method">
+                    <option value="original-payment">Phương thức gốc</option>
+                    <option value="bank-transfer">Chuyển khoản ngân hàng</option>
+                    <option value="cash">Tiền mặt</option>
+                    <option value="store-credit">Tín dụng cửa hàng</option>
+                    <option value="voucher">Phiếu mua hàng</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Additional Information -->
+            <div>
+              <h4 class="text-md font-medium text-gray-900 mb-4">Thông tin bổ sung</h4>
+              <div class="space-y-4">
+                <div>
+                  <label class="form-label">Mô tả chi tiết *</label>
+                  <textarea class="form-textarea" id="return-description" rows="4" placeholder="Mô tả chi tiết lý do trả hàng..."></textarea>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label class="form-label">Mức độ ưu tiên</label>
+                    <select class="form-select" id="return-priority">
+                      <option value="normal">Bình thường</option>
+                      <option value="high">Cao</option>
+                      <option value="urgent">Khẩn cấp</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="form-label">Phương thức trả hàng</label>
+                    <select class="form-select" id="return-method">
+                      <option value="in-store">Tại cửa hàng</option>
+                      <option value="pickup">Lấy hàng tại nhà</option>
+                      <option value="shipping">Gửi qua vận chuyển</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <input type="hidden" id="return-id">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('return-modal')">Hủy</button>
+          <button type="button" class="btn btn-primary" onclick="saveReturn()">Tạo yêu cầu trả hàng</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- View Return Detail Modal -->
+    <div id="return-detail-modal" class="modal-overlay hidden">
+      <div class="modal-content max-w-5xl">
+        <div class="modal-header">
+          <h3 class="modal-title" id="return-detail-title">Chi tiết yêu cầu trả hàng</h3>
+          <button class="modal-close" onclick="closeModal('return-detail-modal')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div id="return-detail-content">
+            <!-- Return details will be populated here -->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('return-detail-modal')">Đóng</button>
+          <button type="button" class="btn btn-success" id="approve-return-btn">Duyệt trả hàng</button>
+          <button type="button" class="btn btn-primary" id="process-refund-btn">Xử lý hoàn tiền</button>
+        </div>
+      </div>
+    </div>
+  </DashboardLayout>
+</BaseLayout>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  let returns = [];
+  let currentReturn = null;
+  let returnItemCounter = 1;
+  const itemsPerPage = 10;
+  let currentPage = 1;
+  let filteredReturns = [];
+
+  // Load sample data
+  function loadSampleData() {
+    returns = JSON.parse(localStorage.getItem('orderReturns') || '[]');
+
+    // Initialize with sample data if empty
+    if (returns.length === 0) {
+      returns = [
+        {
+          id: 'ret_1',
+          code: 'RET-001',
+          originalOrderId: 'ORD-2024-001',
+          customerName: 'Nguyễn Văn An',
+          customerPhone: '0987654321',
+          customerEmail: 'an.nguyen@email.com',
+          customerAddress: '123 Đường ABC, Q1, TP.HCM',
+          items: [
+            {
+              productName: 'Intel Core i5-13400F',
+              quantity: 1,
+              unitPrice: 4500000,
+              totalValue: 4500000,
+              condition: 'defective'
+            }
+          ],
+          reason: 'defective',
+          description: 'CPU bị lỗi, không khởi động được máy tính',
+          totalQuantity: 1,
+          totalReturnValue: 4500000,
+          processingFee: 0,
+          refundAmount: 4500000,
+          refundMethod: 'original-payment',
+          priority: 'high',
+          returnMethod: 'in-store',
+          status: 'pending',
+          createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+          createdBy: 'Admin User'
+        },
+        {
+          id: 'ret_2',
+          code: 'RET-002',
+          originalOrderId: 'ORD-2024-002',
+          customerName: 'Trần Thị Bình',
+          customerPhone: '0912345678',
+          customerEmail: 'binh.tran@email.com',
+          customerAddress: '456 Đường XYZ, Q3, TP.HCM',
+          items: [
+            {
+              productName: 'RTX 4060 8GB',
+              quantity: 1,
+              unitPrice: 12000000,
+              totalValue: 12000000,
+              condition: 'unused'
+            }
+          ],
+          reason: 'changed-mind',
+          description: 'Khách hàng thay đổi ý định, muốn trả hàng',
+          totalQuantity: 1,
+          totalReturnValue: 12000000,
+          processingFee: 5,
+          refundAmount: 11400000,
+          refundMethod: 'bank-transfer',
+          priority: 'normal',
+          returnMethod: 'pickup',
+          status: 'approved',
+          createdAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
+          createdBy: 'Staff User',
+          approvedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+          approvedBy: 'Manager'
+        },
+        {
+          id: 'ret_3',
+          code: 'RET-003',
+          originalOrderId: 'ORD-2024-003',
+          customerName: 'Lê Văn Cường',
+          customerPhone: '0923456789',
+          customerEmail: 'cuong.le@email.com',
+          customerAddress: '789 Đường DEF, Q7, TP.HCM',
+          items: [
+            {
+              productName: 'RAM DDR4 16GB 3200MHz',
+              quantity: 2,
+              unitPrice: 1800000,
+              totalValue: 3600000,
+              condition: 'unused'
+            }
+          ],
+          reason: 'wrong-item',
+          description: 'Giao sai loại RAM, khách hàng đặt DDR5 nhưng nhận DDR4',
+          totalQuantity: 2,
+          totalReturnValue: 3600000,
+          processingFee: 0,
+          refundAmount: 3600000,
+          refundMethod: 'original-payment',
+          priority: 'urgent',
+          returnMethod: 'shipping',
+          status: 'refunded',
+          createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+          createdBy: 'Staff User',
+          refundedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+          refundedBy: 'Admin User'
+        },
+        {
+          id: 'ret_4',
+          code: 'RET-004',
+          originalOrderId: 'ORD-2024-004',
+          customerName: 'Phạm Thị Dung',
+          customerPhone: '0934567890',
+          customerEmail: 'dung.pham@email.com',
+          customerAddress: '321 Đường GHI, Q5, TP.HCM',
+          items: [
+            {
+              productName: 'Motherboard ASUS B550M',
+              quantity: 1,
+              unitPrice: 2800000,
+              totalValue: 2800000,
+              condition: 'used'
+            }
+          ],
+          reason: 'not-as-described',
+          description: 'Mainboard không có đủ các tính năng như mô tả',
+          totalQuantity: 1,
+          totalReturnValue: 2800000,
+          processingFee: 10,
+          refundAmount: 2520000,
+          refundMethod: 'store-credit',
+          priority: 'normal',
+          returnMethod: 'in-store',
+          status: 'rejected',
+          createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+          createdBy: 'Staff User',
+          rejectedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+          rejectedBy: 'Manager',
+          rejectionReason: 'Đã quá thời hạn trả hàng (7 ngày)'
+        },
+        {
+          id: 'ret_5',
+          code: 'RET-005',
+          originalOrderId: 'ORD-2024-005',
+          customerName: 'Hoàng Minh Tuấn',
+          customerPhone: '0945678901',
+          customerEmail: 'tuan.hoang@email.com',
+          customerAddress: '555 Đường JKL, Q10, TP.HCM',
+          items: [
+            {
+              productName: 'SSD Samsung 980 Pro 1TB',
+              quantity: 1,
+              unitPrice: 3200000,
+              totalValue: 3200000,
+              condition: 'damaged'
+            },
+            {
+              productName: 'PSU Corsair 750W',
+              quantity: 1,
+              unitPrice: 2200000,
+              totalValue: 2200000,
+              condition: 'damaged'
+            }
+          ],
+          reason: 'damaged-shipping',
+          description: 'Sản phẩm bị hỏng trong quá trình vận chuyển, hộp bị móp méo',
+          totalQuantity: 2,
+          totalReturnValue: 5400000,
+          processingFee: 0,
+          refundAmount: 5400000,
+          refundMethod: 'original-payment',
+          priority: 'urgent',
+          returnMethod: 'pickup',
+          status: 'approved',
+          createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+          createdBy: 'Admin User',
+          approvedAt: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(),
+          approvedBy: 'Manager'
+        }
+      ];
+
+      saveData();
+    }
+  }
+
+  function saveData() {
+    localStorage.setItem('orderReturns', JSON.stringify(returns));
+  }
+
+  function renderReturns() {
+    const tbody = document.getElementById('returns-tbody');
+    const searchTerm = document.getElementById('search-input').value.toLowerCase();
+    const statusFilter = document.getElementById('status-filter').value;
+    const reasonFilter = document.getElementById('reason-filter').value;
+    const dateFilter = document.getElementById('date-filter').value;
+    const sortBy = document.getElementById('sort-by').value;
+
+    filteredReturns = returns.filter(returnItem => {
+      const matchesSearch = returnItem.code.toLowerCase().includes(searchTerm) ||
+                           returnItem.originalOrderId.toLowerCase().includes(searchTerm) ||
+                           returnItem.customerName.toLowerCase().includes(searchTerm) ||
+                           returnItem.customerPhone.includes(searchTerm);
+      const matchesStatus = statusFilter === 'all' || returnItem.status === statusFilter;
+      const matchesReason = reasonFilter === 'all' || returnItem.reason === reasonFilter;
+      
+      let matchesDate = true;
+      if (dateFilter !== 'custom') {
+        const days = parseInt(dateFilter);
+        const cutoffDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+        matchesDate = new Date(returnItem.createdAt) >= cutoffDate;
+      }
+
+      return matchesSearch && matchesStatus && matchesReason && matchesDate;
+    });
+
+    // Sort filtered results
+    filteredReturns.sort((a, b) => {
+      switch (sortBy) {
+        case 'newest':
+          return new Date(b.createdAt) - new Date(a.createdAt);
+        case 'oldest':
+          return new Date(a.createdAt) - new Date(b.createdAt);
+        case 'amount-desc':
+          return b.refundAmount - a.refundAmount;
+        case 'amount-asc':
+          return a.refundAmount - b.refundAmount;
+        default:
+          return 0;
+      }
+    });
+
+    renderPaginatedReturns();
+    updateStats();
+    renderChart();
+    renderTopReturnReasons();
+  }
+
+  function renderPaginatedReturns() {
+    const tbody = document.getElementById('returns-tbody');
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const pageItems = filteredReturns.slice(startIndex, endIndex);
+
+    if (pageItems.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="9" class="px-6 py-12 text-center text-gray-500">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+            </svg>
+            <h3 class="mt-2 text-sm font-medium text-gray-900">Không tìm thấy yêu cầu trả hàng nào</h3>
+            <p class="mt-1 text-sm text-gray-500">Thử thay đổi bộ lọc hoặc tạo yêu cầu mới.</p>
+          </td>
+        </tr>
+      `;
+      updatePagination();
+      return;
+    }
+
+    let html = '';
+    pageItems.forEach(returnItem => {
+      const statusColors = {
+        pending: 'bg-yellow-100 text-yellow-800',
+        approved: 'bg-blue-100 text-blue-800',
+        refunded: 'bg-green-100 text-green-800',
+        rejected: 'bg-red-100 text-red-800',
+        cancelled: 'bg-gray-100 text-gray-800'
+      };
+
+      const statusNames = {
+        pending: 'Chờ xử lý',
+        approved: 'Đã duyệt',
+        refunded: 'Đã hoàn tiền',
+        rejected: 'Từ chối',
+        cancelled: 'Đã hủy'
+      };
+
+      const reasonNames = {
+        defective: 'Sản phẩm lỗi',
+        'wrong-item': 'Sai sản phẩm',
+        'not-as-described': 'Không đúng mô tả',
+        'changed-mind': 'Thay đổi ý định',
+        'damaged-shipping': 'Hỏng khi vận chuyển',
+        'duplicate-order': 'Đặt nhầm',
+        other: 'Lý do khác'
+      };
+
+      const productSummary = returnItem.items.length === 1 
+        ? returnItem.items[0].productName 
+        : `${returnItem.items[0].productName} +${returnItem.items.length - 1} sản phẩm khác`;
+
+      html += `
+        <tr class="hover:bg-gray-50">
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${returnItem.code}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${returnItem.originalOrderId}</td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm font-medium text-gray-900">${returnItem.customerName}</div>
+            <div class="text-sm text-gray-500">${returnItem.customerPhone}</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm font-medium text-gray-900">${productSummary}</div>
+            <div class="text-sm text-gray-500">${returnItem.totalQuantity} sản phẩm</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${reasonNames[returnItem.reason]}</td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm font-medium text-gray-900">${formatVND(returnItem.refundAmount)}</div>
+            ${returnItem.processingFee > 0 ? `<div class="text-sm text-gray-500">Phí: ${returnItem.processingFee}%</div>` : ''}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="px-2 py-1 text-xs font-medium rounded-full ${statusColors[returnItem.status]}">${statusNames[returnItem.status]}</span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            ${new Date(returnItem.createdAt).toLocaleDateString('vi-VN')}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+            <div class="flex space-x-2">
+              <button onclick="viewReturn('${returnItem.id}')" class="text-blue-600 hover:text-blue-900">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+              </button>
+              ${returnItem.status === 'pending' || returnItem.status === 'approved' ? `
+                <button onclick="processRefund('${returnItem.id}')" class="text-green-600 hover:text-green-900">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </button>
+              ` : ''}
+            </div>
+          </td>
+        </tr>
+      `;
+    });
+
+    tbody.innerHTML = html;
+    updatePagination();
+  }
+
+  function updatePagination() {
+    const totalPages = Math.ceil(filteredReturns.length / itemsPerPage);
+    const startItem = (currentPage - 1) * itemsPerPage + 1;
+    const endItem = Math.min(currentPage * itemsPerPage, filteredReturns.length);
+    
+    document.getElementById('from-item').textContent = filteredReturns.length > 0 ? startItem : 0;
+    document.getElementById('to-item').textContent = endItem;
+    document.getElementById('total-items').textContent = filteredReturns.length;
+
+    const pagination = document.getElementById('pagination');
+    let paginationHtml = '';
+
+    // Previous button
+    paginationHtml += `
+      <button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''} 
+              class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 ${currentPage === 1 ? 'cursor-not-allowed' : ''}">
+        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
+        </svg>
+      </button>
+    `;
+
+    // Page numbers
+    for (let i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) {
+      paginationHtml += `
+        <button onclick="changePage(${i})" 
+                class="relative inline-flex items-center px-4 py-2 text-sm font-semibold ${i === currentPage ? 'z-10 bg-blue-600 text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600' : 'text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0'}">
+          ${i}
+        </button>
+      `;
+    }
+
+    // Next button
+    paginationHtml += `
+      <button onclick="changePage(${currentPage + 1})" ${currentPage === totalPages || totalPages === 0 ? 'disabled' : ''} 
+              class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 ${currentPage === totalPages || totalPages === 0 ? 'cursor-not-allowed' : ''}">
+        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+        </svg>
+      </button>
+    `;
+
+    pagination.innerHTML = paginationHtml;
+  }
+
+  window.changePage = function(page) {
+    const totalPages = Math.ceil(filteredReturns.length / itemsPerPage);
+    if (page >= 1 && page <= totalPages) {
+      currentPage = page;
+      renderPaginatedReturns();
+    }
+  };
+
+  function updateStats() {
+    const totalReturns = returns.length;
+    const pendingReturns = returns.filter(r => r.status === 'pending' || r.status === 'approved').length;
+    const refundedReturns = returns.filter(r => r.status === 'refunded').length;
+    const totalRefundAmount = returns.filter(r => r.status === 'refunded').reduce((sum, r) => sum + r.refundAmount, 0);
+
+    document.getElementById('total-returns').textContent = totalReturns;
+    document.getElementById('pending-returns').textContent = pendingReturns;
+    document.getElementById('refunded-returns').textContent = refundedReturns;
+    document.getElementById('total-refund-amount').textContent = formatVND(totalRefundAmount);
+  }
+
+  function renderChart() {
+    const canvas = document.getElementById('returns-chart');
+    const ctx = canvas.getContext('2d');
+    const period = parseInt(document.getElementById('chart-period').value);
+    
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Group returns by date
+    const dateGroups = {};
+    const cutoffDate = new Date(Date.now() - period * 24 * 60 * 60 * 1000);
+    
+    returns
+      .filter(r => new Date(r.createdAt) >= cutoffDate)
+      .forEach(returnItem => {
+        const date = new Date(returnItem.createdAt).toLocaleDateString('vi-VN');
+        if (!dateGroups[date]) {
+          dateGroups[date] = { count: 0, amount: 0 };
+        }
+        dateGroups[date].count++;
+        dateGroups[date].amount += returnItem.refundAmount;
+      });
+
+    const dates = Object.keys(dateGroups).sort((a, b) => new Date(a) - new Date(b)).slice(-7);
+    if (dates.length === 0) {
+      ctx.fillStyle = '#9CA3AF';
+      ctx.font = '16px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Không có dữ liệu', canvas.width / 2, canvas.height / 2);
+      return;
+    }
+
+    const maxValue = Math.max(...dates.map(date => dateGroups[date].count));
+    const barWidth = canvas.width / dates.length * 0.6;
+
+    dates.forEach((date, index) => {
+      const x = index * (canvas.width / dates.length);
+      const data = dateGroups[date];
+      
+      // Returns bar
+      const returnHeight = (data.count / maxValue) * (canvas.height * 0.6);
+      ctx.fillStyle = '#EF4444';
+      ctx.fillRect(x + barWidth * 0.2, canvas.height - returnHeight - 50, barWidth * 0.6, returnHeight);
+      
+      // Date label
+      ctx.fillStyle = '#374151';
+      ctx.font = '12px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(date.split('/').slice(0, 2).join('/'), x + barWidth / 2, canvas.height - 20);
+      
+      // Count label
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = 'bold 12px sans-serif';
+      ctx.fillText(data.count, x + barWidth / 2, canvas.height - returnHeight - 55);
+    });
+
+    // Legend
+    ctx.fillStyle = '#EF4444';
+    ctx.fillRect(20, 20, 15, 15);
+    ctx.fillStyle = '#374151';
+    ctx.font = '14px sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('Số lượng trả hàng', 45, 32);
+  }
+
+  function renderTopReturnReasons() {
+    const container = document.getElementById('top-return-reasons');
+    const reasonGroups = {};
+    
+    returns.forEach(returnItem => {
+      const reason = returnItem.reason;
+      if (!reasonGroups[reason]) {
+        reasonGroups[reason] = { count: 0, amount: 0 };
+      }
+      reasonGroups[reason].count++;
+      reasonGroups[reason].amount += returnItem.refundAmount;
+    });
+
+    const topReasons = Object.keys(reasonGroups)
+      .map(reason => ({ reason, ...reasonGroups[reason] }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 5);
+
+    const reasonNames = {
+      defective: 'Sản phẩm lỗi',
+      'wrong-item': 'Sai sản phẩm',
+      'not-as-described': 'Không đúng mô tả',
+      'changed-mind': 'Thay đổi ý định',
+      'damaged-shipping': 'Hỏng khi vận chuyển',
+      'duplicate-order': 'Đặt nhầm',
+      other: 'Lý do khác'
+    };
+
+    let html = '';
+    topReasons.forEach((reason, index) => {
+      html += `
+        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+          <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
+              ${index + 1}
+            </div>
+            <div>
+              <p class="text-sm font-medium text-gray-900">${reasonNames[reason.reason] || reason.reason}</p>
+              <p class="text-xs text-gray-500">${formatVND(reason.amount)}</p>
+            </div>
+          </div>
+          <div class="text-right">
+            <p class="text-sm font-medium text-gray-900">${reason.count} yêu cầu</p>
+          </div>
+        </div>
+      `;
+    });
+
+    container.innerHTML = html || '<p class="text-sm text-gray-500 text-center py-4">Không có dữ liệu</p>';
+  }
+
+  window.createNewReturn = function() {
+    // Generate new return code
+    const returnCount = returns.length + 1;
+    document.getElementById('return-code').value = `RET-${returnCount.toString().padStart(3, '0')}`;
+    
+    // Reset form
+    const form = document.getElementById('return-modal');
+    const inputs = form.querySelectorAll('input, select, textarea');
+    inputs.forEach(input => {
+      if (input.id !== 'return-code') {
+        input.value = '';
+      }
+    });
+    
+    // Reset return items
+    document.getElementById('return-items-container').innerHTML = `
+      <div class="border border-gray-200 rounded-lg p-4 return-item" data-item-index="0">
+        <div class="flex justify-between items-center mb-3">
+          <h5 class="text-sm font-medium text-gray-900">Sản phẩm 1</h5>
+          <button type="button" class="text-red-600 hover:text-red-900" onclick="removeReturnItem(0)">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+          </button>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+          <div>
+            <label class="form-label">Tên sản phẩm *</label>
+            <input type="text" class="form-input" name="product-name" placeholder="Tìm sản phẩm...">
+          </div>
+          <div>
+            <label class="form-label">Số lượng *</label>
+            <input type="number" class="form-input" name="quantity" value="1" min="1">
+          </div>
+          <div>
+            <label class="form-label">Đơn giá</label>
+            <input type="number" class="form-input" name="unit-price" placeholder="0">
+          </div>
+          <div>
+            <label class="form-label">Tổng giá trị</label>
+            <input type="number" class="form-input" name="total-value" placeholder="0" readonly>
+          </div>
+        </div>
+        <div class="mt-3">
+          <label class="form-label">Tình trạng sản phẩm</label>
+          <select class="form-select" name="condition">
+            <option value="unused">Chưa sử dụng</option>
+            <option value="lightly-used">Sử dụng ít</option>
+            <option value="used">Đã sử dụng</option>
+            <option value="damaged">Hỏng</option>
+            <option value="defective">Lỗi</option>
+          </select>
+        </div>
+      </div>
+    `;
+    
+    returnItemCounter = 1;
+    document.getElementById('return-reason').value = 'defective';
+    document.getElementById('return-priority').value = 'normal';
+    document.getElementById('return-method').value = 'in-store';
+    document.getElementById('refund-method').value = 'original-payment';
+    document.getElementById('processing-fee').value = 0;
+    document.getElementById('return-id').value = '';
+    
+    calculateReturnSummary();
+    document.getElementById('return-modal').classList.remove('hidden');
+  };
+
+  window.addReturnItem = function() {
+    const container = document.getElementById('return-items-container');
+    const newItemHtml = `
+      <div class="border border-gray-200 rounded-lg p-4 return-item mt-4" data-item-index="${returnItemCounter}">
+        <div class="flex justify-between items-center mb-3">
+          <h5 class="text-sm font-medium text-gray-900">Sản phẩm ${returnItemCounter + 1}</h5>
+          <button type="button" class="text-red-600 hover:text-red-900" onclick="removeReturnItem(${returnItemCounter})">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+          </button>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+          <div>
+            <label class="form-label">Tên sản phẩm *</label>
+            <input type="text" class="form-input" name="product-name" placeholder="Tìm sản phẩm...">
+          </div>
+          <div>
+            <label class="form-label">Số lượng *</label>
+            <input type="number" class="form-input" name="quantity" value="1" min="1">
+          </div>
+          <div>
+            <label class="form-label">Đơn giá</label>
+            <input type="number" class="form-input" name="unit-price" placeholder="0">
+          </div>
+          <div>
+            <label class="form-label">Tổng giá trị</label>
+            <input type="number" class="form-input" name="total-value" placeholder="0" readonly>
+          </div>
+        </div>
+        <div class="mt-3">
+          <label class="form-label">Tình trạng sản phẩm</label>
+          <select class="form-select" name="condition">
+            <option value="unused">Chưa sử dụng</option>
+            <option value="lightly-used">Sử dụng ít</option>
+            <option value="used">Đã sử dụng</option>
+            <option value="damaged">Hỏng</option>
+            <option value="defective">Lỗi</option>
+          </select>
+        </div>
+      </div>
+    `;
+    
+    container.insertAdjacentHTML('beforeend', newItemHtml);
+    returnItemCounter++;
+    
+    // Add event listeners to new item
+    addReturnItemEventListeners();
+  };
+
+  window.removeReturnItem = function(index) {
+    const items = document.querySelectorAll('.return-item');
+    if (items.length > 1) {
+      const item = document.querySelector(`.return-item[data-item-index="${index}"]`);
+      if (item) {
+        item.remove();
+        calculateReturnSummary();
+      }
+    } else {
+      alert('Phải có ít nhất một sản phẩm!');
+    }
+  };
+
+  function addReturnItemEventListeners() {
+    document.querySelectorAll('.return-item input[name="quantity"], .return-item input[name="unit-price"]').forEach(input => {
+      input.removeEventListener('input', calculateItemTotal);
+      input.addEventListener('input', calculateItemTotal);
+    });
+    
+    document.getElementById('processing-fee').removeEventListener('input', calculateReturnSummary);
+    document.getElementById('processing-fee').addEventListener('input', calculateReturnSummary);
+  }
+
+  function calculateItemTotal(event) {
+    const item = event.target.closest('.return-item');
+    const quantity = parseFloat(item.querySelector('input[name="quantity"]').value) || 0;
+    const unitPrice = parseFloat(item.querySelector('input[name="unit-price"]').value) || 0;
+    const total = quantity * unitPrice;
+    
+    item.querySelector('input[name="total-value"]').value = total;
+    calculateReturnSummary();
+  }
+
+  function calculateReturnSummary() {
+    const items = document.querySelectorAll('.return-item');
+    let totalQuantity = 0;
+    let totalValue = 0;
+    
+    items.forEach(item => {
+      const quantity = parseFloat(item.querySelector('input[name="quantity"]').value) || 0;
+      const value = parseFloat(item.querySelector('input[name="total-value"]').value) || 0;
+      totalQuantity += quantity;
+      totalValue += value;
+    });
+    
+    const processingFee = parseFloat(document.getElementById('processing-fee').value) || 0;
+    const refundAmount = totalValue * (1 - processingFee / 100);
+    
+    document.getElementById('total-quantity').value = totalQuantity;
+    document.getElementById('total-return-value').value = totalValue;
+    document.getElementById('refund-amount').value = refundAmount;
+  }
+
+  window.saveReturn = function() {
+    const code = document.getElementById('return-code').value;
+    const originalOrderId = document.getElementById('original-order').value;
+    const customerName = document.getElementById('customer-name').value;
+    const customerPhone = document.getElementById('customer-phone').value;
+    const customerEmail = document.getElementById('customer-email').value;
+    const customerAddress = document.getElementById('customer-address').value;
+    const reason = document.getElementById('return-reason').value;
+    const description = document.getElementById('return-description').value;
+    const priority = document.getElementById('return-priority').value;
+    const returnMethod = document.getElementById('return-method').value;
+    const refundMethod = document.getElementById('refund-method').value;
+    const processingFee = parseFloat(document.getElementById('processing-fee').value) || 0;
+
+    if (!originalOrderId || !customerName || !customerPhone || !description) {
+      alert('Vui lòng điền đầy đủ thông tin bắt buộc!');
+      return;
+    }
+
+    // Phone validation
+    const phoneRegex = /^[0-9]{10,11}$/;
+    if (!phoneRegex.test(customerPhone.replace(/[\s-]/g, ''))) {
+      alert('Số điện thoại không hợp lệ!');
+      return;
+    }
+
+    // Collect return items
+    const items = [];
+    const itemElements = document.querySelectorAll('.return-item');
+    
+    for (let itemElement of itemElements) {
+      const productName = itemElement.querySelector('input[name="product-name"]').value;
+      const quantity = parseInt(itemElement.querySelector('input[name="quantity"]').value) || 0;
+      const unitPrice = parseFloat(itemElement.querySelector('input[name="unit-price"]').value) || 0;
+      const totalValue = parseFloat(itemElement.querySelector('input[name="total-value"]').value) || 0;
+      const condition = itemElement.querySelector('select[name="condition"]').value;
+
+      if (!productName || quantity <= 0) {
+        alert('Vui lòng điền đầy đủ thông tin sản phẩm!');
+        return;
+      }
+
+      items.push({
+        productName,
+        quantity,
+        unitPrice,
+        totalValue,
+        condition
+      });
+    }
+
+    const totalQuantity = parseInt(document.getElementById('total-quantity').value) || 0;
+    const totalReturnValue = parseFloat(document.getElementById('total-return-value').value) || 0;
+    const refundAmount = parseFloat(document.getElementById('refund-amount').value) || 0;
+
+    const returnRequest = {
+      id: 'ret_' + Date.now(),
+      code,
+      originalOrderId,
+      customerName,
+      customerPhone,
+      customerEmail,
+      customerAddress,
+      items,
+      reason,
+      description,
+      totalQuantity,
+      totalReturnValue,
+      processingFee,
+      refundAmount,
+      refundMethod,
+      priority,
+      returnMethod,
+      status: 'pending',
+      createdAt: new Date().toISOString(),
+      createdBy: 'Admin User'
+    };
+
+    returns.unshift(returnRequest);
+    saveData();
+    closeModal('return-modal');
+    renderReturns();
+    alert('Đã tạo yêu cầu trả hàng thành công!');
+  };
+
+  window.viewReturn = function(returnId) {
+    const returnItem = returns.find(r => r.id === returnId);
+    if (!returnItem) return;
+
+    currentReturn = returnItem;
+
+    const reasonNames = {
+      defective: 'Sản phẩm lỗi',
+      'wrong-item': 'Sai sản phẩm',
+      'not-as-described': 'Không đúng mô tả',
+      'changed-mind': 'Thay đổi ý định',
+      'damaged-shipping': 'Hỏng khi vận chuyển',
+      'duplicate-order': 'Đặt nhầm',
+      other: 'Lý do khác'
+    };
+
+    const statusNames = {
+      pending: 'Chờ xử lý',
+      approved: 'Đã duyệt',
+      refunded: 'Đã hoàn tiền',
+      rejected: 'Từ chối',
+      cancelled: 'Đã hủy'
+    };
+
+    const priorityNames = {
+      normal: 'Bình thường',
+      high: 'Cao',
+      urgent: 'Khẩn cấp'
+    };
+
+    const refundMethodNames = {
+      'original-payment': 'Phương thức gốc',
+      'bank-transfer': 'Chuyển khoản ngân hàng',
+      cash: 'Tiền mặt',
+      'store-credit': 'Tín dụng cửa hàng',
+      voucher: 'Phiếu mua hàng'
+    };
+
+    let itemsHtml = '';
+    returnItem.items.forEach((item, index) => {
+      itemsHtml += `
+        <div class="border border-gray-200 rounded-lg p-3 ${index > 0 ? 'mt-3' : ''}">
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+            <div><strong>Sản phẩm:</strong> ${item.productName}</div>
+            <div><strong>Số lượng:</strong> ${item.quantity}</div>
+            <div><strong>Đơn giá:</strong> ${formatVND(item.unitPrice)}</div>
+            <div><strong>Tổng:</strong> ${formatVND(item.totalValue)}</div>
+          </div>
+          <div class="mt-2 text-sm"><strong>Tình trạng:</strong> ${item.condition}</div>
+        </div>
+      `;
+    });
+
+    const html = `
+      <div class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <h4 class="font-semibold text-gray-900 mb-3">Thông tin trả hàng</h4>
+            <div class="space-y-2 text-sm">
+              <div><strong>Mã trả hàng:</strong> ${returnItem.code}</div>
+              <div><strong>Đơn hàng gốc:</strong> ${returnItem.originalOrderId}</div>
+              <div><strong>Lý do trả hàng:</strong> ${reasonNames[returnItem.reason]}</div>
+              <div><strong>Mức độ ưu tiên:</strong> <span class="px-2 py-1 text-xs rounded-full ${getPriorityColor(returnItem.priority)}">${priorityNames[returnItem.priority]}</span></div>
+              <div><strong>Trạng thái:</strong> <span class="px-2 py-1 text-xs rounded-full ${getStatusColor(returnItem.status)}">${statusNames[returnItem.status]}</span></div>
+              <div><strong>Ngày tạo:</strong> ${new Date(returnItem.createdAt).toLocaleString('vi-VN')}</div>
+            </div>
+          </div>
+          <div>
+            <h4 class="font-semibold text-gray-900 mb-3">Thông tin khách hàng</h4>
+            <div class="space-y-2 text-sm">
+              <div><strong>Tên khách hàng:</strong> ${returnItem.customerName}</div>
+              <div><strong>Điện thoại:</strong> <a href="tel:${returnItem.customerPhone}" class="text-blue-600">${returnItem.customerPhone}</a></div>
+              ${returnItem.customerEmail ? `<div><strong>Email:</strong> <a href="mailto:${returnItem.customerEmail}" class="text-blue-600">${returnItem.customerEmail}</a></div>` : ''}
+              ${returnItem.customerAddress ? `<div><strong>Địa chỉ:</strong> ${returnItem.customerAddress}</div>` : ''}
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="font-semibold text-gray-900 mb-2">Mô tả chi tiết</h4>
+          <p class="text-sm text-gray-600 bg-gray-50 p-3 rounded-md">${returnItem.description}</p>
+        </div>
+
+        <div>
+          <h4 class="font-semibold text-gray-900 mb-3">Sản phẩm trả hàng</h4>
+          ${itemsHtml}
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <h4 class="font-semibold text-gray-900 mb-3">Tóm tắt tài chính</h4>
+            <div class="space-y-2 text-sm">
+              <div><strong>Tổng số lượng:</strong> ${returnItem.totalQuantity}</div>
+              <div><strong>Tổng giá trị:</strong> ${formatVND(returnItem.totalReturnValue)}</div>
+              <div><strong>Phí xử lý:</strong> ${returnItem.processingFee}%</div>
+              <div><strong>Số tiền hoàn trả:</strong> <span class="text-green-600 font-semibold">${formatVND(returnItem.refundAmount)}</span></div>
+              <div><strong>Phương thức hoàn tiền:</strong> ${refundMethodNames[returnItem.refundMethod]}</div>
+            </div>
+          </div>
+          <div>
+            <h4 class="font-semibold text-gray-900 mb-3">Thông tin xử lý</h4>
+            <div class="space-y-2 text-sm">
+              <div><strong>Phương thức trả hàng:</strong> ${returnItem.returnMethod}</div>
+              <div><strong>Người tạo:</strong> ${returnItem.createdBy}</div>
+              ${returnItem.approvedBy ? `<div><strong>Người duyệt:</strong> ${returnItem.approvedBy}</div>` : ''}
+              ${returnItem.refundedBy ? `<div><strong>Người hoàn tiền:</strong> ${returnItem.refundedBy}</div>` : ''}
+              ${returnItem.rejectionReason ? `<div><strong>Lý do từ chối:</strong> <span class="text-red-600">${returnItem.rejectionReason}</span></div>` : ''}
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.getElementById('return-detail-title').textContent = `Chi tiết trả hàng ${returnItem.code}`;
+    document.getElementById('return-detail-content').innerHTML = html;
+    
+    // Show/hide action buttons based on status
+    const approveBtn = document.getElementById('approve-return-btn');
+    const refundBtn = document.getElementById('process-refund-btn');
+    
+    if (returnItem.status === 'pending') {
+      approveBtn.classList.remove('hidden');
+      refundBtn.classList.add('hidden');
+    } else if (returnItem.status === 'approved') {
+      approveBtn.classList.add('hidden');
+      refundBtn.classList.remove('hidden');
+    } else {
+      approveBtn.classList.add('hidden');
+      refundBtn.classList.add('hidden');
+    }
+
+    // Set up button events
+    approveBtn.onclick = () => approveReturn(returnItem.id);
+    refundBtn.onclick = () => processRefund(returnItem.id);
+    
+    document.getElementById('return-detail-modal').classList.remove('hidden');
+  };
+
+  window.approveReturn = function(returnId) {
+    if (!confirm('Bạn có chắc chắn muốn duyệt yêu cầu trả hàng này?')) return;
+
+    const returnItem = returns.find(r => r.id === returnId);
+    if (returnItem) {
+      returnItem.status = 'approved';
+      returnItem.approvedAt = new Date().toISOString();
+      returnItem.approvedBy = 'Admin User';
+
+      saveData();
+      closeModal('return-detail-modal');
+      renderReturns();
+      alert('Đã duyệt yêu cầu trả hàng thành công!');
+    }
+  };
+
+  window.processRefund = function(returnId) {
+    const returnItem = returns.find(r => r.id === returnId);
+    if (!returnItem) return;
+
+    if (returnItem.status === 'pending') {
+      // Auto-approve first
+      returnItem.status = 'approved';
+      returnItem.approvedAt = new Date().toISOString();
+      returnItem.approvedBy = 'Admin User';
+    }
+
+    if (confirm(`Xác nhận hoàn tiền ${formatVND(returnItem.refundAmount)} cho khách hàng ${returnItem.customerName}?`)) {
+      returnItem.status = 'refunded';
+      returnItem.refundedAt = new Date().toISOString();
+      returnItem.refundedBy = 'Admin User';
+
+      saveData();
+      renderReturns();
+      alert(`Đã hoàn tiền thành công ${formatVND(returnItem.refundAmount)}!`);
+    }
+  };
+
+  function getStatusColor(status) {
+    const colors = {
+      pending: 'bg-yellow-100 text-yellow-800',
+      approved: 'bg-blue-100 text-blue-800',
+      refunded: 'bg-green-100 text-green-800',
+      rejected: 'bg-red-100 text-red-800',
+      cancelled: 'bg-gray-100 text-gray-800'
+    };
+    return colors[status] || '';
+  }
+
+  function getPriorityColor(priority) {
+    const colors = {
+      normal: 'bg-gray-100 text-gray-800',
+      high: 'bg-orange-100 text-orange-800',
+      urgent: 'bg-red-100 text-red-800'
+    };
+    return colors[priority] || '';
+  }
+
+  window.exportReturns = function() {
+    const csvContent = generateReturnCSV(returns);
+    downloadCSV(csvContent, `return-requests-${new Date().toISOString().split('T')[0]}.csv`);
+  };
+
+  function generateReturnCSV(data) {
+    const headers = ['Mã trả hàng', 'Đơn gốc', 'Khách hàng', 'Điện thoại', 'Lý do', 'Số lượng', 'Giá trị trả', 'Phí xử lý', 'Số tiền hoàn', 'Trạng thái', 'Ngày tạo'];
+    
+    const reasonNames = {
+      defective: 'Sản phẩm lỗi',
+      'wrong-item': 'Sai sản phẩm',
+      'not-as-described': 'Không đúng mô tả',
+      'changed-mind': 'Thay đổi ý định',
+      'damaged-shipping': 'Hỏng khi vận chuyển',
+      'duplicate-order': 'Đặt nhầm',
+      other: 'Lý do khác'
+    };
+
+    const statusNames = {
+      pending: 'Chờ xử lý',
+      approved: 'Đã duyệt',
+      refunded: 'Đã hoàn tiền',
+      rejected: 'Từ chối',
+      cancelled: 'Đã hủy'
+    };
+    
+    const rows = data.map(returnItem => [
+      returnItem.code,
+      returnItem.originalOrderId,
+      returnItem.customerName,
+      returnItem.customerPhone,
+      reasonNames[returnItem.reason],
+      returnItem.totalQuantity,
+      returnItem.totalReturnValue,
+      returnItem.processingFee + '%',
+      returnItem.refundAmount,
+      statusNames[returnItem.status],
+      new Date(returnItem.createdAt).toLocaleDateString('vi-VN')
+    ]);
+
+    return [headers, ...rows].map(row => 
+      row.map(field => `"${field}"`).join(',')
+    ).join('\n');
+  }
+
+  function downloadCSV(content, filename) {
+    const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  window.refreshReturns = function() {
+    currentPage = 1;
+    renderReturns();
+    alert('Đã làm mới danh sách yêu cầu trả hàng!');
+  };
+
+  window.closeModal = function(modalId) {
+    document.getElementById(modalId).classList.add('hidden');
+  };
+
+  function formatVND(amount) {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND'
+    }).format(amount);
+  }
+
+  // Event listeners
+  document.getElementById('search-input').addEventListener('input', () => {
+    currentPage = 1;
+    renderReturns();
+  });
+  document.getElementById('status-filter').addEventListener('change', () => {
+    currentPage = 1;
+    renderReturns();
+  });
+  document.getElementById('reason-filter').addEventListener('change', () => {
+    currentPage = 1;
+    renderReturns();
+  });
+  document.getElementById('date-filter').addEventListener('change', function() {
+    const customRange = document.getElementById('custom-date-range');
+    if (this.value === 'custom') {
+      customRange.classList.remove('hidden');
+    } else {
+      customRange.classList.add('hidden');
+      currentPage = 1;
+      renderReturns();
+    }
+  });
+  document.getElementById('sort-by').addEventListener('change', () => {
+    currentPage = 1;
+    renderReturns();
+  });
+  document.getElementById('chart-period').addEventListener('change', renderChart);
+
+  // Add event listeners for return item calculations
+  addReturnItemEventListeners();
+
+  // Initialize
+  loadSampleData();
+  renderReturns();
+});
+</script>
+
+<style>
+.form-input, .form-select, .form-textarea {
+  @apply px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full;
+}
+
+.modal-overlay {
+  @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50;
+}
+
+.modal-content {
+  @apply bg-white rounded-lg shadow-xl w-full mx-4 max-h-screen overflow-y-auto;
+}
+
+.modal-header {
+  @apply flex items-center justify-between p-6 border-b;
+}
+
+.modal-title {
+  @apply text-lg font-medium text-gray-900;
+}
+
+.modal-close {
+  @apply text-gray-400 hover:text-gray-600 text-2xl font-bold cursor-pointer;
+}
+
+.modal-body {
+  @apply p-6;
+}
+
+.modal-footer {
+  @apply flex items-center justify-end space-x-3 p-6 border-t bg-gray-50;
+}
+
+.btn {
+  @apply px-4 py-2 rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-offset-2;
+}
+
+.btn-primary {
+  @apply bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500;
+}
+
+.btn-secondary {
+  @apply bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500;
+}
+
+.btn-success {
+  @apply bg-green-600 text-white hover:bg-green-700 focus:ring-green-500;
+}
+
+.form-label {
+  @apply block text-sm font-medium text-gray-700 mb-1;
+}
+</style>

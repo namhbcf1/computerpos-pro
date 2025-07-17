@@ -1,0 +1,244 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import DashboardLayout from '../../layouts/DashboardLayout.astro';
+import Card from '../../components/ui/Card.astro';
+import Button from '../../components/ui/Button.astro';
+---
+
+<BaseLayout title="Lịch làm việc - ComputerPOS Pro">
+  <DashboardLayout>
+    <main class="p-6 space-y-6">
+      <div class="flex justify-between items-center">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">Lịch làm việc</h1>
+          <p class="text-gray-600 mt-1">Quản lý lịch làm việc của nhân viên</p>
+        </div>
+        <div class="flex space-x-3">
+          <Button href="/staff" variant="secondary">Quay lại</Button>
+          <Button variant="primary" id="add-schedule">Thêm ca làm</Button>
+        </div>
+      </div>
+
+      <!-- Schedule Overview -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Đang làm việc</dt>
+                  <dd class="text-lg font-medium text-gray-900">8</dd>
+                  <dd class="text-sm text-blue-600">Nhân viên</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Ca sáng</dt>
+                  <dd class="text-lg font-medium text-gray-900">5</dd>
+                  <dd class="text-sm text-green-600">8:00 - 12:00</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-yellow-500 rounded-lg flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Ca chiều</dt>
+                  <dd class="text-lg font-medium text-gray-900">6</dd>
+                  <dd class="text-sm text-yellow-600">13:00 - 18:00</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Ca tối</dt>
+                  <dd class="text-lg font-medium text-gray-900">3</dd>
+                  <dd class="text-sm text-purple-600">18:00 - 22:00</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      <!-- Weekly Schedule -->
+      <Card>
+        <div class="p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Lịch làm việc tuần này</h3>
+          <div class="overflow-x-auto">
+            <table class="min-w-full">
+              <thead>
+                <tr class="border-b border-gray-200">
+                  <th class="text-left py-3 px-4 font-medium text-gray-900">Nhân viên</th>
+                  <th class="text-center py-3 px-4 font-medium text-gray-900">T2</th>
+                  <th class="text-center py-3 px-4 font-medium text-gray-900">T3</th>
+                  <th class="text-center py-3 px-4 font-medium text-gray-900">T4</th>
+                  <th class="text-center py-3 px-4 font-medium text-gray-900">T5</th>
+                  <th class="text-center py-3 px-4 font-medium text-gray-900">T6</th>
+                  <th class="text-center py-3 px-4 font-medium text-gray-900">T7</th>
+                  <th class="text-center py-3 px-4 font-medium text-gray-900">CN</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200">
+                <tr class="hover:bg-gray-50">
+                  <td class="py-4 px-4">
+                    <div class="flex items-center">
+                      <div class="flex-shrink-0 h-8 w-8">
+                        <div class="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
+                          <span class="text-blue-600 font-medium text-xs">NV</span>
+                        </div>
+                      </div>
+                      <div class="ml-3">
+                        <div class="text-sm font-medium text-gray-900">Nguyễn Văn A</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="py-4 px-4 text-center">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      8-17
+                    </span>
+                  </td>
+                  <td class="py-4 px-4 text-center">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      8-17
+                    </span>
+                  </td>
+                  <td class="py-4 px-4 text-center">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                      Nghỉ
+                    </span>
+                  </td>
+                  <td class="py-4 px-4 text-center">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      8-17
+                    </span>
+                  </td>
+                  <td class="py-4 px-4 text-center">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      8-17
+                    </span>
+                  </td>
+                  <td class="py-4 px-4 text-center">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                      13-22
+                    </span>
+                  </td>
+                  <td class="py-4 px-4 text-center">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                      Nghỉ
+                    </span>
+                  </td>
+                </tr>
+                <tr class="hover:bg-gray-50">
+                  <td class="py-4 px-4">
+                    <div class="flex items-center">
+                      <div class="flex-shrink-0 h-8 w-8">
+                        <div class="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center">
+                          <span class="text-green-600 font-medium text-xs">TT</span>
+                        </div>
+                      </div>
+                      <div class="ml-3">
+                        <div class="text-sm font-medium text-gray-900">Trần Thị B</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="py-4 px-4 text-center">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                      8-12
+                    </span>
+                  </td>
+                  <td class="py-4 px-4 text-center">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                      8-12
+                    </span>
+                  </td>
+                  <td class="py-4 px-4 text-center">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                      8-12
+                    </span>
+                  </td>
+                  <td class="py-4 px-4 text-center">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                      8-12
+                    </span>
+                  </td>
+                  <td class="py-4 px-4 text-center">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                      8-12
+                    </span>
+                  </td>
+                  <td class="py-4 px-4 text-center">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                      Nghỉ
+                    </span>
+                  </td>
+                  <td class="py-4 px-4 text-center">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                      Nghỉ
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </Card>
+    </main>
+  </DashboardLayout>
+</BaseLayout>
+
+<script>
+  // Schedules functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    // Add schedule
+    const addScheduleBtn = document.getElementById('add-schedule');
+    addScheduleBtn?.addEventListener('click', function() {
+      alert('Chức năng thêm ca làm sẽ được phát triển trong phiên bản tiếp theo');
+    });
+  });
+</script>

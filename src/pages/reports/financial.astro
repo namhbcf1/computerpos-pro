@@ -1,0 +1,318 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import DashboardLayout from '../../layouts/DashboardLayout.astro';
+import Card from '../../components/ui/Card.astro';
+import Button from '../../components/ui/Button.astro';
+---
+
+<BaseLayout title="Báo cáo tài chính - ComputerPOS Pro">
+  <DashboardLayout>
+    <main class="p-6 space-y-6">
+      <!-- Header -->
+      <div class="flex justify-between items-center">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">Báo cáo tài chính</h1>
+          <p class="text-gray-600 mt-1">Phân tích doanh thu, chi phí và lợi nhuận</p>
+        </div>
+        <div class="flex space-x-3">
+          <Button href="/reports" variant="secondary">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m0 7h18" />
+            </svg>
+            Quay lại
+          </Button>
+          <Button variant="primary" id="export-financial-report">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Xuất báo cáo
+          </Button>
+        </div>
+      </div>
+
+      <!-- Financial Summary -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Tổng doanh thu</dt>
+                  <dd class="text-lg font-medium text-gray-900">8.1 tỷ</dd>
+                  <dd class="text-sm text-green-600">+12.5% so với tháng trước</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Lợi nhuận gộp</dt>
+                  <dd class="text-lg font-medium text-gray-900">1.2 tỷ</dd>
+                  <dd class="text-sm text-blue-600">14.8% margin</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-red-500 rounded-lg flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Chi phí vận hành</dt>
+                  <dd class="text-lg font-medium text-gray-900">450M</dd>
+                  <dd class="text-sm text-red-600">5.6% của doanh thu</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Lợi nhuận ròng</dt>
+                  <dd class="text-lg font-medium text-gray-900">750M</dd>
+                  <dd class="text-sm text-purple-600">9.3% net margin</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      <!-- Financial Charts -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card>
+          <div class="p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Doanh thu & Lợi nhuận theo tháng</h3>
+            <div class="h-80 flex items-center justify-center relative">
+              <canvas id="revenueChart"></canvas>
+              <div id="revenueChart-loading" class="absolute inset-0 flex items-center justify-center bg-gray-50 rounded-lg">
+                <div class="flex items-center space-x-2 text-gray-600">
+                  <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  <span>Đang tải biểu đồ...</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <div class="p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Cơ cấu chi phí</h3>
+            <div class="h-80 flex items-center justify-center relative">
+              <canvas id="expenseChart"></canvas>
+              <div id="expenseChart-loading" class="absolute inset-0 flex items-center justify-center bg-gray-50 rounded-lg">
+                <div class="flex items-center space-x-2 text-gray-600">
+                  <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  <span>Đang tải biểu đồ...</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      <!-- Financial Details Table -->
+      <Card>
+        <div class="overflow-hidden">
+          <div class="px-6 py-4 border-b border-gray-200">
+            <h3 class="text-lg font-medium text-gray-900">Chi tiết tài chính theo tháng</h3>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tháng</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Doanh thu</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Chi phí hàng bán</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lợi nhuận gộp</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Chi phí vận hành</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lợi nhuận ròng</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Margin</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Tháng 12/2024</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-green-600">810,000,000₫</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-red-600">690,000,000₫</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-blue-600">120,000,000₫</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-red-600">45,000,000₫</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-purple-600">75,000,000₫</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">9.3%</td>
+                </tr>
+                <tr class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Tháng 11/2024</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-green-600">720,000,000₫</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-red-600">612,000,000₫</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-blue-600">108,000,000₫</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-red-600">40,000,000₫</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-purple-600">68,000,000₫</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">9.4%</td>
+                </tr>
+                <tr class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Tháng 10/2024</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-green-600">680,000,000₫</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-red-600">578,000,000₫</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-blue-600">102,000,000₫</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-red-600">38,000,000₫</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-purple-600">64,000,000₫</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">9.4%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </Card>
+    </main>
+  </DashboardLayout>
+</BaseLayout>
+
+<script>
+  // Financial reports functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    // Load Chart.js and initialize charts
+    import('https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js').then(module => {
+      const Chart = module.default;
+
+      // Revenue Chart
+      const revenueCtx = document.getElementById('revenueChart');
+      if (revenueCtx) {
+        document.getElementById('revenueChart-loading').style.display = 'none';
+
+        new Chart(revenueCtx, {
+          type: 'line',
+          data: {
+            labels: ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11', 'T12'],
+            datasets: [
+              {
+                label: 'Doanh thu (triệu VNĐ)',
+                data: [520, 580, 620, 590, 640, 680, 720, 750, 710, 680, 720, 810],
+                borderColor: 'rgb(34, 197, 94)',
+                backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                tension: 0.4,
+                fill: true
+              },
+              {
+                label: 'Lợi nhuận (triệu VNĐ)',
+                data: [45, 52, 58, 54, 60, 64, 68, 71, 67, 64, 68, 75],
+                borderColor: 'rgb(168, 85, 247)',
+                backgroundColor: 'rgba(168, 85, 247, 0.1)',
+                tension: 0.4,
+                fill: false
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'top',
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        });
+      }
+
+      // Expense Chart
+      const expenseCtx = document.getElementById('expenseChart');
+      if (expenseCtx) {
+        document.getElementById('expenseChart-loading').style.display = 'none';
+
+        new Chart(expenseCtx, {
+          type: 'doughnut',
+          data: {
+            labels: ['Chi phí hàng bán', 'Lương nhân viên', 'Thuê mặt bằng', 'Marketing', 'Khác'],
+            datasets: [{
+              data: [690, 120, 80, 45, 35],
+              backgroundColor: [
+                'rgb(239, 68, 68)',
+                'rgb(59, 130, 246)',
+                'rgb(245, 158, 11)',
+                'rgb(34, 197, 94)',
+                'rgb(156, 163, 175)'
+              ]
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'bottom',
+              }
+            }
+          }
+        });
+      }
+    }).catch(e => console.error('Failed to load Chart.js', e));
+
+    // Export functionality
+    const exportBtn = document.getElementById('export-financial-report');
+    exportBtn?.addEventListener('click', function() {
+      const originalText = exportBtn.innerHTML;
+      exportBtn.innerHTML = `
+        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        Đang xuất...
+      `;
+
+      setTimeout(() => {
+        exportBtn.innerHTML = originalText;
+        alert('Báo cáo tài chính đã được xuất thành công!');
+      }, 2000);
+    });
+  });
+</script>

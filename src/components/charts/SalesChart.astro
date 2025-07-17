@@ -1,0 +1,32 @@
+---
+// Mock data for sales chart
+const salesData = [
+  { day: 'T2', sales: 15500000 },
+  { day: 'T3', sales: 22300000 },
+  { day: 'T4', sales: 18900000 },
+  { day: 'T5', sales: 31200000 },
+  { day: 'T6', sales: 45600000 },
+  { day: 'T7', sales: 52100000 },
+  { day: 'CN', sales: 38700000 }
+];
+
+const maxSales = Math.max(...salesData.map(d => d.sales));
+---
+
+<div class="w-full h-64">
+  <div class="flex items-end justify-between h-full space-x-2">
+    {salesData.map((data) => {
+      const height = (data.sales / maxSales) * 100;
+      return (
+        <div class="flex-1 flex flex-col items-center">
+          <div class="w-full bg-blue-500 rounded-t-md relative group cursor-pointer" style={`height: ${height}%`}>
+            <div class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+              {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(data.sales)}
+            </div>
+          </div>
+          <div class="mt-2 text-xs text-gray-600 font-medium">{data.day}</div>
+        </div>
+      );
+    })}
+  </div>
+</div>

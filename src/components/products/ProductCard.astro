@@ -1,0 +1,30 @@
+// src/components/products/ProductCard.astro
+---
+// Chỉ nhận props, KHÔNG gọi database
+interface Props {
+  product: {
+    id: string;
+    name: string;
+    price: number;
+    specifications: Record<string, any>;
+  };
+}
+
+const { product } = Astro.props;
+---
+
+<div class="product-card">
+  <h3>{product.name}</h3>
+  <p class="price">{new Intl.NumberFormat('vi-VN', {
+    style: 'currency',
+    currency: 'VND'
+  }).format(product.price)}</p>
+  
+  <div class="specs">
+    {Object.entries(product.specifications).map(([key, value]) => (
+      <span class="spec-item">
+        <strong>{key}:</strong> {value}
+      </span>
+    ))}
+  </div>
+</div>

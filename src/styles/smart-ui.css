@@ -1,0 +1,289 @@
+/* Smart UI - Modern Dashboard Styles
+ * A modern CSS library for dashboard interfaces with 
+ * 3D effects, neumorphism, and glass morphism 
+ */
+
+/* Base Elements */
+:root {
+  --color-primary: rgb(79 70 229);
+  --color-primary-dark: rgb(67 56 202);
+  --color-primary-light: rgb(99 102 241);
+  --color-primary-lighter: rgb(129 140 248);
+  
+  --color-slate: rgb(15 23 42);
+  --color-slate-dark: rgb(2 6 23);
+  --color-slate-light: rgb(30 41 59);
+  
+  --color-white: rgb(255 255 255);
+  --color-black: rgb(0 0 0);
+  
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  
+  --shadow-colored-sm: 0 1px 2px 0 var(--tw-shadow-color);
+  --shadow-colored: 0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);
+  --shadow-colored-md: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
+  --shadow-colored-lg: 0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);
+  --shadow-colored-xl: 0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);
+  --shadow-colored-2xl: 0 25px 50px -12px var(--tw-shadow-color);
+}
+
+/* Modern Dashboard Layout Components */
+.layout-modern {
+  @apply min-h-screen bg-slate-900;
+  background-image: 
+    radial-gradient(at 50% 0%, rgba(56, 189, 248, 0.13) 0px, transparent 75%),
+    radial-gradient(at 100% 0%, rgba(99, 102, 241, 0.13) 0px, transparent 50%);
+}
+
+/* 3D Container Elements */
+.container-3d {
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.card-3d {
+  @apply rounded-xl border border-white/20 backdrop-blur-md bg-white/10 shadow-xl;
+  transform: translateZ(0);
+  transition: transform 0.5s ease, box-shadow 0.5s ease;
+}
+
+.card-3d:hover {
+  transform: translateY(-5px) translateZ(10px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+}
+
+/* Glass Morphism Effects */
+.glass-panel {
+  @apply backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl;
+}
+
+.glass-light {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-dark {
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Neumorphic Design Elements */
+.neu-light {
+  background: #f0f4f8;
+  box-shadow: 
+    8px 8px 16px rgba(174, 174, 192, 0.4),
+    -8px -8px 16px rgba(255, 255, 255, 0.8);
+}
+
+.neu-dark {
+  background: #1e293b;
+  box-shadow: 
+    8px 8px 16px rgba(0, 0, 0, 0.5),
+    -8px -8px 16px rgba(30, 41, 59, 0.6);
+}
+
+.neu-inset-light {
+  background: #f0f4f8;
+  box-shadow: 
+    inset 4px 4px 8px rgba(174, 174, 192, 0.4),
+    inset -4px -4px 8px rgba(255, 255, 255, 0.8);
+}
+
+.neu-inset-dark {
+  background: #1e293b;
+  box-shadow: 
+    inset 4px 4px 8px rgba(0, 0, 0, 0.5),
+    inset -4px -4px 8px rgba(30, 41, 59, 0.6);
+}
+
+/* Modern Scrollbar */
+.scrollbar-modern::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+.scrollbar-modern::-webkit-scrollbar-track {
+  @apply bg-slate-800/50;
+  border-radius: 10px;
+}
+
+.scrollbar-modern::-webkit-scrollbar-thumb {
+  @apply bg-indigo-600/50;
+  border-radius: 10px;
+}
+
+.scrollbar-modern::-webkit-scrollbar-thumb:hover {
+  @apply bg-indigo-500/70;
+}
+
+/* Custom Animations */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes pulse-shadow {
+  0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(99, 102, 241, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+}
+
+.animate-pulse-shadow {
+  animation: pulse-shadow 2s infinite;
+}
+
+/* Data Visualization Card */
+.chart-card {
+  @apply bg-white/10 backdrop-blur-md border border-white/20 rounded-xl shadow-xl p-4 relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.chart-card:hover {
+  @apply border-indigo-500/30;
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.chart-card-header {
+  @apply flex items-center justify-between mb-4 pb-3 border-b border-white/10;
+}
+
+/* Modern Badge Types */
+.badge-outline {
+  @apply text-xs py-0.5 px-2 rounded-md border;
+}
+
+.badge-pill {
+  @apply text-xs py-0.5 px-2 rounded-full;
+}
+
+.badge-dot {
+  @apply flex items-center;
+}
+
+.badge-dot::before {
+  content: '';
+  @apply w-2 h-2 rounded-full mr-2;
+}
+
+/* Status Indicators */
+.status-online::before {
+  @apply bg-green-500;
+}
+
+.status-offline::before {
+  @apply bg-gray-400;
+}
+
+.status-busy::before {
+  @apply bg-red-500;
+}
+
+.status-away::before {
+  @apply bg-yellow-500;
+}
+
+/* Utility Classes */
+.text-gradient-primary {
+  @apply text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-600;
+}
+
+.text-gradient-blue {
+  @apply text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-400;
+}
+
+.text-gradient-green {
+  @apply text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-600;
+}
+
+.text-gradient-orange {
+  @apply text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-amber-500;
+}
+
+/* Dashboard Card Types */
+.stat-card {
+  @apply glass-panel p-5 relative overflow-hidden;
+}
+
+.stat-card-value {
+  @apply text-2xl font-bold mb-1;
+}
+
+.stat-card-title {
+  @apply text-sm text-gray-400 mb-2;
+}
+
+.stat-card-trend {
+  @apply flex items-center text-xs font-medium;
+}
+
+.stat-card-trend-up {
+  @apply text-green-500;
+}
+
+.stat-card-trend-down {
+  @apply text-red-500;
+}
+
+/* Activity Feed Elements */
+.activity-item {
+  @apply flex items-start gap-3 py-3 border-b border-white/10 last:border-b-0;
+}
+
+.activity-icon {
+  @apply w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0;
+}
+
+.activity-content {
+  @apply flex-1;
+}
+
+.activity-time {
+  @apply text-xs text-gray-400 mt-1;
+}
+
+/* Modern Grid */
+.bg-grid-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.05'%3E%3Cpath d='M0 38.59l2.83-2.83 1.41 1.41L1.41 40H0v-1.41zM0 20.83l2.83-2.83 1.41 1.41L1.41 22H0v-1.17zM0 3.07l2.83-2.83 1.41 1.41L1.41 4.24H0V3.07zM17.76 40l2.83-2.83 1.41 1.41L19.17 40h-1.41zM0 38.59l2.83-2.83 1.41 1.41L1.41 40H0v-1.41zM0 20.83l2.83-2.83 1.41 1.41L1.41 22H0v-1.17zM0 3.07l2.83-2.83 1.41 1.41L1.41 4.24H0V3.07zM17.76 40l2.83-2.83 1.41 1.41L19.17 40h-1.41zM35.52 40l2.83-2.83 1.41 1.41L37.93 40h-2.41zM17.76 22.24l2.83-2.83 1.41 1.41L19.17 23.66h-1.41zM35.52 22.24l2.83-2.83 1.41 1.41L37.93 23.66h-2.41zM17.76 4.48l2.83-2.83 1.41 1.41L19.17 5.9h-1.41zM35.52 4.48l2.83-2.83 1.41 1.41L37.93 5.9h-2.41z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Modern Form Elements */
+.input-modern {
+  @apply w-full py-2 px-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all duration-300;
+}
+
+.select-modern {
+  @apply w-full py-2 px-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all duration-300;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.5rem center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+  padding-right: 2.5rem;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* Responsive Utilities */
+@media (max-width: 640px) {
+  .card-3d:hover {
+    transform: none;
+    box-shadow: inherit;
+  }
+  
+  .stat-card-value {
+    @apply text-xl;
+  }
+}

@@ -1,0 +1,116 @@
+---
+export interface Props {
+  variant?: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'light' | 'dark' | 'ghost' | 'link' | 'glass' | 'gradient';
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+  href?: string;
+  type?: 'button' | 'submit' | 'reset';
+  disabled?: boolean;
+  fullWidth?: boolean;
+  rounded?: boolean;
+  elevated?: boolean;
+  outlined?: boolean;
+  icon?: boolean;
+  loading?: boolean;
+  class?: string;
+}
+
+const { 
+  variant = 'primary', 
+  size = 'md',
+  href,
+  type = 'button',
+  disabled = false,
+  fullWidth = false,
+  rounded = false,
+  elevated = false,
+  outlined = false,
+  icon = false,
+  loading = false,
+  class: className = '',
+  ...props 
+} = Astro.props;
+
+// Base styles
+const baseClasses = 'inline-flex items-center justify-center font-medium transition-all duration-200 focus:outline-none disabled:opacity-60 disabled:cursor-not-allowed gap-2';
+
+// Size variations
+const sizes = {
+  xs: icon ? 'p-1.5 text-xs' : 'px-2.5 py-1 text-xs',
+  sm: icon ? 'p-2 text-sm' : 'px-3 py-1.5 text-sm',
+  md: icon ? 'p-2.5 text-base' : 'px-4 py-2 text-sm',
+  lg: icon ? 'p-3 text-lg' : 'px-5 py-2.5 text-base',
+  xl: icon ? 'p-3.5 text-xl' : 'px-6 py-3 text-lg'
+};
+
+// Border radius based on rounded prop and icon
+const radiusClasses = rounded 
+  ? icon ? 'rounded-full' : 'rounded-full'
+  : icon ? 'rounded-lg' : 'rounded-lg';
+
+// Variant styles with modern colors
+const variants = {
+  primary: 'bg-indigo-600 hover:bg-indigo-700 text-white focus:ring-indigo-500',
+  secondary: 'bg-slate-700 hover:bg-slate-800 text-white focus:ring-slate-600',
+  success: 'bg-emerald-600 hover:bg-emerald-700 text-white focus:ring-emerald-500',
+  danger: 'bg-rose-600 hover:bg-rose-700 text-white focus:ring-rose-500',
+  warning: 'bg-amber-500 hover:bg-amber-600 text-white focus:ring-amber-400',
+  info: 'bg-sky-500 hover:bg-sky-600 text-white focus:ring-sky-400',
+  light: 'bg-gray-100 hover:bg-gray-200 text-gray-800 focus:ring-gray-300',
+  dark: 'bg-gray-800 hover:bg-gray-900 text-white focus:ring-gray-600',
+  ghost: 'bg-transparent hover:bg-gray-100 text-gray-800 dark:text-white dark:hover:bg-gray-700',
+  link: 'bg-transparent text-indigo-600 hover:underline hover:text-indigo-700 p-0 m-0 focus:ring-0',
+  glass: 'backdrop-blur-md bg-white/10 hover:bg-white/20 text-white border border-white/20 focus:ring-white/30',
+  gradient: 'bg-gradient-to-br from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white focus:ring-purple-500'
+};
+
+// Additional style modifiers
+const outlinedClasses = outlined 
+  ? `bg-transparent border ${variant === 'primary' ? 'border-indigo-500 text-indigo-600 hover:bg-indigo-50' : 
+      variant === 'secondary' ? 'border-gray-500 text-gray-700 hover:bg-gray-50' :
+      variant === 'success' ? 'border-emerald-500 text-emerald-600 hover:bg-emerald-50' :
+      variant === 'danger' ? 'border-rose-500 text-rose-600 hover:bg-rose-50' :
+      variant === 'warning' ? 'border-amber-500 text-amber-600 hover:bg-amber-50' :
+      variant === 'info' ? 'border-sky-500 text-sky-600 hover:bg-sky-50' :
+      variant === 'light' ? 'border-gray-300 text-gray-700 hover:bg-gray-50' :
+      variant === 'dark' ? 'border-gray-700 text-gray-800 hover:bg-gray-50' :
+      variant === 'glass' ? 'border-white/30 text-white hover:bg-white/10' :
+      variant === 'gradient' ? 'border-indigo-500 text-indigo-600 hover:bg-indigo-50' :
+      'border-gray-300 text-gray-700 hover:bg-gray-50'}`
+  : '';
+
+const elevatedClasses = elevated ? 'shadow-md hover:shadow-lg transform hover:-translate-y-0.5 active:translate-y-0' : '';
+const fullWidthClasses = fullWidth ? 'w-full' : '';
+const focusRingClasses = variant !== 'link' ? 'focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-900' : '';
+
+// Loading indicator
+const loadingClasses = loading ? 'relative !text-transparent' : '';
+
+// Combine all classes
+const classes = [
+  baseClasses, 
+  outlinedClasses || variants[variant], 
+  sizes[size], 
+  radiusClasses,
+  elevatedClasses,
+  fullWidthClasses,
+  focusRingClasses,
+  loadingClasses,
+  className
+].join(' ');
+---
+
+{href ? (
+  <a href={href} class={classes} {...props}>
+    <slot />
+    {loading && <span class="absolute inset-0 flex items-center justify-center">
+      <span class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+    </span>}
+  </a>
+) : (
+  <button type={type} class={classes} disabled={disabled || loading} {...props}>
+    <slot />
+    {loading && <span class="absolute inset-0 flex items-center justify-center">
+      <span class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+    </span>}
+  </button>
+)}

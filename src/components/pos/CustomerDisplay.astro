@@ -1,0 +1,187 @@
+---
+// Customer Display Component for POS
+---
+
+<div class="bg-gray-900 text-white p-6 rounded-lg">
+  <!-- Header -->
+  <div class="text-center mb-6">
+    <h2 class="text-2xl font-bold mb-2">ComputerPOS Pro</h2>
+    <p class="text-gray-300">Màn hình khách hàng</p>
+  </div>
+
+  <!-- Current Item -->
+  <div id="customer-current-item" class="bg-gray-800 rounded-lg p-4 mb-6">
+    <div class="text-center">
+      <div id="current-item-display" class="hidden">
+        <h3 id="current-item-name" class="text-xl font-semibold mb-2"></h3>
+        <div class="text-3xl font-bold text-green-400 mb-2" id="current-item-price"></div>
+        <div class="text-sm text-gray-400">
+          Số lượng: <span id="current-item-quantity">1</span>
+        </div>
+      </div>
+      <div id="welcome-message" class="py-8">
+        <svg class="w-16 h-16 mx-auto mb-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l-1 12H6L5 9z" />
+        </svg>
+        <h3 class="text-xl font-semibold mb-2">Chào mừng quý khách!</h3>
+        <p class="text-gray-400">Cảm ơn quý khách đã đến với ComputerPOS Pro</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cart Summary -->
+  <div class="bg-gray-800 rounded-lg p-4 mb-6">
+    <h4 class="text-lg font-semibold mb-3">Tóm tắt đơn hàng</h4>
+    <div class="space-y-2">
+      <div class="flex justify-between">
+        <span class="text-gray-400">Số lượng sản phẩm:</span>
+        <span id="customer-item-count">0</span>
+      </div>
+      <div class="flex justify-between">
+        <span class="text-gray-400">Tạm tính:</span>
+        <span id="customer-subtotal">0₫</span>
+      </div>
+      <div class="flex justify-between">
+        <span class="text-gray-400">Giảm giá:</span>
+        <span id="customer-discount">0₫</span>
+      </div>
+      <div class="flex justify-between">
+        <span class="text-gray-400">Thuế VAT:</span>
+        <span id="customer-tax">0₫</span>
+      </div>
+      <hr class="border-gray-600">
+      <div class="flex justify-between text-xl font-bold">
+        <span>Tổng cộng:</span>
+        <span id="customer-total" class="text-green-400">0₫</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Promotions/Ads -->
+  <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg p-4 text-center">
+    <h4 class="text-lg font-semibold mb-2">🎉 Khuyến mãi đặc biệt!</h4>
+    <p class="text-sm mb-2">Mua CPU + VGA giảm ngay 5%</p>
+    <p class="text-xs text-blue-200">Áp dụng cho tất cả sản phẩm Intel & NVIDIA</p>
+  </div>
+
+  <!-- Footer -->
+  <div class="text-center mt-6 text-sm text-gray-400">
+    <p>Hotline: 1900-1234 | Website: computerpos.vn</p>
+    <p class="mt-1">Cảm ơn quý khách đã mua sắm tại ComputerPOS Pro!</p>
+  </div>
+</div>
+
+<script>
+  // Customer display functionality
+  let customerDisplayData = {
+    itemCount: 0,
+    subtotal: 0,
+    discount: 0,
+    tax: 0,
+    total: 0
+  };
+
+  function updateCustomerDisplay(data) {
+    customerDisplayData = { ...customerDisplayData, ...data };
+
+    // Update item count
+    document.getElementById('customer-item-count').textContent = customerDisplayData.itemCount;
+
+    // Update amounts
+    document.getElementById('customer-subtotal').textContent = formatCurrency(customerDisplayData.subtotal);
+    document.getElementById('customer-discount').textContent = formatCurrency(customerDisplayData.discount);
+    document.getElementById('customer-tax').textContent = formatCurrency(customerDisplayData.tax);
+    document.getElementById('customer-total').textContent = formatCurrency(customerDisplayData.total);
+  }
+
+  function showCurrentItem(item) {
+    // Hide welcome message
+    document.getElementById('welcome-message').classList.add('hidden');
+
+    // Show current item
+    const currentItemDisplay = document.getElementById('current-item-display');
+    currentItemDisplay.classList.remove('hidden');
+
+    // Update item details
+    document.getElementById('current-item-name').textContent = item.name;
+    document.getElementById('current-item-price').textContent = item.price;
+    document.getElementById('current-item-quantity').textContent = item.quantity || 1;
+
+    // Auto-hide after 3 seconds
+    setTimeout(() => {
+      hideCurrentItem();
+    }, 3000);
+  }
+
+  function hideCurrentItem() {
+    document.getElementById('current-item-display').classList.add('hidden');
+    document.getElementById('welcome-message').classList.remove('hidden');
+  }
+
+  function formatCurrency(amount) {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+      minimumFractionDigits: 0
+    }).format(amount).replace('₫', '') + '₫';
+  }
+
+  // Listen for cart updates
+  document.addEventListener('addToCart', function(event) {
+    const item = event.detail;
+    showCurrentItem(item);
+  });
+
+  // Listen for cart summary updates
+  document.addEventListener('updateCustomerDisplay', function(event) {
+    updateCustomerDisplay(event.detail);
+  });
+
+  // Promotional messages rotation
+  const promotions = [
+    {
+      title: "🎉 Khuyến mãi đặc biệt!",
+      content: "Mua CPU + VGA giảm ngay 5%",
+      subtitle: "Áp dụng cho tất cả sản phẩm Intel & NVIDIA"
+    },
+    {
+      title: "💻 Build PC trọn gói",
+      content: "Tặng Windows bản quyền",
+      subtitle: "Khi mua đủ linh kiện build PC"
+    },
+    {
+      title: "🚚 Miễn phí vận chuyển",
+      content: "Đơn hàng từ 10 triệu",
+      subtitle: "Áp dụng trong nội thành TP.HCM"
+    },
+    {
+      title: "🔧 Bảo hành tận nơi",
+      content: "Miễn phí 2 năm đầu",
+      subtitle: "Cho tất cả sản phẩm chính hãng"
+    }
+  ];
+
+  let currentPromotionIndex = 0;
+
+  function rotatePromotions() {
+    const promotion = promotions[currentPromotionIndex];
+    const promoElement = document.querySelector('.bg-gradient-to-r');
+
+    if (promoElement) {
+      promoElement.innerHTML = `
+        <h4 class="text-lg font-semibold mb-2">${promotion.title}</h4>
+        <p class="text-sm mb-2">${promotion.content}</p>
+        <p class="text-xs text-blue-200">${promotion.subtitle}</p>
+      `;
+    }
+
+    currentPromotionIndex = (currentPromotionIndex + 1) % promotions.length;
+  }
+
+  // Rotate promotions every 5 seconds
+  setInterval(rotatePromotions, 5000);
+
+  // Make functions global
+  window.updateCustomerDisplay = updateCustomerDisplay;
+  window.showCurrentItem = showCurrentItem;
+</script>

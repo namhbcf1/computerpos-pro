@@ -1,0 +1,255 @@
+---
+// Barcode Scanner Component for POS
+---
+
+<div id="barcode-scanner" class="hidden fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center">
+  <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+    <!-- Scanner Header -->
+    <div class="flex items-center justify-between p-6 border-b border-gray-200">
+      <h3 class="text-lg font-semibold text-gray-900">Quét mã vạch</h3>
+      <button id="close-scanner" class="text-gray-400 hover:text-gray-600">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Scanner Body -->
+    <div class="p-6">
+      <!-- Manual Input -->
+      <div class="mb-6">
+        <label class="block text-sm font-medium text-gray-700 mb-2">Nhập mã sản phẩm</label>
+        <div class="flex space-x-2">
+          <input
+            type="text"
+            id="barcode-input"
+            class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Quét hoặc nhập mã vạch..."
+            autofocus
+          />
+          <button
+            id="search-barcode"
+            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Tìm
+          </button>
+        </div>
+      </div>
+
+      <!-- Camera Scanner (Placeholder) -->
+      <div class="mb-6">
+        <div class="bg-gray-100 rounded-lg p-8 text-center">
+          <svg class="w-16 h-16 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+          <p class="text-sm text-gray-600 mb-2">Camera scanner</p>
+          <button
+            id="start-camera"
+            class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm"
+          >
+            Bật camera
+          </button>
+        </div>
+      </div>
+
+      <!-- Recent Scans -->
+      <div>
+        <h4 class="text-sm font-medium text-gray-700 mb-3">Sản phẩm đã quét gần đây</h4>
+        <div id="recent-scans" class="space-y-2 max-h-32 overflow-y-auto">
+          <div class="text-sm text-gray-500 text-center py-4">
+            Chưa có sản phẩm nào được quét
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scanner Footer -->
+    <div class="flex space-x-3 p-6 border-t border-gray-200">
+      <button
+        id="clear-scans"
+        class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+      >
+        Xóa lịch sử
+      </button>
+      <button
+        id="close-scanner-btn"
+        class="flex-1 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+      >
+        Đóng
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Barcode scanner functionality
+  let recentScans = [];
+
+  // Sample product database (in real app, this would be from API)
+  const productDatabase = {
+    '1234567890123': {
+      id: '1',
+      name: 'Intel Core i7-13700K',
+      price: '12,500,000₫',
+      stock: 25
+    },
+    '2345678901234': {
+      id: '2',
+      name: 'NVIDIA RTX 4080',
+      price: '35,000,000₫',
+      stock: 8
+    },
+    '3456789012345': {
+      id: '3',
+      name: 'Corsair Vengeance 32GB DDR5',
+      price: '4,200,000₫',
+      stock: 0
+    }
+  };
+
+  function showBarcodeScanner() {
+    document.getElementById('barcode-scanner').classList.remove('hidden');
+    document.getElementById('barcode-input').focus();
+  }
+
+  function hideBarcodeScanner() {
+    document.getElementById('barcode-scanner').classList.add('hidden');
+    document.getElementById('barcode-input').value = '';
+  }
+
+  function searchByBarcode(barcode) {
+    if (!barcode.trim()) {
+      alert('Vui lòng nhập mã vạch!');
+      return;
+    }
+
+    const product = productDatabase[barcode];
+
+    if (product) {
+      // Add to recent scans
+      addToRecentScans(barcode, product);
+
+      // Add to cart
+      const addToCartEvent = new CustomEvent('addToCart', {
+        detail: product
+      });
+      document.dispatchEvent(addToCartEvent);
+
+      // Clear input
+      document.getElementById('barcode-input').value = '';
+
+      // Show success message
+      showScanResult(true, `Đã thêm ${product.name} vào giỏ hàng`);
+    } else {
+      showScanResult(false, 'Không tìm thấy sản phẩm với mã này');
+    }
+  }
+
+  function addToRecentScans(barcode, product) {
+    const scan = {
+      barcode,
+      product,
+      timestamp: new Date()
+    };
+
+    // Remove if already exists
+    recentScans = recentScans.filter(s => s.barcode !== barcode);
+
+    // Add to beginning
+    recentScans.unshift(scan);
+
+    // Keep only last 5 scans
+    recentScans = recentScans.slice(0, 5);
+
+    updateRecentScansDisplay();
+  }
+
+  function updateRecentScansDisplay() {
+    const container = document.getElementById('recent-scans');
+
+    if (recentScans.length === 0) {
+      container.innerHTML = `
+        <div class="text-sm text-gray-500 text-center py-4">
+          Chưa có sản phẩm nào được quét
+        </div>
+      `;
+      return;
+    }
+
+    const scansHTML = recentScans.map(scan => `
+      <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
+        <div class="flex-1">
+          <div class="text-sm font-medium text-gray-900">${scan.product.name}</div>
+          <div class="text-xs text-gray-500">${scan.barcode}</div>
+        </div>
+        <button
+          onclick="addScanToCart('${scan.barcode}')"
+          class="text-blue-600 hover:text-blue-800 text-xs"
+        >
+          Thêm lại
+        </button>
+      </div>
+    `).join('');
+
+    container.innerHTML = scansHTML;
+  }
+
+  function addScanToCart(barcode) {
+    const product = productDatabase[barcode];
+    if (product) {
+      const addToCartEvent = new CustomEvent('addToCart', {
+        detail: product
+      });
+      document.dispatchEvent(addToCartEvent);
+      showScanResult(true, `Đã thêm ${product.name} vào giỏ hàng`);
+    }
+  }
+
+  function showScanResult(success, message) {
+    const resultDiv = document.createElement('div');
+    resultDiv.className = `fixed top-4 right-4 z-60 px-4 py-2 rounded-lg text-white text-sm ${
+      success ? 'bg-green-600' : 'bg-red-600'
+    }`;
+    resultDiv.textContent = message;
+
+    document.body.appendChild(resultDiv);
+
+    setTimeout(() => {
+      resultDiv.remove();
+    }, 3000);
+  }
+
+  function clearRecentScans() {
+    if (recentScans.length === 0) return;
+
+    if (confirm('Bạn có chắc muốn xóa lịch sử quét?')) {
+      recentScans = [];
+      updateRecentScansDisplay();
+    }
+  }
+
+  // Event listeners
+  document.getElementById('close-scanner')?.addEventListener('click', hideBarcodeScanner);
+  document.getElementById('close-scanner-btn')?.addEventListener('click', hideBarcodeScanner);
+  document.getElementById('clear-scans')?.addEventListener('click', clearRecentScans);
+
+  document.getElementById('search-barcode')?.addEventListener('click', function() {
+    const barcode = document.getElementById('barcode-input').value;
+    searchByBarcode(barcode);
+  });
+
+  document.getElementById('barcode-input')?.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      searchByBarcode(this.value);
+    }
+  });
+
+  document.getElementById('start-camera')?.addEventListener('click', function() {
+    alert('Chức năng camera scanner sẽ được phát triển trong phiên bản tiếp theo');
+  });
+
+  // Make functions global
+  window.showBarcodeScanner = showBarcodeScanner;
+  window.addScanToCart = addScanToCart;
+</script>

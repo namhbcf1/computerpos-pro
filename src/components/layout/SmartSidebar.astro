@@ -1,0 +1,276 @@
+---
+// Smart Sidebar with compact and organized navigation
+const currentPath = Astro.url.pathname;
+
+const navGroups = [
+  {
+    title: 'Tổng quan',
+    items: [
+      {
+        title: 'Dashboard',
+        href: '/',
+        icon: 'home',
+        active: currentPath === '/'
+      }
+    ]
+  },
+  {
+    title: 'Bán hàng',
+    items: [
+      {
+        title: 'POS Bán hàng',
+        href: '/pos',
+        icon: 'calculator',
+        active: currentPath.startsWith('/pos'),
+        badge: '5'
+      },
+      {
+        title: 'Đơn hàng',
+        href: '/orders',
+        icon: 'clipboard',
+        active: currentPath.startsWith('/orders')
+      },
+      {
+        title: 'Khách hàng',
+        href: '/customers',
+        icon: 'users',
+        active: currentPath.startsWith('/customers')
+      }
+    ]
+  },
+  {
+    title: 'Sản phẩm',
+    items: [
+      {
+        title: 'Danh sách SP',
+        href: '/products',
+        icon: 'package',
+        active: currentPath === '/products'
+      },
+      {
+        title: 'Thêm sản phẩm',
+        href: '/products/add',
+        icon: 'plus',
+        active: currentPath === '/products/add'
+      },
+      {
+        title: 'Cấu hình PC',
+        href: '/build',
+        icon: 'cpu',
+        active: currentPath.startsWith('/build')
+      }
+    ]
+  },
+  {
+    title: 'Kho hàng',
+    items: [
+      {
+        title: 'Tồn kho',
+        href: '/inventory',
+        icon: 'archive',
+        active: currentPath === '/inventory'
+      },
+      {
+        title: 'Kiểm kê',
+        href: '/inventory/adjustment',
+        icon: 'check',
+        active: currentPath === '/inventory/adjustment'
+      },
+      {
+        title: 'Cảnh báo',
+        href: '/inventory/alerts',
+        icon: 'alert',
+        active: currentPath === '/inventory/alerts',
+        badge: '7'
+      }
+    ]
+  },
+  {
+    title: 'Báo cáo',
+    items: [
+      {
+        title: 'Doanh thu',
+        href: '/reports/sales',
+        icon: 'chart',
+        active: currentPath === '/reports/sales'
+      },
+      {
+        title: 'Tồn kho',
+        href: '/reports/inventory',
+        icon: 'bar-chart',
+        active: currentPath === '/reports/inventory'
+      }
+    ]
+  },
+  {
+    title: 'Hệ thống',
+    items: [
+      {
+        title: 'Nhân viên',
+        href: '/staff',
+        icon: 'user-group',
+        active: currentPath.startsWith('/staff')
+      },
+      {
+        title: 'Cài đặt',
+        href: '/settings',
+        icon: 'settings',
+        active: currentPath.startsWith('/settings')
+      }
+    ]
+  }
+];
+
+function getIconPath(iconName: string) {
+  const icons = {
+    'home': 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6',
+    'calculator': 'M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z',
+    'clipboard': 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01',
+    'users': 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a4 4 0 11-8 0 4 4 0 018 0z',
+    'package': 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4',
+    'plus': 'M12 6v6m0 0v6m0-6h6m-6 0H6',
+    'cpu': 'M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z',
+    'archive': 'M5 8l6 6m0 0l6-6m-6 6v8m-9-9h18a2 2 0 002-2V6a2 2 0 00-2-2H3a2 2 0 00-2 2v3a2 2 0 002 2z',
+    'check': 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z',
+    'alert': 'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z',
+    'chart': 'M13 7h8m0 0v8m0-8l-8 8-4-4-6 6',
+    'bar-chart': 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z',
+    'user-group': 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z',
+    'settings': 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z'
+  };
+  return icons[iconName] || icons['package'];
+}
+---
+
+<aside class="smart-sidebar" id="smartSidebar">
+  <div class="smart-sidebar-content">
+    {navGroups.map((group) => (
+      <div class="smart-nav-group">
+        <div class="smart-nav-title">{group.title}</div>
+        {group.items.map((item) => (
+          <a href={item.href} class={`smart-nav-item ${item.active ? 'active' : ''}`}>
+            <svg class="smart-nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={getIconPath(item.icon)}></path>
+            </svg>
+            <span>{item.title}</span>
+            {item.badge && (
+              <span class="smart-nav-badge">{item.badge}</span>
+            )}
+          </a>
+        ))}
+      </div>
+    ))}
+    
+    <!-- Quick Stats at Bottom -->
+    <div style="margin-top: var(--space-8); padding-top: var(--space-4); border-top: 1px solid var(--gray-200);">
+      <div class="smart-nav-title">Thống kê nhanh</div>
+      <div style="padding: var(--space-3); background: var(--gray-50); border-radius: var(--radius); margin-bottom: var(--space-3);">
+        <div style="display: flex; justify-content: between; align-items: center; margin-bottom: var(--space-2);">
+          <span style="font-size: var(--text-xs); color: var(--gray-600);">Doanh thu hôm nay</span>
+          <span style="font-size: var(--text-sm); font-weight: 600; color: var(--success);">₫34.2M</span>
+        </div>
+        <div style="display: flex; justify-content: between; align-items: center; margin-bottom: var(--space-2);">
+          <span style="font-size: var(--text-xs); color: var(--gray-600);">Đơn hàng</span>
+          <span style="font-size: var(--text-sm); font-weight: 600; color: var(--primary);">156</span>
+        </div>
+        <div style="display: flex; justify-content: between; align-items: center;">
+          <span style="font-size: var(--text-xs); color: var(--gray-600);">Hết hàng</span>
+          <span style="font-size: var(--text-sm); font-weight: 600; color: var(--danger);">7</span>
+        </div>
+      </div>
+      
+      <!-- Online Status -->
+      <div style="display: flex; align-items: center; gap: var(--space-2); padding: var(--space-2) var(--space-3); background: rgba(16, 185, 129, 0.1); border-radius: var(--radius);">
+        <div style="width: 8px; height: 8px; background: var(--success); border-radius: 50%;"></div>
+        <span style="font-size: var(--text-xs); color: var(--success); font-weight: 500;">Hệ thống hoạt động</span>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- Mobile Sidebar Overlay -->
+<div id="sidebarOverlay" class="smart-sidebar-overlay" style="display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); z-index: 1000;" onclick="closeMobileSidebar()">
+  <div class="smart-sidebar" style="position: relative; transform: translateX(0);" onclick="event.stopPropagation()">
+    <div style="padding: var(--space-4); border-bottom: 1px solid var(--gray-200); display: flex; justify-content: between; align-items: center;">
+      <div class="smart-logo">
+        <div class="smart-logo-icon">
+          <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+          </svg>
+        </div>
+        <span>ComputerPOS</span>
+      </div>
+      <button onclick="closeMobileSidebar()" style="padding: var(--space-1); border: none; background: none; cursor: pointer;">
+        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+    <!-- Same content as desktop sidebar -->
+    <div class="smart-sidebar-content">
+      {navGroups.map((group) => (
+        <div class="smart-nav-group">
+          <div class="smart-nav-title">{group.title}</div>
+          {group.items.map((item) => (
+            <a href={item.href} class={`smart-nav-item ${item.active ? 'active' : ''}`}>
+              <svg class="smart-nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={getIconPath(item.icon)}></path>
+              </svg>
+              <span>{item.title}</span>
+              {item.badge && (
+                <span class="smart-nav-badge">{item.badge}</span>
+              )}
+            </a>
+          ))}
+        </div>
+      ))}
+    </div>
+  </div>
+</div>
+
+<script>
+  // Mobile sidebar functionality
+  function openMobileSidebar() {
+    const overlay = document.getElementById('sidebarOverlay');
+    if (overlay) {
+      overlay.style.display = 'block';
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  function closeMobileSidebar() {
+    const overlay = document.getElementById('sidebarOverlay');
+    if (overlay) {
+      overlay.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    if (mobileMenuBtn) {
+      mobileMenuBtn.addEventListener('click', openMobileSidebar);
+    }
+
+    // Handle responsive behavior
+    function handleResize() {
+      if (window.innerWidth > 1024) {
+        closeMobileSidebar();
+      }
+    }
+
+    window.addEventListener('resize', handleResize);
+  });
+</script>
+
+<style>
+  .smart-sidebar-overlay {
+    backdrop-filter: blur(4px);
+  }
+  
+  @media (max-width: 1024px) {
+    .smart-sidebar:not(.smart-sidebar-overlay .smart-sidebar) {
+      transform: translateX(-100%);
+    }
+  }
+</style>

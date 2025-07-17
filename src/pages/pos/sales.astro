@@ -1,0 +1,1199 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import DashboardLayout from '../../layouts/DashboardLayout.astro';
+import Card from '../../components/ui/Card.astro';
+import Button from '../../components/ui/Button.astro';
+---
+
+<BaseLayout title="POS Sales - ComputerPOS Pro">
+  <DashboardLayout>
+    <main class="p-6 space-y-6">
+      <!-- Header -->
+      <div class="flex justify-between items-center">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">POS Sales</h1>
+          <p class="text-gray-600 mt-1">Hệ thống bán hàng tại quầy</p>
+        </div>
+        <div class="flex space-x-3">
+          <Button href="/pos" variant="secondary">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Quay lại POS
+          </Button>
+          <Button variant="primary" onclick="startNewSale()">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            Bán hàng mới
+          </Button>
+        </div>
+      </div>
+
+      <!-- POS Interface -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Product Search & Cart -->
+        <div class="lg:col-span-2 space-y-6">
+          <!-- Product Search -->
+          <Card>
+            <div class="p-6">
+              <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-medium text-gray-900">Tìm kiếm sản phẩm</h2>
+                <div class="flex space-x-2">
+                  <Button onclick="showProductCatalog()" variant="secondary" size="sm">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                    </svg>
+                    Danh mục
+                  </Button>
+                  <Button onclick="scanBarcode()" variant="secondary" size="sm">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+                    </svg>
+                    Quét mã
+                  </Button>
+                </div>
+              </div>
+              
+              <div class="relative mb-4">
+                <input type="text" class="form-input pl-10" id="product-search" placeholder="Tìm theo tên, mã sản phẩm, hoặc mã vạch...">
+                <svg class="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+
+              <!-- Search Results -->
+              <div id="search-results" class="max-h-64 overflow-y-auto border border-gray-200 rounded-md hidden">
+                <!-- Search results will be populated here -->
+              </div>
+
+              <!-- Quick Categories -->
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <button onclick="filterByCategory('cpu')" class="category-btn p-3 text-center border border-gray-200 rounded-lg hover:bg-blue-50 hover:border-blue-300">
+                  <div class="text-2xl mb-1">🖥️</div>
+                  <div class="text-sm font-medium">CPU</div>
+                </button>
+                <button onclick="filterByCategory('gpu')" class="category-btn p-3 text-center border border-gray-200 rounded-lg hover:bg-blue-50 hover:border-blue-300">
+                  <div class="text-2xl mb-1">🎮</div>
+                  <div class="text-sm font-medium">GPU</div>
+                </button>
+                <button onclick="filterByCategory('ram')" class="category-btn p-3 text-center border border-gray-200 rounded-lg hover:bg-blue-50 hover:border-blue-300">
+                  <div class="text-2xl mb-1">💾</div>
+                  <div class="text-sm font-medium">RAM</div>
+                </button>
+                <button onclick="filterByCategory('storage')" class="category-btn p-3 text-center border border-gray-200 rounded-lg hover:bg-blue-50 hover:border-blue-300">
+                  <div class="text-2xl mb-1">💿</div>
+                  <div class="text-sm font-medium">Ổ cứng</div>
+                </button>
+              </div>
+            </div>
+          </Card>
+
+          <!-- Shopping Cart -->
+          <Card>
+            <div class="p-6">
+              <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-medium text-gray-900">Giỏ hàng</h2>
+                <div class="flex space-x-2">
+                  <Button onclick="clearCart()" variant="secondary" size="sm">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                    Xóa hết
+                  </Button>
+                  <Button onclick="saveAsHold()" variant="secondary" size="sm">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    Giữ đơn
+                  </Button>
+                </div>
+              </div>
+
+              <div id="cart-items" class="space-y-3 mb-4 max-h-96 overflow-y-auto">
+                <div id="empty-cart" class="text-center py-8 text-gray-500">
+                  <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.5 5H19" />
+                  </svg>
+                  <p>Giỏ hàng trống</p>
+                  <p class="text-sm">Tìm kiếm và thêm sản phẩm vào giỏ hàng</p>
+                </div>
+              </div>
+
+              <!-- Cart Summary -->
+              <div class="border-t pt-4" id="cart-summary" style="display: none;">
+                <div class="space-y-2 text-sm">
+                  <div class="flex justify-between">
+                    <span>Tạm tính:</span>
+                    <span id="subtotal">0₫</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span>Giảm giá:</span>
+                    <span id="discount-amount" class="text-green-600">-0₫</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span>Thuế (10%):</span>
+                    <span id="tax-amount">0₫</span>
+                  </div>
+                  <div class="border-t pt-2 flex justify-between font-bold text-lg">
+                    <span>Tổng cộng:</span>
+                    <span id="total-amount" class="text-blue-600">0₫</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        <!-- Payment & Customer Info -->
+        <div class="space-y-6">
+          <!-- Customer Info -->
+          <Card>
+            <div class="p-6">
+              <h2 class="text-lg font-medium text-gray-900 mb-4">Thông tin khách hàng</h2>
+              <div class="space-y-4">
+                <div>
+                  <label class="form-label">Tên khách hàng</label>
+                  <input type="text" class="form-input" id="customer-name" placeholder="Khách lẻ">
+                </div>
+                <div>
+                  <label class="form-label">Số điện thoại</label>
+                  <div class="flex space-x-2">
+                    <input type="tel" class="form-input" id="customer-phone" placeholder="0123456789">
+                    <Button onclick="lookupCustomer()" variant="secondary" size="sm">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                      </svg>
+                    </Button>
+                  </div>
+                </div>
+                <div>
+                  <label class="form-label">Email</label>
+                  <input type="email" class="form-input" id="customer-email" placeholder="email@example.com">
+                </div>
+                <div class="flex items-center">
+                  <input type="checkbox" id="customer-membership" class="form-checkbox">
+                  <label for="customer-membership" class="ml-2 text-sm">Khách hàng thành viên</label>
+                </div>
+              </div>
+            </div>
+          </Card>
+
+          <!-- Discount & Coupon -->
+          <Card>
+            <div class="p-6">
+              <h2 class="text-lg font-medium text-gray-900 mb-4">Giảm giá & Khuyến mãi</h2>
+              <div class="space-y-4">
+                <div>
+                  <label class="form-label">Mã giảm giá</label>
+                  <div class="flex space-x-2">
+                    <input type="text" class="form-input" id="coupon-code" placeholder="Nhập mã giảm giá">
+                    <Button onclick="applyCoupon()" variant="secondary" size="sm">Áp dụng</Button>
+                  </div>
+                </div>
+                <div>
+                  <label class="form-label">Giảm giá (%)</label>
+                  <input type="number" class="form-input" id="discount-percent" min="0" max="100" step="0.1" placeholder="0">
+                </div>
+                <div>
+                  <label class="form-label">Giảm giá (VND)</label>
+                  <input type="number" class="form-input" id="discount-amount-input" min="0" placeholder="0">
+                </div>
+                <div class="flex items-center">
+                  <input type="checkbox" id="staff-discount" class="form-checkbox">
+                  <label for="staff-discount" class="ml-2 text-sm">Giảm giá nhân viên (5%)</label>
+                </div>
+              </div>
+            </div>
+          </Card>
+
+          <!-- Payment Methods -->
+          <Card>
+            <div class="p-6">
+              <h2 class="text-lg font-medium text-gray-900 mb-4">Phương thức thanh toán</h2>
+              <div class="space-y-3">
+                <label class="flex items-center">
+                  <input type="radio" name="payment-method" value="cash" class="form-radio" checked>
+                  <span class="ml-2">💵 Tiền mặt</span>
+                </label>
+                <label class="flex items-center">
+                  <input type="radio" name="payment-method" value="card" class="form-radio">
+                  <span class="ml-2">💳 Thẻ tín dụng/ghi nợ</span>
+                </label>
+                <label class="flex items-center">
+                  <input type="radio" name="payment-method" value="transfer" class="form-radio">
+                  <span class="ml-2">🏦 Chuyển khoản</span>
+                </label>
+                <label class="flex items-center">
+                  <input type="radio" name="payment-method" value="ewallet" class="form-radio">
+                  <span class="ml-2">📱 Ví điện tử</span>
+                </label>
+                <label class="flex items-center">
+                  <input type="radio" name="payment-method" value="mixed" class="form-radio">
+                  <span class="ml-2">🔄 Thanh toán kết hợp</span>
+                </label>
+              </div>
+
+              <!-- Cash Payment Details -->
+              <div id="cash-details" class="mt-4 space-y-3">
+                <div>
+                  <label class="form-label">Số tiền nhận</label>
+                  <input type="number" class="form-input" id="cash-received" min="0" placeholder="0">
+                </div>
+                <div>
+                  <label class="form-label">Tiền thối</label>
+                  <input type="number" class="form-input" id="change-amount" readonly>
+                </div>
+              </div>
+
+              <!-- Payment Actions -->
+              <div class="mt-6 space-y-3">
+                <Button onclick="processPayment()" variant="primary" class="w-full text-lg py-3">
+                  <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-3a2 2 0 00-2-2H9a2 2 0 00-2 2v3a2 2 0 002 2z" />
+                  </svg>
+                  Thanh toán
+                </Button>
+                <div class="grid grid-cols-2 gap-2">
+                  <Button onclick="printReceipt()" variant="secondary" class="w-full">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                    </svg>
+                    In hóa đơn
+                  </Button>
+                  <Button onclick="emailReceipt()" variant="secondary" class="w-full">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                    Gửi email
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </Card>
+        </div>
+      </div>
+
+      <!-- Sales History -->
+      <Card>
+        <div class="p-6">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-lg font-medium text-gray-900">Lịch sử bán hàng hôm nay</h2>
+            <div class="flex space-x-3">
+              <Button onclick="exportSales()" variant="secondary">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Xuất báo cáo
+              </Button>
+              <Button onclick="refreshSales()" variant="secondary">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                Làm mới
+              </Button>
+            </div>
+          </div>
+
+          <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+            <table class="min-w-full divide-y divide-gray-300">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Đơn hàng</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Khách hàng</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sản phẩm</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Thanh toán</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tổng tiền</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Thời gian</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200" id="sales-tbody">
+                <!-- Sales will be populated here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </Card>
+    </main>
+
+    <!-- Product Catalog Modal -->
+    <div id="catalog-modal" class="modal-overlay hidden">
+      <div class="modal-content max-w-6xl">
+        <div class="modal-header">
+          <h3 class="modal-title">Danh mục sản phẩm</h3>
+          <button class="modal-close" onclick="closeModal('catalog-modal')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="product-catalog">
+            <!-- Products will be populated here -->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('catalog-modal')">Đóng</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Receipt Preview Modal -->
+    <div id="receipt-modal" class="modal-overlay hidden">
+      <div class="modal-content max-w-md">
+        <div class="modal-header">
+          <h3 class="modal-title">Xem trước hóa đơn</h3>
+          <button class="modal-close" onclick="closeModal('receipt-modal')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div id="receipt-content" class="text-sm">
+            <!-- Receipt content will be populated here -->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('receipt-modal')">Đóng</button>
+          <button type="button" class="btn btn-primary" onclick="printReceiptFinal()">In hóa đơn</button>
+        </div>
+      </div>
+    </div>
+  </DashboardLayout>
+</BaseLayout>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  let cart = [];
+  let products = [];
+  let sales = [];
+  let currentSale = null;
+
+  // Sample products data
+  function loadSampleData() {
+    products = [
+      { id: 'cpu_001', name: 'Intel Core i5-13400F', category: 'cpu', price: 4500000, stock: 25, barcode: '8001234567890' },
+      { id: 'cpu_002', name: 'AMD Ryzen 5 7600X', category: 'cpu', price: 5200000, stock: 18, barcode: '8001234567891' },
+      { id: 'cpu_003', name: 'Intel Core i7-13700F', category: 'cpu', price: 6800000, stock: 15, barcode: '8001234567892' },
+      { id: 'gpu_001', name: 'RTX 4060 8GB', category: 'gpu', price: 12000000, stock: 12, barcode: '8001234567893' },
+      { id: 'gpu_002', name: 'RTX 4070 12GB', category: 'gpu', price: 18000000, stock: 8, barcode: '8001234567894' },
+      { id: 'gpu_003', name: 'RTX 4080 16GB', category: 'gpu', price: 32000000, stock: 5, barcode: '8001234567895' },
+      { id: 'ram_001', name: 'RAM DDR4 16GB 3200MHz', category: 'ram', price: 1800000, stock: 35, barcode: '8001234567896' },
+      { id: 'ram_002', name: 'RAM DDR5 16GB 5600MHz', category: 'ram', price: 2600000, stock: 22, barcode: '8001234567897' },
+      { id: 'ram_003', name: 'RAM DDR4 32GB 3600MHz', category: 'ram', price: 3200000, stock: 15, barcode: '8001234567898' },
+      { id: 'storage_001', name: 'SSD Samsung 980 Pro 1TB', category: 'storage', price: 3200000, stock: 20, barcode: '8001234567899' },
+      { id: 'storage_002', name: 'SSD WD Black SN850X 2TB', category: 'storage', price: 5800000, stock: 10, barcode: '8001234567900' },
+      { id: 'storage_003', name: 'HDD Seagate 4TB', category: 'storage', price: 2200000, stock: 25, barcode: '8001234567901' }
+    ];
+
+    // Load existing sales from localStorage
+    sales = JSON.parse(localStorage.getItem('posSales') || '[]');
+
+    // Add sample sales if empty
+    if (sales.length === 0) {
+      const sampleSales = [
+        {
+          id: 'sale_001',
+          orderNumber: 'POS-' + new Date().toISOString().slice(0, 10).replace(/-/g, '') + '-001',
+          customerName: 'Nguyễn Văn An',
+          customerPhone: '0987654321',
+          items: [
+            { id: 'cpu_001', name: 'Intel Core i5-13400F', price: 4500000, quantity: 1, total: 4500000 },
+            { id: 'ram_001', name: 'RAM DDR4 16GB 3200MHz', price: 1800000, quantity: 2, total: 3600000 }
+          ],
+          subtotal: 8100000,
+          discount: 0,
+          tax: 810000,
+          total: 8910000,
+          paymentMethod: 'cash',
+          cashReceived: 9000000,
+          changeAmount: 90000,
+          createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+          cashier: 'Admin User'
+        },
+        {
+          id: 'sale_002',
+          orderNumber: 'POS-' + new Date().toISOString().slice(0, 10).replace(/-/g, '') + '-002',
+          customerName: 'Trần Thị Bình',
+          customerPhone: '0912345678',
+          items: [
+            { id: 'gpu_001', name: 'RTX 4060 8GB', price: 12000000, quantity: 1, total: 12000000 }
+          ],
+          subtotal: 12000000,
+          discount: 600000,
+          tax: 1140000,
+          total: 12540000,
+          paymentMethod: 'card',
+          createdAt: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
+          cashier: 'Admin User'
+        }
+      ];
+
+      sales.push(...sampleSales);
+      saveSalesData();
+    }
+  }
+
+  function saveSalesData() {
+    localStorage.setItem('posSales', JSON.stringify(sales));
+  }
+
+  function renderCart() {
+    const cartItems = document.getElementById('cart-items');
+    const emptyCart = document.getElementById('empty-cart');
+    const cartSummary = document.getElementById('cart-summary');
+
+    if (cart.length === 0) {
+      emptyCart.style.display = 'block';
+      cartSummary.style.display = 'none';
+      return;
+    }
+
+    emptyCart.style.display = 'none';
+    cartSummary.style.display = 'block';
+
+    let html = '';
+    cart.forEach((item, index) => {
+      html += `
+        <div class="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
+          <div class="flex-1">
+            <div class="font-medium text-sm">${item.name}</div>
+            <div class="text-xs text-gray-500">${formatVND(item.price)} x ${item.quantity}</div>
+          </div>
+          <div class="flex items-center space-x-2">
+            <button onclick="updateQuantity(${index}, ${item.quantity - 1})" class="w-6 h-6 flex items-center justify-center bg-gray-100 rounded text-xs">-</button>
+            <span class="w-8 text-center text-sm">${item.quantity}</span>
+            <button onclick="updateQuantity(${index}, ${item.quantity + 1})" class="w-6 h-6 flex items-center justify-center bg-gray-100 rounded text-xs">+</button>
+            <div class="font-medium text-sm w-24 text-right">${formatVND(item.total)}</div>
+            <button onclick="removeFromCart(${index})" class="text-red-600 hover:text-red-800">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      `;
+    });
+
+    cartItems.innerHTML = html;
+    updateCartSummary();
+  }
+
+  function updateCartSummary() {
+    const subtotal = cart.reduce((sum, item) => sum + item.total, 0);
+    
+    // Calculate discount
+    let discount = 0;
+    const discountPercent = parseFloat(document.getElementById('discount-percent').value) || 0;
+    const discountAmount = parseFloat(document.getElementById('discount-amount-input').value) || 0;
+    const staffDiscount = document.getElementById('staff-discount').checked;
+    
+    if (discountPercent > 0) {
+      discount = subtotal * (discountPercent / 100);
+    } else if (discountAmount > 0) {
+      discount = discountAmount;
+    }
+    
+    if (staffDiscount) {
+      discount += subtotal * 0.05; // 5% staff discount
+    }
+
+    const taxableAmount = subtotal - discount;
+    const tax = taxableAmount * 0.1; // 10% VAT
+    const total = taxableAmount + tax;
+
+    document.getElementById('subtotal').textContent = formatVND(subtotal);
+    document.getElementById('discount-amount').textContent = '-' + formatVND(discount);
+    document.getElementById('tax-amount').textContent = formatVND(tax);
+    document.getElementById('total-amount').textContent = formatVND(total);
+
+    // Update change calculation
+    updateChangeAmount();
+  }
+
+  function updateChangeAmount() {
+    const total = parseFloat(document.getElementById('total-amount').textContent.replace(/[^\d]/g, ''));
+    const cashReceived = parseFloat(document.getElementById('cash-received').value) || 0;
+    const change = Math.max(0, cashReceived - total);
+    document.getElementById('change-amount').value = change;
+  }
+
+  window.addToCart = function(product) {
+    const existingItem = cart.find(item => item.id === product.id);
+    
+    if (existingItem) {
+      existingItem.quantity += 1;
+      existingItem.total = existingItem.quantity * existingItem.price;
+    } else {
+      cart.push({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        quantity: 1,
+        total: product.price
+      });
+    }
+    
+    renderCart();
+  };
+
+  window.updateQuantity = function(index, newQuantity) {
+    if (newQuantity <= 0) {
+      removeFromCart(index);
+      return;
+    }
+    
+    cart[index].quantity = newQuantity;
+    cart[index].total = cart[index].quantity * cart[index].price;
+    renderCart();
+  };
+
+  window.removeFromCart = function(index) {
+    cart.splice(index, 1);
+    renderCart();
+  };
+
+  window.clearCart = function() {
+    if (confirm('Bạn có chắc chắn muốn xóa tất cả sản phẩm trong giỏ hàng?')) {
+      cart = [];
+      renderCart();
+    }
+  };
+
+  window.startNewSale = function() {
+    clearCart();
+    document.getElementById('customer-name').value = 'Khách lẻ';
+    document.getElementById('customer-phone').value = '';
+    document.getElementById('customer-email').value = '';
+    document.getElementById('customer-membership').checked = false;
+    document.getElementById('coupon-code').value = '';
+    document.getElementById('discount-percent').value = '';
+    document.getElementById('discount-amount-input').value = '';
+    document.getElementById('staff-discount').checked = false;
+    document.getElementById('cash-received').value = '';
+    document.getElementById('change-amount').value = '';
+    document.querySelector('input[name="payment-method"][value="cash"]').checked = true;
+    updateCartSummary();
+  };
+
+  // Product search functionality
+  document.getElementById('product-search').addEventListener('input', function(e) {
+    const searchTerm = e.target.value.toLowerCase();
+    const resultsContainer = document.getElementById('search-results');
+    
+    if (searchTerm.length < 2) {
+      resultsContainer.classList.add('hidden');
+      return;
+    }
+
+    const filteredProducts = products.filter(product => 
+      product.name.toLowerCase().includes(searchTerm) ||
+      product.id.toLowerCase().includes(searchTerm) ||
+      product.barcode.includes(searchTerm)
+    );
+
+    if (filteredProducts.length === 0) {
+      resultsContainer.innerHTML = '<div class="p-4 text-gray-500 text-center">Không tìm thấy sản phẩm</div>';
+    } else {
+      let html = '';
+      filteredProducts.slice(0, 8).forEach(product => {
+        html += `
+          <div class="flex items-center justify-between p-3 hover:bg-gray-50 cursor-pointer border-b" onclick="addToCart(${JSON.stringify(product).replace(/"/g, '&quot;')})">
+            <div>
+              <div class="font-medium text-sm">${product.name}</div>
+              <div class="text-xs text-gray-500">Kho: ${product.stock} | Mã: ${product.id}</div>
+            </div>
+            <div class="text-right">
+              <div class="font-medium text-sm">${formatVND(product.price)}</div>
+              <div class="text-xs text-blue-600">Thêm vào giỏ</div>
+            </div>
+          </div>
+        `;
+      });
+      resultsContainer.innerHTML = html;
+    }
+    
+    resultsContainer.classList.remove('hidden');
+  });
+
+  window.filterByCategory = function(category) {
+    const filteredProducts = products.filter(product => product.category === category);
+    const resultsContainer = document.getElementById('search-results');
+    
+    let html = '';
+    filteredProducts.forEach(product => {
+      html += `
+        <div class="flex items-center justify-between p-3 hover:bg-gray-50 cursor-pointer border-b" onclick="addToCart(${JSON.stringify(product).replace(/"/g, '&quot;')})">
+          <div>
+            <div class="font-medium text-sm">${product.name}</div>
+            <div class="text-xs text-gray-500">Kho: ${product.stock} | Mã: ${product.id}</div>
+          </div>
+          <div class="text-right">
+            <div class="font-medium text-sm">${formatVND(product.price)}</div>
+            <div class="text-xs text-blue-600">Thêm vào giỏ</div>
+          </div>
+        </div>
+      `;
+    });
+    
+    resultsContainer.innerHTML = html;
+    resultsContainer.classList.remove('hidden');
+  };
+
+  window.showProductCatalog = function() {
+    const catalog = document.getElementById('product-catalog');
+    let html = '';
+    
+    products.forEach(product => {
+      const categoryEmoji = {
+        'cpu': '🖥️',
+        'gpu': '🎮', 
+        'ram': '💾',
+        'storage': '💿'
+      };
+      
+      html += `
+        <div class="border border-gray-200 rounded-lg p-4 hover:bg-blue-50 cursor-pointer" onclick="addToCart(${JSON.stringify(product).replace(/"/g, '&quot;')})">
+          <div class="text-center mb-2">
+            <div class="text-3xl mb-2">${categoryEmoji[product.category] || '📦'}</div>
+            <div class="font-medium text-sm">${product.name}</div>
+            <div class="text-xs text-gray-500 mt-1">Kho: ${product.stock}</div>
+            <div class="font-bold text-blue-600 mt-2">${formatVND(product.price)}</div>
+          </div>
+        </div>
+      `;
+    });
+    
+    catalog.innerHTML = html;
+    document.getElementById('catalog-modal').classList.remove('hidden');
+  };
+
+  window.scanBarcode = function() {
+    const barcode = prompt('Nhập mã vạch sản phẩm:');
+    if (barcode) {
+      const product = products.find(p => p.barcode === barcode);
+      if (product) {
+        addToCart(product);
+        alert(`Đã thêm ${product.name} vào giỏ hàng`);
+      } else {
+        alert('Không tìm thấy sản phẩm với mã vạch này');
+      }
+    }
+  };
+
+  window.lookupCustomer = function() {
+    const phone = document.getElementById('customer-phone').value;
+    if (phone) {
+      // Simulate customer lookup
+      const customers = [
+        { phone: '0987654321', name: 'Nguyễn Văn An', email: 'an.nguyen@email.com', member: true },
+        { phone: '0912345678', name: 'Trần Thị Bình', email: 'binh.tran@email.com', member: false }
+      ];
+      
+      const customer = customers.find(c => c.phone === phone);
+      if (customer) {
+        document.getElementById('customer-name').value = customer.name;
+        document.getElementById('customer-email').value = customer.email;
+        document.getElementById('customer-membership').checked = customer.member;
+        alert('Đã tìm thấy thông tin khách hàng');
+      } else {
+        alert('Không tìm thấy khách hàng với số điện thoại này');
+      }
+    }
+  };
+
+  window.applyCoupon = function() {
+    const couponCode = document.getElementById('coupon-code').value;
+    if (couponCode) {
+      // Simulate coupon validation
+      const coupons = {
+        'DISCOUNT10': { type: 'percent', value: 10 },
+        'SAVE50K': { type: 'amount', value: 50000 },
+        'NEWCUSTOMER': { type: 'percent', value: 15 }
+      };
+      
+      const coupon = coupons[couponCode.toUpperCase()];
+      if (coupon) {
+        if (coupon.type === 'percent') {
+          document.getElementById('discount-percent').value = coupon.value;
+          document.getElementById('discount-amount-input').value = '';
+        } else {
+          document.getElementById('discount-amount-input').value = coupon.value;
+          document.getElementById('discount-percent').value = '';
+        }
+        updateCartSummary();
+        alert(`Đã áp dụng mã giảm giá ${couponCode}`);
+      } else {
+        alert('Mã giảm giá không hợp lệ');
+      }
+    }
+  };
+
+  window.processPayment = function() {
+    if (cart.length === 0) {
+      alert('Giỏ hàng trống!');
+      return;
+    }
+
+    const customerName = document.getElementById('customer-name').value || 'Khách lẻ';
+    const customerPhone = document.getElementById('customer-phone').value;
+    const customerEmail = document.getElementById('customer-email').value;
+    const paymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
+    
+    const subtotal = cart.reduce((sum, item) => sum + item.total, 0);
+    const discountPercent = parseFloat(document.getElementById('discount-percent').value) || 0;
+    const discountAmount = parseFloat(document.getElementById('discount-amount-input').value) || 0;
+    const staffDiscount = document.getElementById('staff-discount').checked;
+    
+    let discount = 0;
+    if (discountPercent > 0) {
+      discount = subtotal * (discountPercent / 100);
+    } else if (discountAmount > 0) {
+      discount = discountAmount;
+    }
+    if (staffDiscount) {
+      discount += subtotal * 0.05;
+    }
+
+    const taxableAmount = subtotal - discount;
+    const tax = taxableAmount * 0.1;
+    const total = taxableAmount + tax;
+
+    // Validate payment for cash
+    if (paymentMethod === 'cash') {
+      const cashReceived = parseFloat(document.getElementById('cash-received').value) || 0;
+      if (cashReceived < total) {
+        alert('Số tiền nhận không đủ!');
+        return;
+      }
+    }
+
+    // Create sale record
+    const saleNumber = 'POS-' + new Date().toISOString().slice(0, 10).replace(/-/g, '') + '-' + String(sales.length + 1).padStart(3, '0');
+    const sale = {
+      id: 'sale_' + Date.now(),
+      orderNumber: saleNumber,
+      customerName,
+      customerPhone,
+      customerEmail,
+      items: cart.map(item => ({ ...item })),
+      subtotal,
+      discount,
+      tax,
+      total,
+      paymentMethod,
+      cashReceived: paymentMethod === 'cash' ? parseFloat(document.getElementById('cash-received').value) : total,
+      changeAmount: paymentMethod === 'cash' ? parseFloat(document.getElementById('change-amount').value) : 0,
+      createdAt: new Date().toISOString(),
+      cashier: 'Admin User'
+    };
+
+    sales.unshift(sale);
+    saveSalesData();
+    renderSalesHistory();
+
+    // Show success message
+    alert(`Thanh toán thành công!\nMã đơn hàng: ${saleNumber}\nTổng tiền: ${formatVND(total)}`);
+
+    // Clear cart and reset form
+    startNewSale();
+  };
+
+  window.saveAsHold = function() {
+    if (cart.length === 0) {
+      alert('Giỏ hàng trống!');
+      return;
+    }
+
+    const customerName = document.getElementById('customer-name').value || 'Khách lẻ';
+    
+    // Save to localStorage as held order
+    const holds = JSON.parse(localStorage.getItem('posHolds') || '[]');
+    const holdNumber = 'HOLD-' + Date.now();
+    
+    holds.push({
+      id: holdNumber,
+      customerName,
+      items: cart.map(item => ({ ...item })),
+      createdAt: new Date().toISOString()
+    });
+    
+    localStorage.setItem('posHolds', JSON.stringify(holds));
+    
+    alert(`Đã lưu đơn hàng tạm: ${holdNumber}`);
+    startNewSale();
+  };
+
+  window.printReceipt = function() {
+    if (cart.length === 0) {
+      alert('Giỏ hàng trống!');
+      return;
+    }
+    generateReceiptPreview();
+  };
+
+  window.emailReceipt = function() {
+    const email = document.getElementById('customer-email').value;
+    if (!email) {
+      alert('Vui lòng nhập email khách hàng!');
+      return;
+    }
+    alert(`Đã gửi hóa đơn đến email: ${email}`);
+  };
+
+  function generateReceiptPreview() {
+    const customerName = document.getElementById('customer-name').value || 'Khách lẻ';
+    const customerPhone = document.getElementById('customer-phone').value;
+    const subtotal = cart.reduce((sum, item) => sum + item.total, 0);
+    
+    let discount = 0;
+    const discountPercent = parseFloat(document.getElementById('discount-percent').value) || 0;
+    const discountAmount = parseFloat(document.getElementById('discount-amount-input').value) || 0;
+    if (discountPercent > 0) discount = subtotal * (discountPercent / 100);
+    else if (discountAmount > 0) discount = discountAmount;
+    
+    const tax = (subtotal - discount) * 0.1;
+    const total = subtotal - discount + tax;
+
+    let itemsHtml = '';
+    cart.forEach(item => {
+      itemsHtml += `
+        <div class="flex justify-between py-1">
+          <div class="flex-1">
+            <div class="font-medium">${item.name}</div>
+            <div class="text-xs text-gray-600">${formatVND(item.price)} x ${item.quantity}</div>
+          </div>
+          <div class="font-medium">${formatVND(item.total)}</div>
+        </div>
+      `;
+    });
+
+    const receiptHtml = `
+      <div class="text-center mb-4">
+        <h2 class="text-lg font-bold">COMPUTERPOS PRO</h2>
+        <p class="text-sm">123 Đường ABC, Q1, TP.HCM</p>
+        <p class="text-sm">Hotline: 1900-1234</p>
+        <hr class="my-2">
+        <p class="text-sm">HÓA ĐƠN BÁN HÀNG</p>
+        <p class="text-xs">${new Date().toLocaleString('vi-VN')}</p>
+      </div>
+      
+      <div class="mb-4">
+        <p><strong>Khách hàng:</strong> ${customerName}</p>
+        ${customerPhone ? `<p><strong>SĐT:</strong> ${customerPhone}</p>` : ''}
+      </div>
+
+      <div class="mb-4">
+        ${itemsHtml}
+      </div>
+
+      <hr class="my-2">
+      <div class="space-y-1">
+        <div class="flex justify-between">
+          <span>Tạm tính:</span>
+          <span>${formatVND(subtotal)}</span>
+        </div>
+        ${discount > 0 ? `
+          <div class="flex justify-between text-green-600">
+            <span>Giảm giá:</span>
+            <span>-${formatVND(discount)}</span>
+          </div>
+        ` : ''}
+        <div class="flex justify-between">
+          <span>Thuế (10%):</span>
+          <span>${formatVND(tax)}</span>
+        </div>
+        <hr class="my-1">
+        <div class="flex justify-between font-bold text-lg">
+          <span>Tổng cộng:</span>
+          <span>${formatVND(total)}</span>
+        </div>
+      </div>
+
+      <div class="text-center mt-4 pt-4 border-t">
+        <p class="text-sm">Cảm ơn quý khách đã mua hàng!</p>
+        <p class="text-xs">Hóa đơn có giá trị trong 7 ngày</p>
+      </div>
+    `;
+
+    document.getElementById('receipt-content').innerHTML = receiptHtml;
+    document.getElementById('receipt-modal').classList.remove('hidden');
+  }
+
+  window.printReceiptFinal = function() {
+    const printWindow = window.open('', '_blank');
+    const receiptContent = document.getElementById('receipt-content').innerHTML;
+    
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Hóa đơn bán hàng</title>
+          <style>
+            body { font-family: 'Courier New', monospace; margin: 20px; font-size: 12px; }
+            .text-center { text-align: center; }
+            .font-bold { font-weight: bold; }
+            .text-lg { font-size: 16px; }
+            .text-sm { font-size: 11px; }
+            .text-xs { font-size: 10px; }
+            .mb-4 { margin-bottom: 16px; }
+            .my-2 { margin: 8px 0; }
+            .py-1 { padding: 4px 0; }
+            .flex { display: flex; }
+            .justify-between { justify-content: space-between; }
+            .space-y-1 > * + * { margin-top: 4px; }
+            hr { border: none; border-top: 1px dashed #000; }
+          </style>
+        </head>
+        <body>
+          ${receiptContent}
+        </body>
+      </html>
+    `);
+    
+    printWindow.document.close();
+    printWindow.print();
+    closeModal('receipt-modal');
+  };
+
+  function renderSalesHistory() {
+    const tbody = document.getElementById('sales-tbody');
+    const todaySales = sales.filter(sale => {
+      const saleDate = new Date(sale.createdAt).toDateString();
+      const today = new Date().toDateString();
+      return saleDate === today;
+    });
+
+    if (todaySales.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="7" class="px-6 py-8 text-center text-gray-500">
+            <div>Chưa có giao dịch nào hôm nay</div>
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    let html = '';
+    todaySales.forEach(sale => {
+      const paymentMethodNames = {
+        cash: '💵 Tiền mặt',
+        card: '💳 Thẻ',
+        transfer: '🏦 Chuyển khoản',
+        ewallet: '📱 Ví điện tử',
+        mixed: '🔄 Kết hợp'
+      };
+
+      const itemsSummary = sale.items.length === 1 
+        ? sale.items[0].name
+        : `${sale.items[0].name} +${sale.items.length - 1} SP khác`;
+
+      html += `
+        <tr class="hover:bg-gray-50">
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm font-medium text-gray-900">${sale.orderNumber}</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm font-medium text-gray-900">${sale.customerName}</div>
+            ${sale.customerPhone ? `<div class="text-sm text-gray-500">${sale.customerPhone}</div>` : ''}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm text-gray-900">${itemsSummary}</div>
+            <div class="text-sm text-gray-500">${sale.items.length} sản phẩm</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm text-gray-900">${paymentMethodNames[sale.paymentMethod]}</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm font-medium text-gray-900">${formatVND(sale.total)}</div>
+            ${sale.discount > 0 ? `<div class="text-sm text-green-600">Giảm: ${formatVND(sale.discount)}</div>` : ''}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            ${new Date(sale.createdAt).toLocaleTimeString('vi-VN')}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+            <button onclick="reprintReceipt('${sale.id}')" class="text-blue-600 hover:text-blue-900 mr-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+              </svg>
+            </button>
+            <button onclick="viewSaleDetail('${sale.id}')" class="text-green-600 hover:text-green-900">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </button>
+          </td>
+        </tr>
+      `;
+    });
+
+    tbody.innerHTML = html;
+  }
+
+  window.reprintReceipt = function(saleId) {
+    const sale = sales.find(s => s.id === saleId);
+    if (!sale) return;
+
+    // Set current sale data to generate receipt
+    cart = sale.items.map(item => ({ ...item }));
+    document.getElementById('customer-name').value = sale.customerName;
+    document.getElementById('customer-phone').value = sale.customerPhone || '';
+    
+    // Set discounts
+    if (sale.discount > 0) {
+      const discountPercent = (sale.discount / sale.subtotal) * 100;
+      if (discountPercent <= 100) {
+        document.getElementById('discount-percent').value = discountPercent.toFixed(1);
+      } else {
+        document.getElementById('discount-amount-input').value = sale.discount;
+      }
+    }
+
+    generateReceiptPreview();
+    
+    // Clear temporary data
+    setTimeout(() => startNewSale(), 1000);
+  };
+
+  window.viewSaleDetail = function(saleId) {
+    const sale = sales.find(s => s.id === saleId);
+    if (!sale) return;
+    
+    alert(`Chi tiết đơn hàng ${sale.orderNumber}\nKhách hàng: ${sale.customerName}\nTổng tiền: ${formatVND(sale.total)}\nThời gian: ${new Date(sale.createdAt).toLocaleString('vi-VN')}`);
+  };
+
+  window.exportSales = function() {
+    const csvContent = generateSalesCSV(sales);
+    downloadCSV(csvContent, `pos-sales-${new Date().toISOString().split('T')[0]}.csv`);
+  };
+
+  function generateSalesCSV(data) {
+    const headers = ['Mã đơn', 'Khách hàng', 'SĐT', 'Số SP', 'Tạm tính', 'Giảm giá', 'Thuế', 'Tổng tiền', 'Thanh toán', 'Thời gian', 'Nhân viên'];
+    
+    const rows = data.map(sale => [
+      sale.orderNumber,
+      sale.customerName,
+      sale.customerPhone || '',
+      sale.items.length,
+      sale.subtotal,
+      sale.discount,
+      sale.tax,
+      sale.total,
+      sale.paymentMethod,
+      new Date(sale.createdAt).toLocaleString('vi-VN'),
+      sale.cashier
+    ]);
+
+    return [headers, ...rows].map(row => 
+      row.map(field => `"${field}"`).join(',')
+    ).join('\n');
+  }
+
+  function downloadCSV(content, filename) {
+    const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  window.refreshSales = function() {
+    renderSalesHistory();
+    alert('Đã làm mới lịch sử bán hàng!');
+  };
+
+  window.closeModal = function(modalId) {
+    document.getElementById(modalId).classList.add('hidden');
+  };
+
+  function formatVND(amount) {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND'
+    }).format(amount);
+  }
+
+  // Event listeners
+  document.getElementById('discount-percent').addEventListener('input', function() {
+    if (this.value) document.getElementById('discount-amount-input').value = '';
+    updateCartSummary();
+  });
+
+  document.getElementById('discount-amount-input').addEventListener('input', function() {
+    if (this.value) document.getElementById('discount-percent').value = '';
+    updateCartSummary();
+  });
+
+  document.getElementById('staff-discount').addEventListener('change', updateCartSummary);
+  document.getElementById('cash-received').addEventListener('input', updateChangeAmount);
+
+  // Hide search results when clicking outside
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('#product-search') && !e.target.closest('#search-results')) {
+      document.getElementById('search-results').classList.add('hidden');
+    }
+  });
+
+  // Initialize
+  loadSampleData();
+  renderCart();
+  renderSalesHistory();
+});
+</script>
+
+<style>
+.form-input, .form-select, .form-textarea, .form-checkbox, .form-radio {
+  @apply px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full;
+}
+
+.form-checkbox, .form-radio {
+  @apply w-4 h-4;
+}
+
+.modal-overlay {
+  @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50;
+}
+
+.modal-content {
+  @apply bg-white rounded-lg shadow-xl w-full mx-4 max-h-screen overflow-y-auto;
+}
+
+.modal-header {
+  @apply flex items-center justify-between p-6 border-b;
+}
+
+.modal-title {
+  @apply text-lg font-medium text-gray-900;
+}
+
+.modal-close {
+  @apply text-gray-400 hover:text-gray-600 text-2xl font-bold cursor-pointer;
+}
+
+.modal-body {
+  @apply p-6;
+}
+
+.modal-footer {
+  @apply flex items-center justify-end space-x-3 p-6 border-t bg-gray-50;
+}
+
+.btn {
+  @apply px-4 py-2 rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-offset-2;
+}
+
+.btn-primary {
+  @apply bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500;
+}
+
+.btn-secondary {
+  @apply bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500;
+}
+
+.form-label {
+  @apply block text-sm font-medium text-gray-700 mb-1;
+}
+
+.category-btn:hover {
+  transform: translateY(-1px);
+  transition: transform 0.2s;
+}
+</style>

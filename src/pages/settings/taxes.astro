@@ -1,0 +1,43 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import DashboardLayout from '../../layouts/DashboardLayout.astro';
+import Card from '../../components/ui/Card.astro';
+import Button from '../../components/ui/Button.astro';
+---
+
+<BaseLayout title="Cài đặt thuế - ComputerPOS Pro">
+  <DashboardLayout>
+    <main class="p-6 space-y-6">
+      <div class="flex justify-between items-center">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">Cài đặt thuế</h1>
+          <p class="text-gray-600 mt-1">Quản lý thuế suất và chính sách thuế</p>
+        </div>
+        <div class="flex space-x-3">
+          <Button href="/settings" variant="secondary">Quay lại</Button>
+          <Button variant="primary">Lưu cài đặt</Button>
+        </div>
+      </div>
+
+      <Card>
+        <div class="p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Thuế VAT</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Thuế suất VAT (%)</label>
+              <input type="number" value="10" min="0" max="100" step="0.1" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Áp dụng cho</label>
+              <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <option value="all">Tất cả sản phẩm</option>
+                <option value="selected">Sản phẩm được chọn</option>
+                <option value="none">Không áp dụng</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </Card>
+    </main>
+  </DashboardLayout>
+</BaseLayout>

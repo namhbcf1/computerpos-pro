@@ -1,0 +1,518 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import DashboardLayout from '../../layouts/DashboardLayout.astro';
+import Card from '../../components/ui/Card.astro';
+import Button from '../../components/ui/Button.astro';
+---
+
+<BaseLayout title="Báo cáo tùy chỉnh - ComputerPOS Pro">
+  <DashboardLayout>
+    <main class="p-6 space-y-6">
+      <!-- Header -->
+      <div class="flex justify-between items-center">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">Báo cáo tùy chỉnh</h1>
+          <p class="text-gray-600 mt-1">Tạo báo cáo theo yêu cầu riêng</p>
+        </div>
+        <div class="flex space-x-3">
+          <Button href="/reports" variant="secondary">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m0 7h18" />
+            </svg>
+            Quay lại
+          </Button>
+          <Button variant="primary" id="save-template">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+            </svg>
+            Lưu mẫu
+          </Button>
+        </div>
+      </div>
+
+      <!-- Report Builder -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Configuration Panel -->
+        <div class="lg:col-span-1 space-y-6">
+          <!-- Basic Settings -->
+          <Card>
+            <div class="p-6">
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">Cài đặt cơ bản</h3>
+              <div class="space-y-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Tên báo cáo</label>
+                  <input
+                    type="text"
+                    id="report-name"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="VD: Báo cáo bán hàng tháng 12"
+                  />
+                </div>
+
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Loại báo cáo</label>
+                  <select
+                    id="report-type"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="sales">Bán hàng</option>
+                    <option value="inventory">Kho hàng</option>
+                    <option value="customers">Khách hàng</option>
+                    <option value="products">Sản phẩm</option>
+                    <option value="financial">Tài chính</option>
+                    <option value="staff">Nhân viên</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Khoảng thời gian</label>
+                  <div class="grid grid-cols-2 gap-2">
+                    <input
+                      type="date"
+                      id="start-date"
+                      class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                    <input
+                      type="date"
+                      id="end-date"
+                      class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Định dạng xuất</label>
+                  <select
+                    id="export-format"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="pdf">PDF</option>
+                    <option value="excel">Excel</option>
+                    <option value="csv">CSV</option>
+                    <option value="json">JSON</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </Card>
+
+          <!-- Data Sources -->
+          <Card>
+            <div class="p-6">
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">Nguồn dữ liệu</h3>
+              <div class="space-y-3">
+                <label class="flex items-center">
+                  <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500" checked>
+                  <span class="ml-2 text-sm text-gray-700">Đơn hàng</span>
+                </label>
+                <label class="flex items-center">
+                  <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                  <span class="ml-2 text-sm text-gray-700">Sản phẩm</span>
+                </label>
+                <label class="flex items-center">
+                  <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                  <span class="ml-2 text-sm text-gray-700">Khách hàng</span>
+                </label>
+                <label class="flex items-center">
+                  <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                  <span class="ml-2 text-sm text-gray-700">Kho hàng</span>
+                </label>
+                <label class="flex items-center">
+                  <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                  <span class="ml-2 text-sm text-gray-700">Nhân viên</span>
+                </label>
+                <label class="flex items-center">
+                  <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                  <span class="ml-2 text-sm text-gray-700">Thanh toán</span>
+                </label>
+              </div>
+            </div>
+          </Card>
+
+          <!-- Filters -->
+          <Card>
+            <div class="p-6">
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">Bộ lọc</h3>
+              <div class="space-y-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Danh mục sản phẩm</label>
+                  <select
+                    multiple
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="cpu">CPU</option>
+                    <option value="vga">VGA</option>
+                    <option value="ram">RAM</option>
+                    <option value="mainboard">Mainboard</option>
+                    <option value="storage">Ổ cứng</option>
+                    <option value="psu">Nguồn</option>
+                    <option value="case">Case</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Thương hiệu</label>
+                  <select
+                    multiple
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="intel">Intel</option>
+                    <option value="amd">AMD</option>
+                    <option value="nvidia">NVIDIA</option>
+                    <option value="asus">ASUS</option>
+                    <option value="msi">MSI</option>
+                    <option value="gigabyte">Gigabyte</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Khoảng giá</label>
+                  <div class="grid grid-cols-2 gap-2">
+                    <input
+                      type="number"
+                      placeholder="Từ"
+                      class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                    <input
+                      type="number"
+                      placeholder="Đến"
+                      class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        <!-- Preview Panel -->
+        <div class="lg:col-span-2 space-y-6">
+          <!-- Report Preview -->
+          <Card>
+            <div class="p-6">
+              <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold text-gray-900">Xem trước báo cáo</h3>
+                <div class="flex space-x-2">
+                  <Button variant="secondary" size="sm" id="refresh-preview">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    Làm mới
+                  </Button>
+                  <Button variant="primary" size="sm" id="generate-report">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Tạo báo cáo
+                  </Button>
+                </div>
+              </div>
+
+              <!-- Preview Content -->
+              <div id="report-preview" class="border border-gray-200 rounded-lg p-4 min-h-96 bg-gray-50">
+                <div class="text-center py-12">
+                  <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  <h3 class="mt-2 text-sm font-medium text-gray-900">Chưa có dữ liệu xem trước</h3>
+                  <p class="mt-1 text-sm text-gray-500">Cấu hình báo cáo và nhấn "Làm mới" để xem trước</p>
+                </div>
+              </div>
+            </div>
+          </Card>
+
+          <!-- Chart Configuration -->
+          <Card>
+            <div class="p-6">
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">Cấu hình biểu đồ</h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Loại biểu đồ</label>
+                  <select
+                    id="chart-type"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="line">Đường</option>
+                    <option value="bar">Cột</option>
+                    <option value="pie">Tròn</option>
+                    <option value="doughnut">Donut</option>
+                    <option value="area">Vùng</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Trục X</label>
+                  <select
+                    id="x-axis"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="date">Ngày</option>
+                    <option value="month">Tháng</option>
+                    <option value="category">Danh mục</option>
+                    <option value="brand">Thương hiệu</option>
+                    <option value="product">Sản phẩm</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Trục Y</label>
+                  <select
+                    id="y-axis"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="revenue">Doanh thu</option>
+                    <option value="quantity">Số lượng</option>
+                    <option value="profit">Lợi nhuận</option>
+                    <option value="orders">Đơn hàng</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Nhóm theo</label>
+                  <select
+                    id="group-by"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="">Không nhóm</option>
+                    <option value="category">Danh mục</option>
+                    <option value="brand">Thương hiệu</option>
+                    <option value="staff">Nhân viên</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </Card>
+        </div>
+      </div>
+
+      <!-- Saved Templates -->
+      <Card>
+        <div class="p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Mẫu báo cáo đã lưu</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer" onclick="loadTemplate('sales-monthly')">
+              <div class="flex items-center justify-between mb-2">
+                <h4 class="font-medium text-gray-900">Báo cáo bán hàng tháng</h4>
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
+              <p class="text-sm text-gray-500 mb-3">Doanh thu, lợi nhuận theo tháng</p>
+              <div class="flex justify-between items-center">
+                <span class="text-xs text-gray-400">Cập nhật: 15/12/2024</span>
+                <Button variant="outline" size="xs">Sử dụng</Button>
+              </div>
+            </div>
+
+            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer" onclick="loadTemplate('inventory-status')">
+              <div class="flex items-center justify-between mb-2">
+                <h4 class="font-medium text-gray-900">Tình trạng kho hàng</h4>
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                </svg>
+              </div>
+              <p class="text-sm text-gray-500 mb-3">Tồn kho, nhập xuất theo danh mục</p>
+              <div class="flex justify-between items-center">
+                <span class="text-xs text-gray-400">Cập nhật: 12/12/2024</span>
+                <Button variant="outline" size="xs">Sử dụng</Button>
+              </div>
+            </div>
+
+            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer" onclick="loadTemplate('customer-analysis')">
+              <div class="flex items-center justify-between mb-2">
+                <h4 class="font-medium text-gray-900">Phân tích khách hàng</h4>
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+              </div>
+              <p class="text-sm text-gray-500 mb-3">Hành vi mua hàng, phân khúc KH</p>
+              <div class="flex justify-between items-center">
+                <span class="text-xs text-gray-400">Cập nhật: 10/12/2024</span>
+                <Button variant="outline" size="xs">Sử dụng</Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Card>
+    </main>
+  </DashboardLayout>
+</BaseLayout>
+
+<script>
+  // Custom reports functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    const reportPreview = document.getElementById('report-preview');
+    const refreshBtn = document.getElementById('refresh-preview');
+    const generateBtn = document.getElementById('generate-report');
+    const saveTemplateBtn = document.getElementById('save-template');
+
+    // Refresh preview
+    refreshBtn?.addEventListener('click', function() {
+      const reportType = document.getElementById('report-type').value;
+      const startDate = document.getElementById('start-date').value;
+      const endDate = document.getElementById('end-date').value;
+
+      if (!startDate || !endDate) {
+        alert('Vui lòng chọn khoảng thời gian');
+        return;
+      }
+
+      // Show loading
+      refreshBtn.disabled = true;
+      refreshBtn.innerHTML = `
+        <svg class="animate-spin -ml-1 mr-3 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        Đang tải...
+      `;
+
+      // Simulate API call
+      setTimeout(() => {
+        // Generate preview content
+        reportPreview.innerHTML = generatePreviewContent(reportType, startDate, endDate);
+
+        // Reset button
+        refreshBtn.disabled = false;
+        refreshBtn.innerHTML = `
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          Làm mới
+        `;
+      }, 2000);
+    });
+
+    // Generate report
+    generateBtn?.addEventListener('click', function() {
+      const reportName = document.getElementById('report-name').value;
+      const exportFormat = document.getElementById('export-format').value;
+
+      if (!reportName) {
+        alert('Vui lòng nhập tên báo cáo');
+        return;
+      }
+
+      // Show loading
+      generateBtn.disabled = true;
+      generateBtn.innerHTML = `
+        <svg class="animate-spin -ml-1 mr-3 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        Đang tạo...
+      `;
+
+      // Simulate report generation
+      setTimeout(() => {
+        // Reset button
+        generateBtn.disabled = false;
+        generateBtn.innerHTML = `
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          Tạo báo cáo
+        `;
+
+        alert(`Báo cáo "${reportName}" đã được tạo thành công dưới định dạng ${exportFormat.toUpperCase()}!`);
+      }, 3000);
+    });
+
+    // Save template
+    saveTemplateBtn?.addEventListener('click', function() {
+      const reportName = document.getElementById('report-name').value;
+
+      if (!reportName) {
+        alert('Vui lòng nhập tên báo cáo');
+        return;
+      }
+
+      const templateName = prompt('Nhập tên mẫu báo cáo:', reportName);
+      if (templateName) {
+        alert(`Mẫu báo cáo "${templateName}" đã được lưu thành công!`);
+      }
+    });
+
+    // Generate preview content
+    function generatePreviewContent(type, startDate, endDate) {
+      const sampleData = {
+        sales: `
+          <div class="bg-white p-4 rounded">
+            <h4 class="font-semibold mb-3">Báo cáo bán hàng (${startDate} - ${endDate})</h4>
+            <div class="grid grid-cols-3 gap-4 mb-4">
+              <div class="text-center">
+                <div class="text-2xl font-bold text-blue-600">2.8 tỷ</div>
+                <div class="text-sm text-gray-500">Tổng doanh thu</div>
+              </div>
+              <div class="text-center">
+                <div class="text-2xl font-bold text-green-600">1,247</div>
+                <div class="text-sm text-gray-500">Đơn hàng</div>
+              </div>
+              <div class="text-center">
+                <div class="text-2xl font-bold text-purple-600">425M</div>
+                <div class="text-sm text-gray-500">Lợi nhuận</div>
+              </div>
+            </div>
+            <div class="h-32 bg-gray-100 rounded flex items-center justify-center">
+              <span class="text-gray-500">Biểu đồ doanh thu theo ngày</span>
+            </div>
+          </div>
+        `,
+        inventory: `
+          <div class="bg-white p-4 rounded">
+            <h4 class="font-semibold mb-3">Báo cáo kho hàng (${startDate} - ${endDate})</h4>
+            <div class="grid grid-cols-3 gap-4 mb-4">
+              <div class="text-center">
+                <div class="text-2xl font-bold text-blue-600">2,456</div>
+                <div class="text-sm text-gray-500">Tổng sản phẩm</div>
+              </div>
+              <div class="text-center">
+                <div class="text-2xl font-bold text-red-600">47</div>
+                <div class="text-sm text-gray-500">Sắp hết hàng</div>
+              </div>
+              <div class="text-center">
+                <div class="text-2xl font-bold text-green-600">15.2 tỷ</div>
+                <div class="text-sm text-gray-500">Giá trị tồn kho</div>
+              </div>
+            </div>
+            <div class="h-32 bg-gray-100 rounded flex items-center justify-center">
+              <span class="text-gray-500">Biểu đồ tồn kho theo danh mục</span>
+            </div>
+          </div>
+        `
+      };
+
+      return sampleData[type] || sampleData.sales;
+    }
+
+    // Load template
+    window.loadTemplate = function(templateId) {
+      const templates = {
+        'sales-monthly': {
+          name: 'Báo cáo bán hàng tháng',
+          type: 'sales',
+          format: 'pdf'
+        },
+        'inventory-status': {
+          name: 'Tình trạng kho hàng',
+          type: 'inventory',
+          format: 'excel'
+        },
+        'customer-analysis': {
+          name: 'Phân tích khách hàng',
+          type: 'customers',
+          format: 'pdf'
+        }
+      };
+
+      const template = templates[templateId];
+      if (template) {
+        document.getElementById('report-name').value = template.name;
+        document.getElementById('report-type').value = template.type;
+        document.getElementById('export-format').value = template.format;
+
+        alert(`Đã tải mẫu: ${template.name}`);
+      }
+    };
+  });
+</script>
