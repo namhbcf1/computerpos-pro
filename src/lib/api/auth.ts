@@ -59,12 +59,20 @@ export class AuthService {
   }
 
   private initializeDefaultUsers() {
-    const defaultUsers = [
-      {
+    // SECURITY: Only initialize default admin user if no users exist
+    // Password must be changed on first login
+    const hasExistingUsers = this.users.size > 0;
+    
+    if (!hasExistingUsers) {
+      const adminPassword = process.env.INITIAL_ADMIN_PASSWORD || this.generateSecurePassword();
+      console.warn('⚠️  SECURITY WARNING: Default admin user created. Change password immediately!');
+      console.warn(`Admin credentials: admin / ${adminPassword}`);
+      
+      const defaultAdmin = {
         id: '1',
         username: 'admin',
         email: 'admin@computerpos.com',
-        password: bcrypt.hashSync('admin123', 10),
+        password: bcrypt.hashSync(adminPassword, 12), // Increased salt rounds
         role: 'admin' as const,
         permissions: [
           'users.read', 'users.write', 'users.delete',
@@ -78,50 +86,22 @@ export class AuthService {
           'build.read', 'build.write'
         ],
         isActive: true,
+        forcePasswordChange: true, // Force password change on first login
         createdAt: new Date(),
         updatedAt: new Date()
-      },
-      {
-        id: '2',
-        username: 'manager',
-        email: 'manager@computerpos.com',
-        password: bcrypt.hashSync('manager123', 10),
-        role: 'manager' as const,
-        permissions: [
-          'inventory.read', 'inventory.write',
-          'orders.read', 'orders.write',
-          'reports.read',
-          'pos.read', 'pos.write',
-          'customers.read', 'customers.write',
-          'staff.read',
-          'build.read', 'build.write'
-        ],
-        isActive: true,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id: '3',
-        username: 'staff',
-        email: 'staff@computerpos.com',
-        password: bcrypt.hashSync('staff123', 10),
-        role: 'staff' as const,
-        permissions: [
-          'inventory.read',
-          'orders.read', 'orders.write',
-          'pos.read', 'pos.write',
-          'customers.read', 'customers.write',
-          'build.read', 'build.write'
-        ],
-        isActive: true,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      }
-    ];
+      };
 
-    defaultUsers.forEach(user => {
-      this.users.set(user.username, user);
-    });
+      this.users.set(defaultAdmin.username, defaultAdmin);
+    }
+  }
+
+  private generateSecurePassword(): string {
+    const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*';
+    let password = '';
+    for (let i = 0; i < 16; i++) {
+      password += charset.charAt(Math.floor(Math.random() * charset.length));
+    }
+    return password;
   }
 
   async login(credentials: LoginCredentials): Promise<AuthResponse> {

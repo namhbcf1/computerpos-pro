@@ -9,7 +9,9 @@ vars = { ENVIRONMENT = "production" }
 [[env.production.d1_databases]]
 binding = "DB"
 database_name = "kho1-production"
-database_id = "39657891-9d7b-4a02-8b43-9921eb8c7d8e"
+# SECURITY: Database ID moved to environment variable
+# Set: wrangler secret put DATABASE_ID
+database_id = "${DATABASE_ID}"
 
 # KV Storage for caching
 [[env.production.kv_namespaces]]

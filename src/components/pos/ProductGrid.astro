@@ -20,9 +20,9 @@
   <!-- Product Grid -->
   <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 p-4">
     <!-- Sample Products -->
-    <div class="pos-product-card bg-white rounded-lg border border-gray-200 p-4 cursor-pointer hover:shadow-md transition-shadow"
+    <div class="pos-product-card bg-white rounded-lg border border-gray-200 p-4 cursor-pointer hover:shadow-md transition-shadow relative"
          data-product data-product-id="1" data-category="cpu"
-         data-add-to-cart data-product-name="Intel Core i7-13700K" data-product-price="12500000">
+         data-add-to-cart data-product-name="Intel Core i7-13700K" data-product-price="12500000" data-stock="25">
       <div class="aspect-square bg-gray-100 rounded-lg mb-3 flex items-center justify-center">
         <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
@@ -36,9 +36,9 @@
       </div>
     </div>
 
-    <div class="pos-product-card bg-white rounded-lg border border-gray-200 p-4 cursor-pointer hover:shadow-md transition-shadow"
+    <div class="pos-product-card bg-white rounded-lg border border-gray-200 p-4 cursor-pointer hover:shadow-md transition-shadow relative"
          data-product data-product-id="2" data-category="vga"
-         data-add-to-cart data-product-name="NVIDIA RTX 4080" data-product-price="35000000">
+         data-add-to-cart data-product-name="NVIDIA RTX 4080" data-product-price="35000000" data-stock="8">
       <div class="aspect-square bg-gray-100 rounded-lg mb-3 flex items-center justify-center">
         <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
@@ -52,25 +52,28 @@
       </div>
     </div>
 
-    <div class="pos-product-card bg-white rounded-lg border border-gray-200 p-4 cursor-pointer hover:shadow-md transition-shadow"
+    <div class="pos-product-card bg-white rounded-lg border border-gray-200 p-4 cursor-pointer hover:shadow-md transition-shadow opacity-50"
          data-product data-product-id="3" data-category="ram"
-         data-add-to-cart data-product-name="Corsair Vengeance 32GB" data-product-price="4200000">
+         data-add-to-cart data-product-name="Corsair Vengeance 32GB" data-product-price="4200000" data-stock="0">
       <div class="aspect-square bg-gray-100 rounded-lg mb-3 flex items-center justify-center">
         <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
         </svg>
       </div>
       <h3 class="font-medium text-sm text-gray-900 mb-1" data-product-name>Corsair Vengeance 32GB</h3>
-      <p class="text-xs text-gray-500 mb-2" data-product-code>RAM DDR5 5600MHz</p>
+      <p class="text-xs text-gray-500 mb-2" data-product-code>RAM DDR5 32GB</p>
       <div class="flex justify-between items-center">
         <span class="text-sm font-bold text-blue-600">4,200,000₫</span>
         <span class="text-xs text-red-600">Hết hàng</span>
       </div>
+      <div class="absolute inset-0 bg-gray-500 bg-opacity-20 rounded-lg flex items-center justify-center">
+        <span class="text-red-600 font-bold text-sm">HẾT HÀNG</span>
+      </div>
     </div>
 
-    <div class="pos-product-card bg-white rounded-lg border border-gray-200 p-4 cursor-pointer hover:shadow-md transition-shadow"
+    <div class="pos-product-card bg-white rounded-lg border border-gray-200 p-4 cursor-pointer hover:shadow-md transition-shadow relative"
          data-product data-product-id="4" data-category="mainboard"
-         data-add-to-cart data-product-name="ASUS ROG Strix B650" data-product-price="6800000">
+         data-add-to-cart data-product-name="ASUS ROG Strix B650" data-product-price="6800000" data-stock="15">
       <div class="aspect-square bg-gray-100 rounded-lg mb-3 flex items-center justify-center">
         <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
@@ -84,9 +87,9 @@
       </div>
     </div>
 
-    <div class="pos-product-card bg-white rounded-lg border border-gray-200 p-4 cursor-pointer hover:shadow-md transition-shadow"
+    <div class="pos-product-card bg-white rounded-lg border border-gray-200 p-4 cursor-pointer hover:shadow-md transition-shadow relative"
          data-product data-product-id="5" data-category="storage"
-         data-add-to-cart data-product-name="Samsung 980 PRO 1TB" data-product-price="2800000">
+         data-add-to-cart data-product-name="Samsung 980 PRO 1TB" data-product-price="2800000" data-stock="32">
       <div class="aspect-square bg-gray-100 rounded-lg mb-3 flex items-center justify-center">
         <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
@@ -100,9 +103,9 @@
       </div>
     </div>
 
-    <div class="pos-product-card bg-white rounded-lg border border-gray-200 p-4 cursor-pointer hover:shadow-md transition-shadow"
+    <div class="pos-product-card bg-white rounded-lg border border-gray-200 p-4 cursor-pointer hover:shadow-md transition-shadow relative"
          data-product data-product-id="6" data-category="psu"
-         data-add-to-cart data-product-name="Corsair RM850x" data-product-price="3200000">
+         data-add-to-cart data-product-name="Corsair RM850x" data-product-price="3200000" data-stock="12">
       <div class="aspect-square bg-gray-100 rounded-lg mb-3 flex items-center justify-center">
         <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
@@ -126,15 +129,23 @@
     productCards.forEach(card => {
       card.addEventListener('click', function() {
         const productId = this.dataset.productId;
-        const productName = this.querySelector('h3').textContent;
-        const productPrice = this.querySelector('.text-blue-600').textContent;
+        const productName = this.dataset.productName;
+        const productPrice = parseFloat(this.dataset.productPrice);
+        const stock = parseInt(this.dataset.stock || '0');
+
+        // Check if product is out of stock
+        if (stock <= 0) {
+          alert('Sản phẩm đã hết hàng!');
+          return;
+        }
 
         // Dispatch custom event to add product to cart
         const event = new CustomEvent('addToCart', {
           detail: {
             id: productId,
             name: productName,
-            price: productPrice
+            price: productPrice,
+            stock: stock
           }
         });
 

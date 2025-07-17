@@ -361,71 +361,301 @@ import Button from '../../components/ui/Button.astro';
 <script>
   // Products page functionality
   document.addEventListener('DOMContentLoaded', function() {
-    // Edit product buttons
+    let productsData = [];
+    
+    // Load products data
+    function loadProductsData() {
+      // Simulate API call to load products
+      // In real implementation, this would fetch from backend
+      console.log('Loading products data...');
+    }
+    
+    // Validate product before deletion
+    function validateProductDeletion(productId, productName) {
+      // Check if product has pending orders
+      const hasPendingOrders = false; // Simulate check
+      if (hasPendingOrders) {
+        alert(`Không thể xóa sản phẩm "${productName}" vì có đơn hàng đang chờ xử lý!`);
+        return false;
+      }
+      
+      // Check if product has stock transactions
+      const hasStockTransactions = false; // Simulate check
+      if (hasStockTransactions) {
+        alert(`Không thể xóa sản phẩm "${productName}" vì có giao dịch tồn kho!`);
+        return false;
+      }
+      
+      return true;
+    }
+    
+    // Delete product with validation
+    function deleteProduct(productId, productName, row) {
+      if (!validateProductDeletion(productId, productName)) {
+        return;
+      }
+      
+      // Show loading state
+      row.style.opacity = '0.5';
+      const deleteButton = row.querySelector('button:contains("Xóa")');
+      if (deleteButton) {
+        deleteButton.disabled = true;
+        deleteButton.textContent = 'Đang xóa...';
+      }
+      
+      // Simulate API call
+      setTimeout(() => {
+        try {
+          // Remove from data array
+          productsData = productsData.filter(p => p.id !== productId);
+          
+          // Remove from DOM
+          row.remove();
+          
+          // Update stats
+          updateProductStats();
+          
+          alert('Đã xóa sản phẩm thành công!');
+          console.log(`Product ${productId} deleted successfully`);
+        } catch (error) {
+          console.error('Error deleting product:', error);
+          alert('Có lỗi xảy ra khi xóa sản phẩm!');
+          
+          // Restore row state
+          row.style.opacity = '1';
+          if (deleteButton) {
+            deleteButton.disabled = false;
+            deleteButton.textContent = 'Xóa';
+          }
+        }
+      }, 1000);
+    }
+    
+    // Update product statistics
+    function updateProductStats() {
+      const totalProducts = document.querySelectorAll('tbody tr').length;
+      const totalProductsElement = document.querySelector('.grid .text-lg');
+      if (totalProductsElement) {
+        totalProductsElement.textContent = totalProducts.toLocaleString();
+      }
+    }
+    
+    // Event delegation for product actions
     document.addEventListener('click', function(e) {
-      if (e.target.textContent === 'Sửa') {
-        const row = e.target.closest('tr');
-        const productName = row.querySelector('td:nth-child(2) .font-medium').textContent;
-        const productId = row.dataset.productId || Math.random().toString(36).substr(2, 9);
-
+      const button = e.target.closest('button');
+      if (!button) return;
+      
+      const row = button.closest('tr');
+      if (!row) return;
+      
+      const productName = row.querySelector('td:nth-child(2) .font-medium')?.textContent;
+      const productId = row.dataset.productId || `product_${Date.now()}`;
+      
+      if (button.textContent.trim() === 'Sửa') {
+        // Edit product
         if (confirm(`Chỉnh sửa sản phẩm: ${productName}?`)) {
           window.location.href = `/products/edit/${productId}`;
         }
-      }
-
-      // Delete product buttons
-      if (e.target.textContent === 'Xóa') {
-        const row = e.target.closest('tr');
-        const productName = row.querySelector('td:nth-child(2) .font-medium').textContent;
-
-        if (confirm(`Bạn có chắc muốn xóa sản phẩm: ${productName}?\nHành động này không thể hoàn tác.`)) {
-          // Simulate delete API call
-          row.style.opacity = '0.5';
-          setTimeout(() => {
-            row.remove();
-            alert('Đã xóa sản phẩm thành công!');
-          }, 500);
+      } else if (button.textContent.trim() === 'Xóa') {
+        // Delete product with enhanced validation
+        if (confirm(`Bạn có chắc muốn xóa sản phẩm: ${productName}?\n\nHành động này không thể hoàn tác và sẽ:\n- Xóa tất cả dữ liệu sản phẩm\n- Xóa lịch sử giao dịch\n- Ảnh hưởng đến báo cáo`)) {
+          deleteProduct(productId, productName, row);
         }
       }
     });
 
-    // Search functionality
+    // Enhanced search functionality
     const searchInput = document.querySelector('input[placeholder*="Tìm kiếm"]');
     if (searchInput) {
+      let searchTimeout;
+      
       searchInput.addEventListener('input', function(e) {
-        const searchTerm = e.target.value.toLowerCase();
+        // Debounce search to improve performance
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+          performSearch(e.target.value);
+        }, 300);
+      });
+      
+      function performSearch(searchTerm) {
+        const normalizedTerm = searchTerm.toLowerCase().trim();
         const rows = document.querySelectorAll('tbody tr');
-
+        let visibleCount = 0;
+        
         rows.forEach(row => {
-          const productName = row.querySelector('td:nth-child(2) .font-medium').textContent.toLowerCase();
-          const productCode = row.querySelector('td:nth-child(2) .text-gray-500').textContent.toLowerCase();
-          const category = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
-
-          if (productName.includes(searchTerm) || productCode.includes(searchTerm) || category.includes(searchTerm)) {
+          const productNameEl = row.querySelector('td:nth-child(2) .font-medium');
+          const productCodeEl = row.querySelector('td:nth-child(2) .text-gray-500');
+          const categoryEl = row.querySelector('td:nth-child(3)');
+          const priceEl = row.querySelector('td:nth-child(4)');
+          
+          if (!productNameEl || !productCodeEl || !categoryEl) {
+            row.style.display = 'none';
+            return;
+          }
+          
+          const productName = productNameEl.textContent.toLowerCase();
+          const productCode = productCodeEl.textContent.toLowerCase();
+          const category = categoryEl.textContent.toLowerCase();
+          const price = priceEl ? priceEl.textContent.toLowerCase() : '';
+          
+          const isMatch = !normalizedTerm || 
+                         productName.includes(normalizedTerm) || 
+                         productCode.includes(normalizedTerm) || 
+                         category.includes(normalizedTerm) ||
+                         price.includes(normalizedTerm);
+          
+          if (isMatch) {
             row.style.display = '';
+            visibleCount++;
           } else {
             row.style.display = 'none';
           }
         });
-      });
+        
+        // Show search results count
+        updateSearchResultsCount(visibleCount, rows.length);
+      }
+      
+      function updateSearchResultsCount(visible, total) {
+        let countElement = document.getElementById('search-results-count');
+        if (!countElement) {
+          countElement = document.createElement('div');
+          countElement.id = 'search-results-count';
+          countElement.className = 'text-sm text-gray-500 mt-2';
+          searchInput.parentNode.appendChild(countElement);
+        }
+        
+        if (searchInput.value.trim()) {
+          countElement.textContent = `Hiển thị ${visible} / ${total} sản phẩm`;
+          countElement.style.display = 'block';
+        } else {
+          countElement.style.display = 'none';
+        }
+      }
     }
 
-    // Filter functionality
+    // Enhanced filter functionality
     const filterSelects = document.querySelectorAll('select');
     filterSelects.forEach(select => {
       select.addEventListener('change', function() {
-        // Implement filter logic here
-        console.log('Filter changed:', this.value);
+        applyFilters();
       });
     });
+    
+    function applyFilters() {
+      const categoryFilter = document.querySelector('select[id*="category"]')?.value || '';
+      const stockFilter = document.querySelector('select[id*="stock"]')?.value || '';
+      const rows = document.querySelectorAll('tbody tr');
+      let visibleCount = 0;
+      
+      rows.forEach(row => {
+        let shouldShow = true;
+        
+        // Category filter
+        if (categoryFilter) {
+          const categoryCell = row.querySelector('td:nth-child(3)');
+          const category = categoryCell ? categoryCell.textContent.toLowerCase() : '';
+          if (!category.includes(categoryFilter.toLowerCase())) {
+            shouldShow = false;
+          }
+        }
+        
+        // Stock filter
+        if (stockFilter && shouldShow) {
+          const stockCell = row.querySelector('td:nth-child(5)');
+          const stockText = stockCell ? stockCell.textContent.toLowerCase() : '';
+          
+          switch (stockFilter) {
+            case 'in-stock':
+              if (stockText.includes('hết hàng') || stockText.includes('0')) {
+                shouldShow = false;
+              }
+              break;
+            case 'low-stock':
+              // Check if stock is low (assuming < 10 is low)
+              const stockNumber = parseInt(stockText.match(/\d+/)?.[0] || '0');
+              if (stockNumber === 0 || stockNumber > 10) {
+                shouldShow = false;
+              }
+              break;
+            case 'out-of-stock':
+              if (!stockText.includes('hết hàng') && !stockText.includes('0')) {
+                shouldShow = false;
+              }
+              break;
+          }
+        }
+        
+        if (shouldShow) {
+          row.style.display = '';
+          visibleCount++;
+        } else {
+          row.style.display = 'none';
+        }
+      });
+      
+      // Update filter results count
+      updateFilterResultsCount(visibleCount, rows.length);
+    }
+    
+    function updateFilterResultsCount(visible, total) {
+      let countElement = document.getElementById('filter-results-count');
+      if (!countElement) {
+        countElement = document.createElement('div');
+        countElement.id = 'filter-results-count';
+        countElement.className = 'text-sm text-gray-500 mt-2';
+        const filtersContainer = document.querySelector('.flex.flex-col.sm\\:flex-row.gap-4');
+        if (filtersContainer) {
+          filtersContainer.appendChild(countElement);
+        }
+      }
+      
+      const hasActiveFilters = Array.from(filterSelects).some(select => select.value);
+      if (hasActiveFilters) {
+        countElement.textContent = `Lọc: ${visible} / ${total} sản phẩm`;
+        countElement.style.display = 'block';
+      } else {
+        countElement.style.display = 'none';
+      }
+    }
 
-    // Pagination functionality
+    // Enhanced pagination functionality
     const paginationButtons = document.querySelectorAll('nav button');
     paginationButtons.forEach(button => {
-      button.addEventListener('click', function() {
+      button.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        // Remove active state from all buttons
+        paginationButtons.forEach(btn => {
+          btn.classList.remove('bg-blue-50', 'border-blue-500', 'text-blue-600');
+          btn.classList.add('bg-white', 'border-gray-300', 'text-gray-700');
+        });
+        
+        // Add active state to clicked button
+        if (this.textContent.match(/^\d+$/)) {
+          this.classList.remove('bg-white', 'border-gray-300', 'text-gray-700');
+          this.classList.add('bg-blue-50', 'border-blue-500', 'text-blue-600');
+        }
+        
         // Implement pagination logic here
-        console.log('Page changed:', this.textContent);
+        const pageNumber = this.textContent;
+        console.log('Page changed to:', pageNumber);
+        
+        // Simulate page loading
+        const tableBody = document.querySelector('tbody');
+        if (tableBody) {
+          tableBody.style.opacity = '0.5';
+          setTimeout(() => {
+            tableBody.style.opacity = '1';
+            // In real implementation, this would load new data
+            console.log(`Loaded page ${pageNumber}`);
+          }, 500);
+        }
       });
     });
+    
+    // Initialize page
+    loadProductsData();
+    updateProductStats();
   });
 </script>

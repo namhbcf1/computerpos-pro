@@ -75,28 +75,38 @@ router.get('/:id', async (req, res) => {
 
 // POST /api/orders - Tạo đơn hàng mới
 router.post('/', async (req, res) => {
-  const t = await sequelize.transaction();
+  // Use SERIALIZABLE isolation level to prevent race conditions
+  const t = await sequelize.transaction({
+    isolationLevel: sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE
+  });
   
   try {
     const { customer_id, items, notes, total } = req.body;
     
     // Validate required fields
     if (!customer_id) {
+      await t.rollback();
       return res.status(400).json({ success: false, message: 'Vui lòng chọn khách hàng.' });
     }
     if (!items || items.length === 0) {
+      await t.rollback();
       return res.status(400).json({ success: false, message: 'Đơn hàng phải có ít nhất 1 sản phẩm.' });
     }
 
-    // Fetch customer details
-    const customer = await Customer.findByPk(customer_id);
+    // Fetch customer details with row lock
+    const customer = await Customer.findByPk(customer_id, {
+      transaction: t,
+      lock: t.LOCK.SHARE
+    });
     if (!customer) {
+      await t.rollback();
       return res.status(400).json({ success: false, message: 'Khách hàng không hợp lệ.' });
     }
 
-    // Tính tổng tiền và kiểm tra tồn kho
+    // Tính tổng tiền và kiểm tra tồn kho với pessimistic locking
     let calculated_total_amount = 0;
     const orderItems = [];
+    const lockedProducts = new Map(); // Track locked products
 
     for (const item of items) {
       if (!item.product_id || !item.quantity || item.quantity <= 0) {
@@ -123,10 +133,36 @@ router.post('/', async (req, res) => {
         subtotal: subtotal
       });
 
-      // Cập nhật tồn kho
-      await product.update({ 
-        quantity: product.quantity - item.quantity 
-      }, { transaction: t });
+      // Lock product for update to prevent race conditions
+      const lockedProduct = await Product.findByPk(product.id, {
+        transaction: t,
+        lock: t.LOCK.UPDATE // Pessimistic lock
+      });
+
+      if (!lockedProduct) {
+        throw new Error(`Sản phẩm ${product.name} không tồn tại.`);
+      }
+
+      // Double-check stock after locking
+      if (lockedProduct.quantity < item.quantity) {
+        throw new Error(`Sản phẩm ${lockedProduct.name} không đủ hàng. Tồn kho: ${lockedProduct.quantity}, yêu cầu: ${item.quantity}`);
+      }
+
+      // Atomic stock update
+      const newQuantity = lockedProduct.quantity - item.quantity;
+      await lockedProduct.update({ 
+        quantity: newQuantity,
+        updated_at: new Date()
+      }, { 
+        transaction: t,
+        fields: ['quantity', 'updated_at'] // Only update specific fields
+      });
+
+      // Store locked product for potential rollback
+      lockedProducts.set(product.id, {
+        original_quantity: lockedProduct.quantity,
+        new_quantity: newQuantity
+      });
     }
 
     // Validate total amount (allow a small tolerance for floating point issues)

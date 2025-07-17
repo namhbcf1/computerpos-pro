@@ -968,43 +968,113 @@ document.addEventListener('DOMContentLoaded', function() {
     window.location.href = `/pos?customer_id=${customerId}`;
   };
 
+  // Validate customer data
+  function validateCustomerData(customerData) {
+    const errors = [];
+    
+    // Required fields validation
+    if (!customerData.name || customerData.name.trim().length < 2) {
+      errors.push('Tên khách hàng phải có ít nhất 2 ký tự');
+    }
+    
+    if (!customerData.phone || !/^[0-9]{10,11}$/.test(customerData.phone)) {
+      errors.push('Số điện thoại phải có 10-11 chữ số');
+    }
+    
+    // Email validation (optional but must be valid if provided)
+    if (customerData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerData.email)) {
+      errors.push('Email không hợp lệ');
+    }
+    
+    // Discount rate validation
+    if (customerData.discountRate < 0 || customerData.discountRate > 50) {
+      errors.push('Tỷ lệ giảm giá phải từ 0% đến 50%');
+    }
+    
+    // Credit limit validation
+    if (customerData.creditLimit < 0) {
+      errors.push('Hạn mức tín dụng không thể âm');
+    }
+    
+    // Business-specific validation
+    if (customerData.type === 'business') {
+      if (!customerData.companyName || customerData.companyName.trim().length < 2) {
+        errors.push('Tên công ty phải có ít nhất 2 ký tự');
+      }
+      
+      if (customerData.taxCode && !/^[0-9]{10,13}$/.test(customerData.taxCode)) {
+        errors.push('Mã số thuế phải có 10-13 chữ số');
+      }
+    }
+    
+    return errors;
+  }
+  
+  // Check for duplicate customer
+  function checkDuplicateCustomer(customerData, excludeId = null) {
+    return customersData.some(customer => {
+      if (excludeId && customer.id === excludeId) return false;
+      return customer.phone === customerData.phone || 
+             (customerData.email && customer.email === customerData.email) ||
+             (customerData.taxCode && customer.taxCode === customerData.taxCode);
+    });
+  }
+
   window.saveCustomer = function() {
     const form = document.getElementById('customer-form');
     const formData = new FormData(form);
 
     const customerData = {
-      name: document.getElementById('customer-name').value,
-      email: document.getElementById('customer-email').value,
-      phone: document.getElementById('customer-phone').value,
+      name: document.getElementById('customer-name').value.trim(),
+      email: document.getElementById('customer-email').value.trim(),
+      phone: document.getElementById('customer-phone').value.trim(),
       type: document.getElementById('customer-type').value,
-      address: document.getElementById('customer-address').value,
+      address: document.getElementById('customer-address').value.trim(),
       city: document.getElementById('customer-city').value,
       district: document.getElementById('customer-district').value,
       ward: document.getElementById('customer-ward').value,
-      notes: document.getElementById('customer-notes').value,
+      notes: document.getElementById('customer-notes').value.trim(),
       discountRate: parseFloat(document.getElementById('discount-rate').value) || 0,
       creditLimit: parseFloat(document.getElementById('credit-limit').value) || 0
     };
 
-    // Validate required fields
-    if (!customerData.name || !customerData.phone) {
-      alert('Vui lòng nhập tên và số điện thoại');
-      return;
-    }
-
     // Business-specific fields
     if (customerData.type === 'business') {
-      customerData.companyName = document.getElementById('company-name').value;
-      customerData.taxCode = document.getElementById('tax-code').value;
-      customerData.representative = document.getElementById('representative').value;
+      customerData.companyName = document.getElementById('company-name').value.trim();
+      customerData.taxCode = document.getElementById('tax-code').value.trim();
+      customerData.representative = document.getElementById('representative').value.trim();
+    }
+    
+    // Validate customer data
+    const validationErrors = validateCustomerData(customerData);
+    if (validationErrors.length > 0) {
+      alert('Lỗi validation:\n' + validationErrors.join('\n'));
+      return;
+    }
+    
+    // Check for duplicates
+    if (checkDuplicateCustomer(customerData, currentCustomerId)) {
+      alert('Khách hàng đã tồn tại với số điện thoại, email hoặc mã số thuế này!');
+      return;
     }
 
     if (currentCustomerId) {
       // Update existing customer
       const customerIndex = customersData.findIndex(c => c.id === currentCustomerId);
       if (customerIndex !== -1) {
-        customersData[customerIndex] = { ...customersData[customerIndex], ...customerData };
+        const updatedCustomer = { 
+          ...customersData[customerIndex], 
+          ...customerData,
+          updatedDate: new Date().toISOString().split('T')[0]
+        };
+        customersData[customerIndex] = updatedCustomer;
         alert('Cập nhật khách hàng thành công!');
+        
+        // Log the update
+        console.log('Customer updated:', updatedCustomer);
+      } else {
+        alert('Không tìm thấy khách hàng để cập nhật!');
+        return;
       }
     } else {
       // Add new customer
@@ -1016,13 +1086,20 @@ document.addEventListener('DOMContentLoaded', function() {
         totalSpent: 0,
         lastOrderDate: null,
         joinDate: new Date().toISOString().split('T')[0],
-        loyaltyPoints: 0
+        loyaltyPoints: 0,
+        createdDate: new Date().toISOString().split('T')[0]
       };
       customersData.push(newCustomer);
       alert('Thêm khách hàng thành công!');
+      
+      // Log the new customer
+      console.log('New customer added:', newCustomer);
     }
 
+    // Clear form and close modal
+    form.reset();
     document.getElementById('customer-modal').classList.add('hidden');
+    currentCustomerId = null;
     loadCustomersData();
   };
 

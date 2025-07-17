@@ -131,26 +131,37 @@
 
   // Listen for add to cart events
   document.addEventListener('addToCart', function(event) {
-    const product = event.detail;
-    addToCart(product);
-  });
-
-  function addToCart(product) {
-    const existingItem = cart.find(item => item.id === product.id);
-
+    const { id, name, price, stock } = event.detail;
+    
+    // Check if item already exists in cart
+    const existingItem = cart.find(item => item.id === id);
+    
     if (existingItem) {
+      // Check stock availability before increasing quantity
+      if (existingItem.quantity >= stock) {
+        alert(`Không thể thêm! Chỉ còn ${stock} sản phẩm trong kho.`);
+        return;
+      }
       existingItem.quantity += 1;
     } else {
+      // Check if stock is available
+      if (stock <= 0) {
+        alert('Sản phẩm đã hết hàng!');
+        return;
+      }
+      
       cart.push({
-        ...product,
+        id,
+        name,
+        price: price, // price is already a number from ProductGrid
         quantity: 1,
-        price: parseFloat(product.price.replace(/[₫,]/g, ''))
+        stock: stock
       });
     }
-
+    
     updateCartDisplay();
     calculateTotals();
-  }
+  });
 
   function removeFromCart(productId) {
     cart = cart.filter(item => item.id !== productId);
@@ -163,6 +174,9 @@
     if (item) {
       if (newQuantity <= 0) {
         removeFromCart(productId);
+      } else if (newQuantity > item.stock) {
+        alert(`Không thể thêm! Chỉ còn ${item.stock} sản phẩm trong kho.`);
+        return;
       } else {
         item.quantity = newQuantity;
         updateCartDisplay();
@@ -227,16 +241,34 @@
     const discountTypeValue = document.getElementById('discount-type')?.value || 'amount';
 
     if (discountTypeValue === 'percent') {
-      discount = subtotal * (discountAmount / 100);
+      // Validate percentage discount
+      if (discountAmount > 100) {
+        alert('Giảm giá không thể vượt quá 100%!');
+        document.getElementById('discount-amount').value = 0;
+        discount = 0;
+      } else {
+        discount = subtotal * (discountAmount / 100);
+      }
     } else {
-      discount = discountAmount;
+      // Validate amount discount
+      if (discountAmount > subtotal) {
+        alert('Giảm giá không thể lớn hơn tổng tiền!');
+        document.getElementById('discount-amount').value = subtotal;
+        discount = subtotal;
+      } else {
+        discount = discountAmount;
+      }
     }
 
-    // Calculate tax (10% VAT)
-    tax = (subtotal - discount) * 0.1;
+    // Calculate tax (10% VAT on discounted amount)
+    const taxableAmount = Math.max(0, subtotal - discount);
+    tax = taxableAmount * 0.1;
 
     // Calculate total
     total = subtotal - discount + tax;
+
+    // Ensure total is not negative
+    total = Math.max(0, total);
 
     // Update display
     document.getElementById('subtotal').textContent = formatCurrency(subtotal);
@@ -264,14 +296,61 @@
   document.getElementById('discount-amount')?.addEventListener('input', calculateTotals);
   document.getElementById('discount-type')?.addEventListener('change', calculateTotals);
 
+  // Validate customer info
+  function validateCustomerInfo() {
+    const customerName = document.getElementById('customer-name')?.value?.trim();
+    const customerPhone = document.getElementById('customer-phone')?.value?.trim();
+    
+    if (!customerName) {
+      alert('Vui lòng nhập tên khách hàng!');
+      document.getElementById('customer-name')?.focus();
+      return false;
+    }
+    
+    if (customerPhone && !/^[0-9]{10,11}$/.test(customerPhone)) {
+      alert('Số điện thoại không hợp lệ! Vui lòng nhập 10-11 chữ số.');
+      document.getElementById('customer-phone')?.focus();
+      return false;
+    }
+    
+    return true;
+  }
+
   // Payment buttons
   document.getElementById('payment-cash')?.addEventListener('click', function() {
     if (cart.length === 0) {
       alert('Giỏ hàng trống!');
       return;
     }
+    
+    if (!validateCustomerInfo()) {
+      return;
+    }
+    
     // Handle cash payment
-    alert('Xử lý thanh toán tiền mặt...');
+    const customerName = document.getElementById('customer-name')?.value?.trim();
+    const customerPhone = document.getElementById('customer-phone')?.value?.trim();
+    
+    const orderData = {
+      customer: { name: customerName, phone: customerPhone },
+      items: cart,
+      subtotal: subtotal,
+      discount: discount,
+      tax: tax,
+      total: total,
+      paymentMethod: 'cash',
+      timestamp: new Date().toISOString()
+    };
+    
+    console.log('Order data:', orderData);
+    alert(`Thanh toán thành công!\nTổng tiền: ${formatCurrency(total)}\nKhách hàng: ${customerName}`);
+    
+    // Clear cart after successful payment
+    cart = [];
+    updateCartDisplay();
+    calculateTotals();
+    document.getElementById('customer-name').value = '';
+    document.getElementById('customer-phone').value = '';
   });
 
   document.getElementById('payment-card')?.addEventListener('click', function() {
@@ -279,8 +358,35 @@
       alert('Giỏ hàng trống!');
       return;
     }
+    
+    if (!validateCustomerInfo()) {
+      return;
+    }
+    
     // Handle card payment
-    alert('Xử lý thanh toán thẻ...');
+    const customerName = document.getElementById('customer-name')?.value?.trim();
+    const customerPhone = document.getElementById('customer-phone')?.value?.trim();
+    
+    const orderData = {
+      customer: { name: customerName, phone: customerPhone },
+      items: cart,
+      subtotal: subtotal,
+      discount: discount,
+      tax: tax,
+      total: total,
+      paymentMethod: 'card',
+      timestamp: new Date().toISOString()
+    };
+    
+    console.log('Order data:', orderData);
+    alert(`Thanh toán thẻ thành công!\nTổng tiền: ${formatCurrency(total)}\nKhách hàng: ${customerName}`);
+    
+    // Clear cart after successful payment
+    cart = [];
+    updateCartDisplay();
+    calculateTotals();
+    document.getElementById('customer-name').value = '';
+    document.getElementById('customer-phone').value = '';
   });
 
   document.getElementById('hold-order')?.addEventListener('click', function() {
@@ -288,8 +394,33 @@
       alert('Giỏ hàng trống!');
       return;
     }
+    
+    if (!validateCustomerInfo()) {
+      return;
+    }
+    
     // Handle hold order
-    alert('Đơn hàng đã được giữ lại!');
+    const customerName = document.getElementById('customer-name')?.value?.trim();
+    const orderData = {
+      customer: { name: customerName },
+      items: cart,
+      subtotal: subtotal,
+      discount: discount,
+      tax: tax,
+      total: total,
+      status: 'held',
+      timestamp: new Date().toISOString()
+    };
+    
+    console.log('Held order data:', orderData);
+    alert(`Đơn hàng đã được giữ lại!\nKhách hàng: ${customerName}`);
+    
+    // Clear cart after holding order
+    cart = [];
+    updateCartDisplay();
+    calculateTotals();
+    document.getElementById('customer-name').value = '';
+    document.getElementById('customer-phone').value = '';
   });
 
   // Make functions global for onclick handlers
