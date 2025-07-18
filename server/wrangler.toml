@@ -1,4 +1,4 @@
-name = "pos-backend"
+name = "computerpos-backend"
 main = "src/test-api.js"
 compatibility_date = "2023-11-15"
 node_compat = true

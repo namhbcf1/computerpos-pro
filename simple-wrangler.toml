@@ -1,0 +1,7 @@
+name = "computerpos-api"
+main = "simple-worker.js"
+compatibility_date = "2023-11-15"
+
+[vars]
+NODE_ENV = "production"
+FRONTEND_URL = "https://pos-frontend-e1q.pages.dev"

@@ -47,6 +47,7 @@ const { TextArea } = Input;
 
 const SerialManagementPage = () => {
   const [serials, setSerials] = useState([]);
+  const [filteredSerials, setFilteredSerials] = useState([]);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
@@ -396,6 +397,39 @@ const SerialManagementPage = () => {
               </Card>
             </Col>
           </Row>
+        </Col>
+
+        {/* Serial Numbers Table */}
+        <Col span={24} style={{ marginTop: 24 }}>
+          <Card title="Danh sách Serial Number">
+            <Table
+              dataSource={filteredSerials}
+              columns={[
+                {
+                  title: 'Serial Number',
+                  dataIndex: 'serialNumber',
+                  key: 'serialNumber',
+                },
+                {
+                  title: 'Sản phẩm',
+                  dataIndex: 'productName',
+                  key: 'productName',
+                },
+                {
+                  title: 'Trạng thái',
+                  dataIndex: 'status',
+                  key: 'status',
+                  render: (status) => (
+                    <Tag color={status === 'available' ? 'green' : status === 'sold' ? 'blue' : 'orange'}>
+                      {status === 'available' ? 'Có sẵn' : status === 'sold' ? 'Đã bán' : 'Bảo hành'}
+                    </Tag>
+                  ),
+                },
+              ]}
+              rowKey="id"
+              loading={loading}
+            />
+          </Card>
         </Col>
       </Row>
     </div>
