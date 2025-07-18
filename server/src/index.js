@@ -25,9 +25,16 @@ function generateCode(prefix, existingCodes = []) {
 app.get('/api/health', (c) => {
   return c.json({
     success: true,
-    message: 'POS API is running on Cloudflare Workers!',
-    timestamp: new Date().toISOString(),
-    version: '2.0.0 - Full Featured'
+    message: 'Complete API is working!',
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Test route
+app.get('/api/test', (c) => {
+  return c.json({
+    success: true,
+    message: 'Test route working!'
   });
 });
 
@@ -1488,4 +1495,14 @@ app.get('/api/serials/search', async (c) => {
   }
 });
 
-export default app; 
+// Catch-all route for debugging
+app.all('*', (c) => {
+  return c.json({
+    success: false,
+    message: 'Endpoint not found',
+    path: c.req.path,
+    method: c.req.method
+  }, 404);
+});
+
+export default app;

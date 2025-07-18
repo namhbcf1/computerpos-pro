@@ -44,7 +44,6 @@ import moment from 'moment';
 
 const { Search } = Input;
 const { Option } = Select;
-const { TabPane } = Tabs;
 const { RangePicker } = DatePicker;
 const { Text, Title } = Typography;
 

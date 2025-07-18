@@ -227,6 +227,7 @@ function ProductsPage() {
 
   return (
     <div>
+      <h1>Quản lý Sản phẩm</h1>
       {/* Thống kê */}
       <Row gutter={16} style={{ marginBottom: 24 }}>
         <Col span={6}>

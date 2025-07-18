@@ -1,0 +1,139 @@
+# Page snapshot
+
+```yaml
+- complementary:
+  - text: 🏪 Smart POS
+  - menu:
+    - menuitem "shopping-cart Bán hàng (POS)":
+      - img "shopping-cart"
+      - link "Bán hàng (POS)":
+        - /url: /pos
+    - menuitem "inbox Sản phẩm":
+      - img "inbox"
+      - link "Sản phẩm":
+        - /url: /products
+    - menuitem "qrcode Quản lý Serial":
+      - img "qrcode"
+      - link "Quản lý Serial":
+        - /url: /serials
+    - menuitem "safety Bảo hành":
+      - img "safety"
+      - link "Bảo hành":
+        - /url: /warranty
+    - menuitem "file-text Đơn hàng":
+      - img "file-text"
+      - link "Đơn hàng":
+        - /url: /orders
+    - menuitem "user Khách hàng":
+      - img "user"
+      - link "Khách hàng":
+        - /url: /customers
+    - menuitem "tool Tồn kho":
+      - img "tool"
+      - link "Tồn kho":
+        - /url: /inventory
+    - menuitem "safety Nhà cung cấp":
+      - img "safety"
+      - link "Nhà cung cấp":
+        - /url: /suppliers
+    - menuitem "wallet Thu chi":
+      - img "wallet"
+      - link "Thu chi":
+        - /url: /financial
+    - menuitem "dashboard Công nợ":
+      - img "dashboard"
+      - link "Công nợ":
+        - /url: /debt
+    - menuitem "bar-chart Báo cáo":
+      - img "bar-chart"
+      - link "Báo cáo":
+        - /url: /reports
+    - menuitem "setting Nhân viên":
+      - img "setting"
+      - link "Nhân viên":
+        - /url: /users
+- banner:
+  - button "menu-fold":
+    - img "menu-fold"
+  - heading "Quản lý đơn hàng" [level=3]
+  - button "bell":
+    - img "bell"
+  - superscript: "3"
+  - img "user"
+  - text: Admin User admin
+  - button "logout":
+    - img "logout"
+- main:
+  - heading "Quản lý Đơn hàng" [level=1]
+  - text: Doanh thu hôm nay 0 ₫ Đơn hàng hôm nay 0 Tổng doanh thu 0 ₫ Tổng đơn hàng 0
+  - img "search"
+  - searchbox "Tìm kiếm đơn hàng..."
+  - button "search":
+    - img "search"
+  - textbox "Từ ngày"
+  - img "swap-right"
+  - textbox "Đến ngày"
+  - img "calendar"
+  - table:
+    - rowgroup:
+      - row "Số đơn hàng Khách hàng Số điện thoại Tổng tiền Trạng thái filter Ngày tạo Thao tác":
+        - columnheader "Số đơn hàng"
+        - columnheader "Khách hàng"
+        - columnheader "Số điện thoại"
+        - columnheader "Tổng tiền"
+        - columnheader "Trạng thái filter":
+          - text: Trạng thái
+          - button "filter":
+            - img "filter"
+        - columnheader "Ngày tạo"
+        - columnheader "Thao tác"
+    - rowgroup:
+      - row "- 0 ₫ Hoàn thành eye printer":
+        - cell
+        - cell
+        - cell "-"
+        - cell "0 ₫"
+        - cell "Hoàn thành"
+        - cell
+        - cell "eye printer":
+          - button "eye":
+            - img "eye"
+          - button "printer":
+            - img "printer"
+      - row "- 0 ₫ Đang xử lý eye printer":
+        - cell
+        - cell
+        - cell "-"
+        - cell "0 ₫"
+        - cell "Đang xử lý"
+        - cell
+        - cell "eye printer":
+          - button "eye":
+            - img "eye"
+          - button "printer":
+            - img "printer"
+      - row "- 0 ₫ Đang xử lý eye printer":
+        - cell
+        - cell
+        - cell "-"
+        - cell "0 ₫"
+        - cell "Đang xử lý"
+        - cell
+        - cell "eye printer":
+          - button "eye":
+            - img "eye"
+          - button "printer":
+            - img "printer"
+  - list:
+    - listitem: Tổng 3 đơn hàng
+    - listitem "Trang Trước":
+      - button "left" [disabled]:
+        - img "left"
+    - listitem "1"
+    - listitem "Trang Kế":
+      - button "right" [disabled]:
+        - img "right"
+    - listitem:
+      - combobox "kích thước trang"
+      - text: 10 / trang
+```

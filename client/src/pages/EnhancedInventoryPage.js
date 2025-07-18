@@ -46,7 +46,6 @@ import moment from 'moment';
 
 const { Search } = Input;
 const { Option } = Select;
-const { TabPane } = Tabs;
 const { RangePicker } = DatePicker;
 const { Text, Title } = Typography;
 
@@ -600,7 +599,7 @@ const EnhancedInventoryPage = () => {
   return (
     <div style={{ padding: '24px' }}>
       <div style={{ marginBottom: 24 }}>
-        <Title level={2}>Quản lý kho - Serial Number Tracking</Title>
+        <h1>Quản lý Tồn kho</h1>
         <Text type="secondary">
           Theo dõi chi tiết từng serial number và quản lý tồn kho thông minh
         </Text>
@@ -673,8 +672,15 @@ const EnhancedInventoryPage = () => {
 
       {/* Main Content */}
       <Card>
-        <Tabs activeKey={activeTab} onChange={setActiveTab}>
-          <TabPane tab="Tồn kho & Serial" key="stock">
+        <Tabs
+          activeKey={activeTab}
+          onChange={setActiveTab}
+          items={[
+            {
+              key: 'stock',
+              label: 'Tồn kho & Serial',
+              children: (
+                <div>
             <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
               <Col span={12}>
                 <Search
@@ -713,9 +719,14 @@ const EnhancedInventoryPage = () => {
               }}
               scroll={{ x: 1400 }}
             />
-          </TabPane>
-
-          <TabPane tab="Lịch sử giao dịch" key="transactions">
+                </div>
+              )
+            },
+            {
+              key: 'transactions',
+              label: 'Lịch sử giao dịch',
+              children: (
+                <div>
             <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
               <Col span={8}>
                 <Search
@@ -769,9 +780,14 @@ const EnhancedInventoryPage = () => {
               }}
               scroll={{ x: 1200 }}
             />
-          </TabPane>
-
-          <TabPane tab="Cảnh báo tồn kho" key="alerts">
+                </div>
+              )
+            },
+            {
+              key: 'alerts',
+              label: 'Cảnh báo tồn kho',
+              children: (
+                <div>
             <Card title="Sản phẩm sắp hết hàng" style={{ marginBottom: 16 }}>
               <Alert
                 message="Cảnh báo tồn kho"
@@ -790,8 +806,11 @@ const EnhancedInventoryPage = () => {
                 size="small"
               />
             </Card>
-          </TabPane>
-        </Tabs>
+                </div>
+              )
+            }
+          ]}
+        />
       </Card>
 
       {/* Serial Number Drawer */}

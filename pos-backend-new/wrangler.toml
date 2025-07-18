@@ -1,0 +1,4 @@
+name = "pos-backend-new"
+main = "src/index.js"
+compatibility_date = "2023-11-15"
+node_compat = true

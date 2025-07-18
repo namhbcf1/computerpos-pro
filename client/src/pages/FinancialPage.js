@@ -51,7 +51,6 @@ import dayjs from 'dayjs';
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
-const { TabPane } = Tabs;
 
 // Zod schema for financial transaction validation
 const transactionSchema = z.object({
@@ -524,14 +523,23 @@ const FinancialPage = () => {
 
   return (
     <div style={{ padding: 24 }}>
-      <Tabs activeKey={activeTab} onChange={setActiveTab}>
-        <TabPane tab="Giao dịch" key="transactions">
-          {renderTransactionsTab()}
-        </TabPane>
-        <TabPane tab="Biểu đồ" key="charts">
-          {renderChartsTab()}
-        </TabPane>
-      </Tabs>
+      <h1>Quản lý Thu Chi</h1>
+      <Tabs
+        activeKey={activeTab}
+        onChange={setActiveTab}
+        items={[
+          {
+            key: 'transactions',
+            label: 'Giao dịch',
+            children: renderTransactionsTab()
+          },
+          {
+            key: 'charts',
+            label: 'Biểu đồ',
+            children: renderChartsTab()
+          }
+        ]}
+      />
 
       <Modal
         title="Thêm giao dịch tài chính"

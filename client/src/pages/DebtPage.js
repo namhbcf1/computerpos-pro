@@ -37,7 +37,6 @@ import { customersAPI, suppliersAPI, financialAPI } from '../services/api';
 import dayjs from 'dayjs';
 
 const { Option } = Select;
-const { TabPane } = Tabs;
 const { Text } = Typography;
 
 // Zod schema for debt payment validation
@@ -437,7 +436,7 @@ const DebtPage = () => {
       />
 
       <Tabs activeKey={activeTab} onChange={setActiveTab}>
-        <TabPane
+        <Tabs.TabPane
           tab={
             <span>
               <UserOutlined />
@@ -479,9 +478,9 @@ const DebtPage = () => {
               }}
             />
           </Card>
-        </TabPane>
+        </Tabs.TabPane>
 
-        <TabPane
+        <Tabs.TabPane
           tab={
             <span>
               <ShopOutlined />
@@ -523,7 +522,7 @@ const DebtPage = () => {
               }}
             />
           </Card>
-        </TabPane>
+        </Tabs.TabPane>
       </Tabs>
 
       <Modal

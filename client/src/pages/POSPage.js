@@ -358,6 +358,7 @@ function POSPage() {
 
   return (
     <div className="pos-page">
+      <h1>Bán hàng</h1>
       <Row gutter={[16, 16]}>
         <Col xs={24} lg={16}>
           <Card 

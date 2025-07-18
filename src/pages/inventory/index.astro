@@ -294,7 +294,38 @@ import Button from '../../components/ui/Button.astro';
 </BaseLayout>
 
 <script>
-import { formatVND, formatInventoryStatus } from '../../lib/utils/format';
+import { formatCurrency } from '../../lib/utils/currency';
+
+// Simple inventory status formatter 
+function formatInventoryStatus(quantity, reserved = 0, minStock = 0) {
+  const available = quantity - reserved;
+  
+  if (available <= 0) {
+    return {
+      status: 'out_of_stock',
+      text: 'Hết hàng',
+      color: 'bg-red-100 text-red-800'
+    };
+  } else if (available <= minStock) {
+    return {
+      status: 'low_stock',
+      text: `${available} sản phẩm`,
+      color: 'bg-yellow-100 text-yellow-800'
+    };
+  } else if (reserved > 0) {
+    return {
+      status: 'reserved',
+      text: `${available} có sẵn (${reserved} đã đặt)`,
+      color: 'bg-blue-100 text-blue-800'
+    };
+  } else {
+    return {
+      status: 'in_stock',
+      text: `${available} có sẵn`,
+      color: 'bg-green-100 text-green-800'
+    };
+  }
+}
 
 document.addEventListener('DOMContentLoaded', function() {
   let inventoryData = [];
@@ -556,11 +587,11 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="text-xs text-gray-500">${item.reserved} đặt trước</div>
       </td>
       <td class="px-6 py-4 whitespace-nowrap">
-        <div class="text-sm font-medium text-gray-900">${formatVND(item.sellingPrice)}</div>
-        <div class="text-xs text-gray-500">Vốn: ${formatVND(item.costPrice)}</div>
+        <div class="text-sm font-medium text-gray-900">${formatCurrency(item.sellingPrice)}</div>
+        <div class="text-xs text-gray-500">Vốn: ${formatCurrency(item.costPrice)}</div>
       </td>
       <td class="px-6 py-4 whitespace-nowrap">
-        <div class="text-sm font-medium text-gray-900">${formatVND(stockValue)}</div>
+        <div class="text-sm font-medium text-gray-900">${formatCurrency(stockValue)}</div>
       </td>
       <td class="px-6 py-4 whitespace-nowrap">
         <span class="px-2 py-1 text-xs font-medium rounded-full bg-${inventoryStatus.color}-100 text-${inventoryStatus.color}-800">
@@ -704,7 +735,7 @@ document.addEventListener('DOMContentLoaded', function() {
           <div class="font-medium text-yellow-900">${item.name}</div>
           <div class="text-sm text-yellow-700">Còn ${item.quantity - item.reserved} / Tối thiểu ${item.minStock}</div>
         </div>
-        <span class="text-yellow-600 font-medium">${formatVND(item.sellingPrice)}</span>
+        <span class="text-yellow-600 font-medium">${formatCurrency(item.sellingPrice)}</span>
       `;
       listEl.appendChild(div);
     });

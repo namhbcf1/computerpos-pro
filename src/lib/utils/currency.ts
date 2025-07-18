@@ -2,67 +2,65 @@
 // Tiện ích cho tiền tệ Việt Nam
 
 /**
- * Format VND currency with proper Vietnamese formatting
- * @param amount - Amount in VND
+ * Format a number as Vietnamese currency (VND)
+ * @param amount - The amount to format
  * @param options - Formatting options
+ * @returns Formatted currency string
  */
-export function formatVND(amount: number, options?: {
-  showSymbol?: boolean;
-  showDecimals?: boolean;
-  compact?: boolean;
-}): string {
-  const {
-    showSymbol = true,
-    showDecimals = false,
-    compact = false
-  } = options || {};
-
-  if (compact && amount >= 1000000) {
-    const millions = amount / 1000000;
-    const formatted = millions % 1 === 0 ? millions.toString() : millions.toFixed(1);
-    return showSymbol ? `${formatted} triệu₫` : `${formatted} triệu`;
-  }
-
-  const formatter = new Intl.NumberFormat('vi-VN', {
-    style: showSymbol ? 'currency' : 'decimal',
+export function formatCurrency(amount: number, options: Intl.NumberFormatOptions = {}): string {
+  const defaultOptions: Intl.NumberFormatOptions = {
+    style: 'currency',
     currency: 'VND',
-    minimumFractionDigits: showDecimals ? 0 : 0,
-    maximumFractionDigits: showDecimals ? 2 : 0
-  });
+    maximumFractionDigits: 0,
+    ...options
+  };
 
-  return formatter.format(amount);
+  return new Intl.NumberFormat('vi-VN', defaultOptions).format(amount);
 }
 
 /**
- * Parse VND string back to number
- * @param vndString - Vietnamese currency string
+ * Format a number as a simple number with thousand separators
+ * @param value - The number to format
+ * @returns Formatted number string
  */
-export function parseVND(vndString: string): number {
-  // Remove currency symbols and Vietnamese text
-  const cleaned = vndString
-    .replace(/[₫\s]/g, '')
-    .replace(/triệu/g, '000000')
-    .replace(/tỷ/g, '000000000')
-    .replace(/[.,]/g, '');
+export function formatNumber(value: number): string {
+  return new Intl.NumberFormat('vi-VN').format(value);
+}
+
+/**
+ * Convert a string to a number, handling formatted input
+ * @param value - The string to convert
+ * @returns Converted number or null if invalid
+ */
+export function parseFormattedNumber(value: string): number | null {
+  // Remove currency symbols, dots, commas and spaces
+  const cleanValue = value.replace(/[₫,.'\s]/g, '');
   
-  return parseInt(cleaned) || 0;
+  // Convert to number
+  const number = Number(cleanValue);
+  
+  // Return null if NaN
+  return isNaN(number) ? null : number;
 }
 
 /**
- * Calculate VAT (Value Added Tax) for Vietnam (10%)
- * @param amount - Base amount in VND
- * @param vatRate - VAT rate (default 10%)
+ * Calculate VAT amount based on price and rate
+ * @param price - Base price
+ * @param vatRate - VAT rate in percentage (default: 10)
+ * @returns VAT amount
  */
-export function calculateVAT(amount: number, vatRate: number = 0.1): {
-  subtotal: number;
-  vat: number;
-  total: number;
-} {
-  const subtotal = amount;
-  const vat = Math.round(amount * vatRate);
-  const total = subtotal + vat;
+export function calculateVAT(price: number, vatRate: number = 10): number {
+  return (price * vatRate) / 100;
+}
 
-  return { subtotal, vat, total };
+/**
+ * Calculate price with VAT included
+ * @param price - Base price
+ * @param vatRate - VAT rate in percentage (default: 10)
+ * @returns Price with VAT
+ */
+export function calculatePriceWithVAT(price: number, vatRate: number = 10): number {
+  return price + calculateVAT(price, vatRate);
 }
 
 /**
@@ -128,17 +126,30 @@ export function roundToThousand(amount: number): number {
 }
 
 /**
- * Format price range in Vietnamese
+ * Format a price range
  * @param minPrice - Minimum price
  * @param maxPrice - Maximum price
+ * @returns Formatted price range string
  */
 export function formatPriceRange(minPrice: number, maxPrice: number): string {
   if (minPrice === maxPrice) {
-    return formatVND(minPrice);
+    return formatCurrency(minPrice);
   }
   
-  const min = formatVND(minPrice, { compact: true });
-  const max = formatVND(maxPrice, { compact: true });
+  // For price ranges, use a compact notation
+  let min: string, max: string;
+  
+  if (minPrice >= 1000000) {
+    min = `${(minPrice / 1000000).toFixed(1)} triệu₫`;
+  } else {
+    min = formatCurrency(minPrice);
+  }
+  
+  if (maxPrice >= 1000000) {
+    max = `${(maxPrice / 1000000).toFixed(1)} triệu₫`;
+  } else {
+    max = formatCurrency(maxPrice);
+  }
   
   return `${min} - ${max}`;
 }

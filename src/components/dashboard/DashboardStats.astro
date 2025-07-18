@@ -1,0 +1,136 @@
+---
+import { formatCurrency } from '../../lib/utils/currency';
+import { formatNumber } from '../../lib/utils/currency';
+
+// Sample data for dashboard stats
+const stats = [
+  {
+    title: 'Doanh thu hôm nay',
+    value: 15250000,
+    type: 'currency',
+    change: 12.5,
+    changeType: 'increase',
+    icon: 'cash',
+    color: 'blue'
+  },
+  {
+    title: 'Đơn hàng hôm nay',
+    value: 12,
+    type: 'number',
+    change: 8.3,
+    changeType: 'increase',
+    icon: 'shopping-bag',
+    color: 'green'
+  },
+  {
+    title: 'Sản phẩm đã bán',
+    value: 38,
+    type: 'number',
+    change: -5.2,
+    changeType: 'decrease',
+    icon: 'package',
+    color: 'purple'
+  },
+  {
+    title: 'Khách hàng mới',
+    value: 3,
+    type: 'number',
+    change: 0,
+    changeType: 'neutral',
+    icon: 'user',
+    color: 'amber'
+  }
+];
+
+// Function to render the appropriate icon
+const getIcon = (iconName: string) => {
+  switch (iconName) {
+    case 'cash':
+      return `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+      </svg>`;
+    case 'shopping-bag':
+      return `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+      </svg>`;
+    case 'package':
+      return `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+      </svg>`;
+    case 'user':
+      return `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+      </svg>`;
+    default:
+      return `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+      </svg>`;
+  }
+};
+
+// Function to get the change indicator
+const getChangeIndicator = (changeType: string, change: number) => {
+  if (change === 0) {
+    return `<span class="text-gray-500 text-sm font-medium ml-2">
+      <span class="inline-block">―</span>
+      <span>Không đổi</span>
+    </span>`;
+  }
+  
+  if (changeType === 'increase') {
+    return `<span class="text-green-600 text-sm font-medium ml-2">
+      <span class="inline-block transform -rotate-90">➤</span>
+      <span>${change}%</span>
+    </span>`;
+  }
+  
+  if (changeType === 'decrease') {
+    return `<span class="text-red-600 text-sm font-medium ml-2">
+      <span class="inline-block transform rotate-90">➤</span>
+      <span>${Math.abs(change)}%</span>
+    </span>`;
+  }
+  
+  return '';
+};
+
+// Function to format the value
+const formatValue = (value: number, type: string) => {
+  if (type === 'currency') {
+    return formatCurrency(value);
+  }
+  return formatNumber(value);
+};
+
+// Function to get background color based on color name
+const getBgColor = (color: string) => {
+  const colors: Record<string, string> = {
+    blue: 'bg-blue-100 text-blue-600',
+    green: 'bg-green-100 text-green-600',
+    purple: 'bg-purple-100 text-purple-600',
+    amber: 'bg-amber-100 text-amber-600',
+    red: 'bg-red-100 text-red-600'
+  };
+  
+  return colors[color] || 'bg-gray-100 text-gray-600';
+};
+---
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+  {stats.map((stat) => (
+    <div class="bg-white rounded-lg shadow p-6">
+      <div class="flex items-center">
+        <div class={`w-12 h-12 rounded-lg flex items-center justify-center ${getBgColor(stat.color)}`}>
+          <Fragment set:html={getIcon(stat.icon)} />
+        </div>
+        <div class="ml-4">
+          <h3 class="text-sm font-medium text-gray-500">{stat.title}</h3>
+          <div class="flex items-center">
+            <p class="text-2xl font-semibold text-gray-900">{formatValue(stat.value, stat.type)}</p>
+            <Fragment set:html={getChangeIndicator(stat.changeType, stat.change)} />
+          </div>
+        </div>
+      </div>
+    </div>
+  ))}
+</div> 

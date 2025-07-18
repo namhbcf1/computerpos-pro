@@ -442,8 +442,8 @@ import Button from '../../components/ui/Button.astro';
 </BaseLayout>
 
 <script>
-import { formatVND } from '../../lib/utils/currency';
-import { formatVietnameseName, formatVietnamesePhone } from '../../lib/utils/format';
+import { formatCurrency } from '../../lib/utils/currency';
+import { formatPhoneNumber } from '../../lib/utils/format';
 
 document.addEventListener('DOMContentLoaded', function() {
   let customersData = [];
@@ -669,7 +669,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.getElementById('total-customers').textContent = totalCustomers;
     document.getElementById('vip-customers').textContent = vipCustomers;
-    document.getElementById('monthly-revenue').textContent = formatVND(monthlyRevenue);
+    document.getElementById('monthly-revenue').textContent = formatCurrency(monthlyRevenue);
     document.getElementById('monthly-orders').textContent = monthlyOrders;
   }
 
@@ -717,7 +717,7 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
       </td>
       <td class="px-6 py-4 whitespace-nowrap">
-        <div class="text-sm text-gray-900">${formatVietnamesePhone(customer.phone)}</div>
+        <div class="text-sm text-gray-900">${formatPhoneNumber(customer.phone)}</div>
         <div class="text-sm text-gray-500">${customer.city}</div>
       </td>
       <td class="px-6 py-4 whitespace-nowrap">
@@ -727,10 +727,10 @@ document.addEventListener('DOMContentLoaded', function() {
       </td>
       <td class="px-6 py-4 whitespace-nowrap">
         <div class="text-sm font-medium text-gray-900">${customer.totalOrders}</div>
-        <div class="text-sm text-gray-500">Trung bình: ${formatVND(avgOrderValue)}</div>
+        <div class="text-sm text-gray-500">Trung bình: ${formatCurrency(avgOrderValue)}</div>
       </td>
       <td class="px-6 py-4 whitespace-nowrap">
-        <div class="text-sm font-medium text-gray-900">${formatVND(customer.totalSpent)}</div>
+        <div class="text-sm font-medium text-gray-900">${formatCurrency(customer.totalSpent)}</div>
         <div class="text-sm text-gray-500">Điểm: ${customer.loyaltyPoints}</div>
       </td>
       <td class="px-6 py-4 whitespace-nowrap">
@@ -887,7 +887,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('detail-customer-name').textContent = customer.name;
     document.getElementById('detail-customer-type').textContent = getTypeText(customer.type);
     document.getElementById('detail-customer-email').textContent = customer.email;
-    document.getElementById('detail-customer-phone').textContent = formatVietnamesePhone(customer.phone);
+    document.getElementById('detail-customer-phone').textContent = formatPhoneNumber(customer.phone);
     document.getElementById('detail-customer-joined').textContent = formatDate(customer.joinDate);
     
     const statusColor = getStatusColor(customer.status);
@@ -897,8 +897,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Stats
     document.getElementById('detail-total-orders').textContent = customer.totalOrders;
-    document.getElementById('detail-total-spent').textContent = formatVND(customer.totalSpent);
-    document.getElementById('detail-avg-order').textContent = formatVND(customer.totalOrders > 0 ? customer.totalSpent / customer.totalOrders : 0);
+    document.getElementById('detail-total-spent').textContent = formatCurrency(customer.totalSpent);
+    document.getElementById('detail-avg-order').textContent = formatCurrency(customer.totalOrders > 0 ? customer.totalSpent / customer.totalOrders : 0);
     document.getElementById('detail-loyalty-points').textContent = customer.loyaltyPoints;
 
     // Mock recent orders
@@ -908,14 +908,14 @@ document.addEventListener('DOMContentLoaded', function() {
         <td class="px-6 py-4 text-sm text-gray-900">ORD240115001</td>
         <td class="px-6 py-4 text-sm text-gray-900">${formatDate(customer.lastOrderDate)}</td>
         <td class="px-6 py-4 text-sm text-gray-900">CPU Intel i7, RAM 32GB</td>
-        <td class="px-6 py-4 text-sm text-gray-900">${formatVND(8500000)}</td>
+        <td class="px-6 py-4 text-sm text-gray-900">${formatCurrency(8500000)}</td>
         <td class="px-6 py-4"><span class="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">Hoàn thành</span></td>
       </tr>
       <tr>
         <td class="px-6 py-4 text-sm text-gray-900">ORD240110002</td>
         <td class="px-6 py-4 text-sm text-gray-900">${formatDate('2024-01-10')}</td>
         <td class="px-6 py-4 text-sm text-gray-900">GPU RTX 4070</td>
-        <td class="px-6 py-4 text-sm text-gray-900">${formatVND(15990000)}</td>
+        <td class="px-6 py-4 text-sm text-gray-900">${formatCurrency(15990000)}</td>
         <td class="px-6 py-4"><span class="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">Hoàn thành</span></td>
       </tr>
     `;

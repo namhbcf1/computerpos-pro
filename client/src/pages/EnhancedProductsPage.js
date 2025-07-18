@@ -43,7 +43,6 @@ import moment from 'moment';
 
 const { Search } = Input;
 const { Option } = Select;
-const { TabPane } = Tabs;
 const { Text } = Typography;
 
 function EnhancedProductsPage() {
@@ -796,17 +795,27 @@ function EnhancedProductsPage() {
           layout="vertical"
           onFinish={handleSubmit}
         >
-          <Tabs activeKey={activeTab} onChange={setActiveTab}>
-            <TabPane tab="Thông tin cơ bản" key="basic">
-              {renderBasicTab()}
-            </TabPane>
-            <TabPane tab="Quản lý kho" key="inventory">
-              {renderInventoryTab()}
-            </TabPane>
-            <TabPane tab="Bảo hành" key="warranty">
-              {renderWarrantyTab()}
-            </TabPane>
-          </Tabs>
+          <Tabs
+            activeKey={activeTab}
+            onChange={setActiveTab}
+            items={[
+              {
+                key: 'basic',
+                label: 'Thông tin cơ bản',
+                children: renderBasicTab()
+              },
+              {
+                key: 'inventory',
+                label: 'Quản lý kho',
+                children: renderInventoryTab()
+              },
+              {
+                key: 'warranty',
+                label: 'Bảo hành',
+                children: renderWarrantyTab()
+              }
+            ]}
+          />
 
           <Divider />
 

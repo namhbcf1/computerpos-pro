@@ -289,6 +289,7 @@ const CustomersPage = () => {
 
   return (
     <div style={{ padding: '24px' }}>
+      <h1>Quản lý Khách hàng</h1>
       {/* Header với thống kê */}
       <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
         <Col span={6}>

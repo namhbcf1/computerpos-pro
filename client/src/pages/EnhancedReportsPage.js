@@ -51,7 +51,6 @@ import moment from 'moment';
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
-const { TabPane } = Tabs;
 const { Title, Text } = Typography;
 
 const EnhancedReportsPage = () => {
@@ -524,7 +523,7 @@ const EnhancedReportsPage = () => {
     <div style={{ padding: '24px' }}>
       <div style={{ marginBottom: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
-          <Title level={2}>Báo cáo và phân tích</Title>
+          <h1>Báo cáo & Thống kê</h1>
           <Text type="secondary">Theo dõi hiệu quả kinh doanh và phân tích dữ liệu</Text>
         </div>
         
@@ -546,55 +545,52 @@ const EnhancedReportsPage = () => {
         </Space>
       </div>
 
-      <Tabs defaultActiveKey="overview" size="large">
-        <TabPane
-          tab={
-            <span>
-              <BarChartOutlined />
-              Tổng quan
-            </span>
+      <Tabs
+        defaultActiveKey="overview"
+        size="large"
+        items={[
+          {
+            key: 'overview',
+            label: (
+              <span>
+                <BarChartOutlined />
+                Tổng quan
+              </span>
+            ),
+            children: renderOverviewTab()
+          },
+          {
+            key: 'sales',
+            label: (
+              <span>
+                <LineChartOutlined />
+                Doanh số
+              </span>
+            ),
+            children: renderSalesTab()
+          },
+          {
+            key: 'inventory',
+            label: (
+              <span>
+                <PieChartOutlined />
+                Tồn kho
+              </span>
+            ),
+            children: renderInventoryTab()
+          },
+          {
+            key: 'profit',
+            label: (
+              <span>
+                <DollarOutlined />
+                Lợi nhuận
+              </span>
+            ),
+            children: renderProfitTab()
           }
-          key="overview"
-        >
-          {renderOverviewTab()}
-        </TabPane>
-        
-        <TabPane
-          tab={
-            <span>
-              <LineChartOutlined />
-              Doanh số
-            </span>
-          }
-          key="sales"
-        >
-          {renderSalesTab()}
-        </TabPane>
-        
-        <TabPane
-          tab={
-            <span>
-              <PieChartOutlined />
-              Tồn kho
-            </span>
-          }
-          key="inventory"
-        >
-          {renderInventoryTab()}
-        </TabPane>
-        
-        <TabPane
-          tab={
-            <span>
-              <DollarOutlined />
-              Lợi nhuận
-            </span>
-          }
-          key="profit"
-        >
-          {renderProfitTab()}
-        </TabPane>
-      </Tabs>
+        ]}
+      />
     </div>
   );
 };

@@ -1,334 +1,249 @@
-// Vietnamese Formatting Utilities
 // Tiện ích định dạng cho tiếng Việt
 
-import { formatVND } from './currency';
+import { formatCurrency, formatNumber } from './currency';
 
 // Re-export currency function for convenience
-export { formatVND };
+export { formatCurrency, formatNumber };
 
 /**
- * Format Vietnamese full name properly
- * @param firstName - First name (tên)
- * @param lastName - Last name (họ)
- * @param middleName - Middle name (tên đệm)
+ * Format phone number in Vietnamese format
+ * @param phone - Phone number
+ * @returns Formatted phone number
  */
-export function formatVietnameseName(
-  firstName: string, 
-  lastName: string, 
-  middleName?: string
-): string {
-  const parts = [lastName.trim(), middleName?.trim(), firstName.trim()].filter(Boolean);
-  return parts.join(' ');
-}
-
-/**
- * Format Vietnamese phone number
- * @param phone - Phone number string
- * @param format - Format type ('dots', 'dashes', 'spaces')
- */
-export function formatVietnamesePhone(
-  phone: string, 
-  format: 'dots' | 'dashes' | 'spaces' = 'dots'
-): string {
-  // Remove all non-digit characters
+export function formatPhoneNumber(phone: string): string {
+  // Remove all non-numeric characters
   const cleaned = phone.replace(/\D/g, '');
   
-  // Handle different length formats
-  if (cleaned.length === 10) {
-    // Mobile format: 0xxx.xxx.xxx
-    const separator = format === 'dots' ? '.' : format === 'dashes' ? '-' : ' ';
-    return `${cleaned.slice(0, 4)}${separator}${cleaned.slice(4, 7)}${separator}${cleaned.slice(7)}`;
-  } else if (cleaned.length === 11 && cleaned.startsWith('84')) {
-    // International format: +84.xxx.xxx.xxx
-    const separator = format === 'dots' ? '.' : format === 'dashes' ? '-' : ' ';
-    return `+84${separator}${cleaned.slice(2, 5)}${separator}${cleaned.slice(5, 8)}${separator}${cleaned.slice(8)}`;
+  // Check if it's a valid phone number
+  if (cleaned.length < 9 || cleaned.length > 11) {
+    return phone;
   }
   
-  return phone; // Return original if format not recognized
+  // Format as Vietnamese phone number
+  if (cleaned.length === 10) {
+    return `${cleaned.slice(0, 3)} ${cleaned.slice(3, 6)} ${cleaned.slice(6)}`;
+  } else if (cleaned.length === 11) {
+    return `${cleaned.slice(0, 4)} ${cleaned.slice(4, 7)} ${cleaned.slice(7)}`;
+  } else {
+    return `${cleaned.slice(0, 3)} ${cleaned.slice(3, 6)} ${cleaned.slice(6)}`;
+  }
 }
 
 /**
- * Format Vietnamese address
- * @param address - Address components
+ * Format a tax code (mã số thuế) in Vietnamese format
+ * @param taxCode - Tax code
+ * @returns Formatted tax code
  */
-export function formatVietnameseAddress(address: {
+export function formatTaxCode(taxCode: string): string {
+  // Remove all non-numeric characters
+  const cleaned = taxCode.replace(/\D/g, '');
+  
+  // Check if it's a valid tax code
+  if (cleaned.length !== 10 && cleaned.length !== 14) {
+    return taxCode;
+  }
+  
+  // Format based on length
+  if (cleaned.length === 10) {
+    return cleaned;
+  } else {
+    // For branch tax codes (14 digits)
+    return `${cleaned.slice(0, 10)}-${cleaned.slice(10)}`;
+  }
+}
+
+/**
+ * Format a Vietnamese address
+ * @param address - Address parts
+ * @returns Formatted address
+ */
+export function formatAddress(address: {
   street?: string;
   ward?: string;
   district?: string;
   city?: string;
-  country?: string;
 }): string {
-  const parts = [
-    address.street,
-    address.ward && `Phường ${address.ward}`,
-    address.district && `Quận ${address.district}`,
-    address.city && `TP. ${address.city}`,
-    address.country || 'Việt Nam'
-  ].filter(Boolean);
+  const parts = [];
+  
+  if (address.street) parts.push(address.street);
+  if (address.ward) parts.push(`Phường ${address.ward}`);
+  if (address.district) parts.push(`Quận ${address.district}`);
+  if (address.city) parts.push(address.city);
   
   return parts.join(', ');
 }
 
 /**
- * Format product specifications in Vietnamese
- * @param specs - Key-value specification pairs
+ * Format a string by capitalizing first letter
+ * @param str - String to format
+ * @returns Formatted string
  */
-export function formatProductSpecs(specs: Record<string, any>): string {
-  return Object.entries(specs)
-    .map(([key, value]) => {
-      if (typeof value === 'number' && key.toLowerCase().includes('price')) {
-        return `${key}: ${formatVND(value)}`;
-      }
-      return `${key}: ${value}`;
-    })
-    .join(' • ');
+export function capitalizeFirstLetter(str: string): string {
+  if (!str) return '';
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-/**
- * Format inventory status in Vietnamese
- * @param quantity - Available quantity
- * @param reserved - Reserved quantity
- */
-export function formatInventoryStatus(quantity: number, reserved: number = 0): {
-  status: 'in_stock' | 'low_stock' | 'out_of_stock' | 'reserved';
-  text: string;
-  color: string;
-} {
-  const available = quantity - reserved;
-  
-  if (available <= 0) {
-    return {
-      status: 'out_of_stock',
-      text: 'Hết hàng',
-      color: 'red'
-    };
-  } else if (available <= 5) {
-    return {
-      status: 'low_stock',
-      text: `Còn ${available} sản phẩm`,
-      color: 'yellow'
-    };
-  } else if (reserved > 0) {
-    return {
-      status: 'reserved',
-      text: `${available} có sẵn (${reserved} đã đặt)`,
-      color: 'blue'
-    };
-  } else {
-    return {
-      status: 'in_stock',
-      text: `${available} có sẵn`,
-      color: 'green'
-    };
-  }
-}
-
-/**
- * Format file size in Vietnamese
- * @param bytes - File size in bytes
- */
-export function formatFileSize(bytes: number): string {
-  const units = ['B', 'KB', 'MB', 'GB', 'TB'];
-  let size = bytes;
-  let unitIndex = 0;
-  
-  while (size >= 1024 && unitIndex < units.length - 1) {
-    size /= 1024;
-    unitIndex++;
-  }
-  
-  return `${size.toFixed(unitIndex === 0 ? 0 : 1)} ${units[unitIndex]}`;
-}
-
-/**
- * Format warranty period in Vietnamese
- * @param months - Warranty period in months
- */
-export function formatWarrantyPeriod(months: number): string {
-  if (months === 0) return 'Không bảo hành';
-  if (months < 12) return `${months} tháng`;
-  
-  const years = Math.floor(months / 12);
-  const remainingMonths = months % 12;
-  
-  if (remainingMonths === 0) {
-    return `${years} năm`;
-  } else {
-    return `${years} năm ${remainingMonths} tháng`;
-  }
-}
-
-/**
- * Format order status in Vietnamese
- * @param status - Order status
- */
-export function formatOrderStatus(status: string): {
+// Define type for order status mapping
+interface StatusMapping {
   text: string;
   color: string;
   description: string;
-} {
-  const statusMap = {
-    pending: {
-      text: 'Chờ xử lý',
-      color: 'yellow',
-      description: 'Đơn hàng đang chờ xác nhận'
-    },
-    processing: {
-      text: 'Đang xử lý',
-      color: 'blue',
-      description: 'Đơn hàng đang được chuẩn bị'
-    },
-    shipped: {
-      text: 'Đã gửi hàng',
-      color: 'purple',
-      description: 'Đơn hàng đang trên đường giao'
-    },
-    delivered: {
-      text: 'Đã giao hàng',
-      color: 'green',
-      description: 'Đơn hàng đã được giao thành công'
-    },
-    cancelled: {
-      text: 'Đã hủy',
-      color: 'red',
-      description: 'Đơn hàng đã bị hủy'
-    },
-    completed: {
-      text: 'Hoàn thành',
-      color: 'green',
-      description: 'Đơn hàng đã hoàn thành'
-    }
-  };
-  
-  return statusMap[status] || {
-    text: 'Không xác định',
-    color: 'gray',
-    description: 'Trạng thái không xác định'
-  };
 }
 
+// Define order status types
+type OrderStatus = 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled' | 'completed';
+
+// Order status mapping
+const orderStatusMap: Record<OrderStatus, StatusMapping> = {
+  pending: { 
+    text: 'Chờ xử lý', 
+    color: 'bg-yellow-100 text-yellow-800', 
+    description: 'Đơn hàng mới tạo, đang chờ xác nhận' 
+  },
+  processing: { 
+    text: 'Đang xử lý', 
+    color: 'bg-blue-100 text-blue-800', 
+    description: 'Đơn hàng đã xác nhận, đang chuẩn bị hàng' 
+  },
+  shipped: { 
+    text: 'Đang giao', 
+    color: 'bg-indigo-100 text-indigo-800', 
+    description: 'Đơn hàng đang được vận chuyển' 
+  },
+  delivered: { 
+    text: 'Đã giao', 
+    color: 'bg-green-100 text-green-800', 
+    description: 'Đơn hàng đã giao thành công' 
+  },
+  cancelled: { 
+    text: 'Đã hủy', 
+    color: 'bg-red-100 text-red-800', 
+    description: 'Đơn hàng đã bị hủy' 
+  },
+  completed: { 
+    text: 'Hoàn thành', 
+    color: 'bg-green-100 text-green-800', 
+    description: 'Đơn hàng đã hoàn thành' 
+  }
+};
+
 /**
- * Format payment method in Vietnamese
+ * Format order status
+ * @param status - Order status
+ * @returns Formatted status
+ */
+export function formatOrderStatus(status: string): string {
+  return status in orderStatusMap ? orderStatusMap[status as OrderStatus].text : status;
+}
+
+// Payment method types
+type PaymentMethod = 'cash' | 'card' | 'transfer' | 'qr' | 'momo' | 'zalopay' | 'vnpay' | 'paypal';
+
+// Payment method mapping
+const paymentMethodMap: Record<PaymentMethod, string> = {
+  cash: 'Tiền mặt',
+  card: 'Thẻ ngân hàng',
+  transfer: 'Chuyển khoản',
+  qr: 'Quét mã QR',
+  momo: 'Ví Momo',
+  zalopay: 'ZaloPay',
+  vnpay: 'VNPAY',
+  paypal: 'PayPal'
+};
+
+/**
+ * Format payment method
  * @param method - Payment method
+ * @returns Formatted payment method
  */
 export function formatPaymentMethod(method: string): string {
-  const methodMap = {
-    cash: 'Tiền mặt',
-    card: 'Thẻ tín dụng',
-    transfer: 'Chuyển khoản',
-    qr: 'QR Code',
-    momo: 'MoMo',
-    zalopay: 'ZaloPay',
-    vnpay: 'VNPay',
-    paypal: 'PayPal'
-  };
-  
-  return methodMap[method] || method;
+  return method in paymentMethodMap ? paymentMethodMap[method as PaymentMethod] : method;
 }
 
+// Customer type mapping
+type CustomerType = 'individual' | 'business' | 'vip' | 'wholesale';
+
+const customerTypeMap: Record<CustomerType, string> = {
+  individual: 'Khách lẻ',
+  business: 'Doanh nghiệp',
+  vip: 'VIP',
+  wholesale: 'Bán buôn'
+};
+
 /**
- * Format customer type in Vietnamese
+ * Format customer type
  * @param type - Customer type
+ * @returns Formatted customer type
  */
 export function formatCustomerType(type: string): string {
-  const typeMap = {
-    individual: 'Cá nhân',
-    business: 'Doanh nghiệp',
-    vip: 'Khách VIP',
-    wholesale: 'Khách sỉ'
-  };
-  
-  return typeMap[type] || type;
+  return type in customerTypeMap ? customerTypeMap[type as CustomerType] : type;
 }
 
+// PC build type mapping
+type BuildType = 'gaming' | 'office' | 'workstation' | 'server' | 'htpc' | 'budget';
+
+const buildTypeMap: Record<BuildType, string> = {
+  gaming: 'Máy tính chơi game',
+  office: 'Máy tính văn phòng',
+  workstation: 'Máy trạm',
+  server: 'Máy chủ',
+  htpc: 'PC giải trí',
+  budget: 'Máy tính giá rẻ'
+};
+
 /**
- * Format build type in Vietnamese
+ * Format PC build type
  * @param type - Build type
+ * @returns Formatted build type
  */
 export function formatBuildType(type: string): string {
-  const typeMap = {
-    gaming: 'Gaming',
-    office: 'Văn phòng',
-    workstation: 'Workstation',
-    server: 'Server',
-    htpc: 'HTPC',
-    budget: 'Tiết kiệm'
-  };
-  
-  return typeMap[type] || type;
+  return type in buildTypeMap ? buildTypeMap[type as BuildType] : type;
+}
+
+// Component type mapping
+type ComponentType = 'cpu' | 'motherboard' | 'ram' | 'gpu' | 'vga' | 'storage' | 'ssd' | 'hdd' | 
+  'psu' | 'case' | 'cooling' | 'monitor' | 'keyboard' | 'mouse' | 'headset' | 'speaker';
+
+const componentTypeMap: Record<ComponentType, string> = {
+  cpu: 'CPU / Vi xử lý',
+  motherboard: 'Bo mạch chủ',
+  ram: 'Bộ nhớ RAM',
+  gpu: 'Card đồ họa',
+  vga: 'Card màn hình',
+  storage: 'Ổ lưu trữ',
+  ssd: 'Ổ cứng SSD',
+  hdd: 'Ổ cứng HDD',
+  psu: 'Nguồn máy tính',
+  case: 'Vỏ case',
+  cooling: 'Tản nhiệt',
+  monitor: 'Màn hình',
+  keyboard: 'Bàn phím',
+  mouse: 'Chuột',
+  headset: 'Tai nghe',
+  speaker: 'Loa'
+};
+
+/**
+ * Format component type
+ * @param type - Component type
+ * @returns Formatted component type
+ */
+export function formatComponentType(type: string): string {
+  return type in componentTypeMap ? componentTypeMap[type as ComponentType] : capitalizeFirstLetter(type);
 }
 
 /**
- * Format component category in Vietnamese
- * @param category - Component category
+ * Format object for display
+ * @param obj - Object to format
+ * @returns Formatted string
  */
-export function formatComponentCategory(category: string): string {
-  const categoryMap = {
-    cpu: 'Bộ vi xử lý',
-    motherboard: 'Bo mạch chủ',
-    ram: 'Bộ nhớ RAM',
-    gpu: 'Card đồ họa',
-    vga: 'Card đồ họa',
-    storage: 'Ổ cứng',
-    ssd: 'Ổ cứng SSD',
-    hdd: 'Ổ cứng HDD',
-    psu: 'Nguồn máy tính',
-    case: 'Vỏ máy tính',
-    cooling: 'Tản nhiệt',
-    monitor: 'Màn hình',
-    keyboard: 'Bàn phím',
-    mouse: 'Chuột máy tính',
-    headset: 'Tai nghe',
-    speaker: 'Loa máy tính'
-  };
-  
-  return categoryMap[category.toLowerCase()] || category;
-}
-
-/**
- * Format percentage with Vietnamese style
- * @param value - Percentage value (0-100)
- * @param decimals - Number of decimal places
- */
-export function formatPercentage(value: number, decimals: number = 1): string {
-  return `${value.toFixed(decimals)}%`;
-}
-
-/**
- * Format rating stars in Vietnamese
- * @param rating - Rating value (0-5)
- * @param total - Total number of ratings
- */
-export function formatRating(rating: number, total: number = 0): string {
-  const stars = '★'.repeat(Math.floor(rating)) + '☆'.repeat(5 - Math.floor(rating));
-  if (total > 0) {
-    return `${stars} ${rating.toFixed(1)} (${total} đánh giá)`;
-  }
-  return `${stars} ${rating.toFixed(1)}`;
-}
-
-/**
- * Truncate text with Vietnamese ellipsis
- * @param text - Text to truncate
- * @param maxLength - Maximum length
- * @param ellipsis - Ellipsis character
- */
-export function truncateText(text: string, maxLength: number, ellipsis: string = '...'): string {
-  if (text.length <= maxLength) return text;
-  return text.slice(0, maxLength - ellipsis.length) + ellipsis;
-}
-
-/**
- * Format list in Vietnamese with proper conjunctions
- * @param items - Array of items
- * @param conjunction - Conjunction ('và', 'hoặc')
- */
-export function formatVietnameseList(items: string[], conjunction: string = 'và'): string {
-  if (items.length === 0) return '';
-  if (items.length === 1) return items[0];
-  if (items.length === 2) return `${items[0]} ${conjunction} ${items[1]}`;
-  
-  const lastItem = items[items.length - 1];
-  const otherItems = items.slice(0, -1);
-  return `${otherItems.join(', ')} ${conjunction} ${lastItem}`;
+export function formatObject(obj: Record<string, any>): string {
+  return Object.entries(obj)
+    .map(([key, value]) => {
+      if (typeof value === 'number' && key.toLowerCase().includes('price')) {
+        return `${key}: ${formatCurrency(value)}`;
+      }
+      return `${key}: ${value}`;
+    })
+    .join('\n');
 }

@@ -1,0 +1,68 @@
+---
+import { formatCurrency } from '../../lib/utils/currency';
+
+// Sample sales data for the chart
+const salesData = [
+  { date: '01/07/2024', sales: 12500000 },
+  { date: '02/07/2024', sales: 9800000 },
+  { date: '03/07/2024', sales: 15300000 },
+  { date: '04/07/2024', sales: 11700000 },
+  { date: '05/07/2024', sales: 13200000 },
+  { date: '06/07/2024', sales: 18500000 },
+  { date: '07/07/2024', sales: 21000000 },
+];
+
+// Calculate some statistics
+const totalSales = salesData.reduce((sum, day) => sum + day.sales, 0);
+const averageSales = totalSales / salesData.length;
+const maxSales = Math.max(...salesData.map(day => day.sales));
+const minSales = Math.min(...salesData.map(day => day.sales));
+
+// For chart scaling
+const chartHeight = 200;
+const maxBarHeight = chartHeight - 40;
+const getBarHeight = (sales: number) => (sales / maxSales) * maxBarHeight;
+---
+
+<div class="bg-white rounded-lg shadow p-4">
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-lg font-semibold text-gray-800">Doanh thu bán hàng</h2>
+    <div class="text-sm text-gray-500">7 ngày gần nhất</div>
+  </div>
+
+  <div class="flex justify-between items-end h-52 mb-4">
+    {salesData.map((day) => (
+      <div class="flex flex-col items-center group">
+        <div class="text-xs text-gray-500 mb-1 opacity-0 group-hover:opacity-100 transition-opacity">
+          {formatCurrency(day.sales)}
+        </div>
+        <div 
+          class="w-12 bg-blue-500 hover:bg-blue-600 rounded-t transition-all duration-200 ease-in-out relative group-hover:bg-blue-600" 
+          style={`height: ${getBarHeight(day.sales)}px;`}
+        >
+          <div class="absolute bottom-0 left-0 right-0 h-1/4 bg-opacity-20 bg-white rounded-t"></div>
+        </div>
+        <div class="text-xs mt-2 text-gray-600">{day.date.split('/').slice(0, 2).join('/')}</div>
+      </div>
+    ))}
+  </div>
+
+  <div class="grid grid-cols-4 gap-4 mt-6">
+    <div class="bg-blue-50 p-3 rounded-lg">
+      <div class="text-sm text-gray-600 mb-1">Tổng doanh thu</div>
+      <div class="text-xl font-bold text-blue-600">{formatCurrency(totalSales)}</div>
+    </div>
+    <div class="bg-green-50 p-3 rounded-lg">
+      <div class="text-sm text-gray-600 mb-1">Trung bình</div>
+      <div class="text-xl font-bold text-green-600">{formatCurrency(averageSales)}</div>
+    </div>
+    <div class="bg-purple-50 p-3 rounded-lg">
+      <div class="text-sm text-gray-600 mb-1">Cao nhất</div>
+      <div class="text-xl font-bold text-purple-600">{formatCurrency(maxSales)}</div>
+    </div>
+    <div class="bg-amber-50 p-3 rounded-lg">
+      <div class="text-sm text-gray-600 mb-1">Thấp nhất</div>
+      <div class="text-xl font-bold text-amber-600">{formatCurrency(minSales)}</div>
+    </div>
+  </div>
+</div> 
