@@ -1,0 +1,14 @@
+name = "pos-frontend"
+compatibility_date = "2023-11-15"
+
+# Pages configuration
+pages_build_output_dir = "build"
+
+[env.production]
+name = "pos-frontend"
+route = "pos-frontend-e1q.pages.dev/*"
+
+[env.production.vars]
+NODE_ENV = "production"
+REACT_APP_API_URL = "https://8d695b6e-computerpos-api.bangachieu2.workers.dev/api"
+REACT_APP_SITE_URL = "https://pos-frontend-e1q.pages.dev"
