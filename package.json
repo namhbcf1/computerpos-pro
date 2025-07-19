@@ -8,6 +8,8 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "wrangler pages dev ./dist",
+    "deploy": "astro build && wrangler pages deploy ./dist",
+    "deploy:production": "astro build && wrangler pages deploy ./dist --env production",
     "astro": "astro",
     "deploy": "npm run deploy:full",
     "deploy:frontend": "npm run build && wrangler pages deploy ./dist --project-name=pos-frontend --compatibility-date=2025-07-19",

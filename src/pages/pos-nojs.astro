@@ -1,0 +1,415 @@
+---
+// ComputerPOS Pro - POS Interface 100% No JavaScript Required
+// Pure server-side rendering with form-based interactions
+
+export const prerender = false; // FORCE SSR
+
+// Handle form submissions server-side
+let cart = [];
+let products = [];
+let message = '';
+
+if (Astro.request.method === 'POST') {
+  try {
+    const formData = await Astro.request.formData();
+    const action = formData.get('action');
+    
+    if (action === 'add_to_cart') {
+      const productId = formData.get('product_id');
+      const quantity = parseInt(formData.get('quantity') || '1');
+      
+      // Add to cart logic
+      const existingItem = cart.find(item => item.id === productId);
+      if (existingItem) {
+        existingItem.quantity += quantity;
+      } else {
+        // Fetch product details from API
+        const response = await fetch(`https://computerpos-api.bangachieu2.workers.dev/api/products/${productId}`);
+        if (response.ok) {
+          const product = await response.json();
+          cart.push({
+            id: productId,
+            name: product.name,
+            price: product.price,
+            quantity: quantity
+          });
+        }
+      }
+      message = 'Đã thêm sản phẩm vào giỏ hàng';
+    }
+    
+    if (action === 'remove_from_cart') {
+      const productId = formData.get('product_id');
+      cart = cart.filter(item => item.id !== productId);
+      message = 'Đã xóa sản phẩm khỏi giỏ hàng';
+    }
+    
+    if (action === 'checkout') {
+      // Process checkout
+      const customerName = formData.get('customer_name');
+      const paymentMethod = formData.get('payment_method');
+      
+      // Create order via API
+      const orderData = {
+        customer: customerName,
+        items: cart,
+        payment_method: paymentMethod,
+        total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+      };
+      
+      const response = await fetch('https://computerpos-api.bangachieu2.workers.dev/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(orderData)
+      });
+      
+      if (response.ok) {
+        cart = [];
+        message = 'Đơn hàng đã được tạo thành công!';
+      } else {
+        message = 'Lỗi khi tạo đơn hàng';
+      }
+    }
+  } catch (error) {
+    message = 'Lỗi xử lý: ' + error.message;
+  }
+}
+
+// Fetch products from API
+try {
+  const response = await fetch('https://computerpos-api.bangachieu2.workers.dev/api/products');
+  if (response.ok) {
+    products = await response.json();
+  }
+} catch (error) {
+  console.error('Error fetching products:', error);
+}
+
+// Format currency
+function formatVND(amount) {
+  return new Intl.NumberFormat('vi-VN', {
+    style: 'currency',
+    currency: 'VND',
+    maximumFractionDigits: 0
+  }).format(amount);
+}
+
+// Calculate cart total
+const cartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+---
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>POS - ComputerPOS Pro</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f8fafc;
+      color: #1e293b;
+    }
+    
+    .header {
+      background: white;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #3b82f6;
+    }
+    
+    .container {
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 1rem;
+      padding: 1rem;
+      height: calc(100vh - 80px);
+    }
+    
+    .products-section {
+      background: white;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      overflow-y: auto;
+    }
+    
+    .cart-section {
+      background: white;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: #1e293b;
+    }
+    
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+    
+    .product-card {
+      border: 1px solid #e2e8f0;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      transition: border-color 0.2s;
+    }
+    
+    .product-card:hover {
+      border-color: #3b82f6;
+    }
+    
+    .product-name {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    .product-price {
+      color: #3b82f6;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    
+    .add-form {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    .quantity-input {
+      width: 60px;
+      padding: 0.25rem;
+      border: 1px solid #d1d5db;
+      border-radius: 0.25rem;
+    }
+    
+    .btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+    
+    .btn-primary {
+      background: #3b82f6;
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background: #2563eb;
+    }
+    
+    .btn-danger {
+      background: #dc2626;
+      color: white;
+    }
+    
+    .btn-danger:hover {
+      background: #b91c1c;
+    }
+    
+    .btn-success {
+      background: #10b981;
+      color: white;
+      width: 100%;
+      padding: 1rem;
+      font-size: 1.1rem;
+    }
+    
+    .btn-success:hover {
+      background: #059669;
+    }
+    
+    .cart-items {
+      flex: 1;
+      overflow-y: auto;
+      margin-bottom: 1rem;
+    }
+    
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .cart-item-info {
+      flex: 1;
+    }
+    
+    .cart-item-name {
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+    }
+    
+    .cart-item-details {
+      font-size: 0.875rem;
+      color: #64748b;
+    }
+    
+    .cart-total {
+      border-top: 2px solid #e2e8f0;
+      padding-top: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .total-amount {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #1e293b;
+    }
+    
+    .checkout-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .form-input {
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 0.25rem;
+    }
+    
+    .message {
+      padding: 1rem;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+      background: #dcfce7;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr auto;
+      }
+      
+      .cart-section {
+        max-height: 400px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="logo">💻 ComputerPOS Pro - POS</div>
+    <a href="/dashboard-nojs" style="text-decoration: none; color: #64748b;">← Quay lại Dashboard</a>
+  </header>
+
+  <div class="container">
+    <div class="products-section">
+      <h2 class="section-title">Sản phẩm</h2>
+      
+      {message && (
+        <div class="message">{message}</div>
+      )}
+      
+      <div class="products-grid">
+        {products.map(product => (
+          <div class="product-card">
+            <div class="product-name">{product.name}</div>
+            <div class="product-price">{formatVND(product.price)}</div>
+            <form method="POST" class="add-form">
+              <input type="hidden" name="action" value="add_to_cart">
+              <input type="hidden" name="product_id" value={product.id}>
+              <input type="number" name="quantity" value="1" min="1" class="quantity-input">
+              <button type="submit" class="btn btn-primary">Thêm</button>
+            </form>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="cart-section">
+      <h2 class="section-title">Giỏ hàng</h2>
+      
+      <div class="cart-items">
+        {cart.length === 0 ? (
+          <p style="text-align: center; color: #64748b; padding: 2rem;">
+            Giỏ hàng trống
+          </p>
+        ) : (
+          cart.map(item => (
+            <div class="cart-item">
+              <div class="cart-item-info">
+                <div class="cart-item-name">{item.name}</div>
+                <div class="cart-item-details">
+                  {item.quantity} x {formatVND(item.price)} = {formatVND(item.price * item.quantity)}
+                </div>
+              </div>
+              <form method="POST" style="margin-left: 1rem;">
+                <input type="hidden" name="action" value="remove_from_cart">
+                <input type="hidden" name="product_id" value={item.id}>
+                <button type="submit" class="btn btn-danger">Xóa</button>
+              </form>
+            </div>
+          ))
+        )}
+      </div>
+
+      {cart.length > 0 && (
+        <>
+          <div class="cart-total">
+            <div class="total-amount">Tổng: {formatVND(cartTotal)}</div>
+          </div>
+
+          <form method="POST" class="checkout-form">
+            <input type="hidden" name="action" value="checkout">
+            
+            <div class="form-group">
+              <label>Tên khách hàng:</label>
+              <input type="text" name="customer_name" class="form-input" required>
+            </div>
+            
+            <div class="form-group">
+              <label>Phương thức thanh toán:</label>
+              <select name="payment_method" class="form-input" required>
+                <option value="cash">Tiền mặt</option>
+                <option value="card">Thẻ</option>
+                <option value="transfer">Chuyển khoản</option>
+              </select>
+            </div>
+            
+            <button type="submit" class="btn btn-success">
+              Thanh toán {formatVND(cartTotal)}
+            </button>
+          </form>
+        </>
+      )}
+    </div>
+  </div>
+
+  <!-- NO JAVASCRIPT REQUIRED - Pure HTML/CSS/Forms -->
+</body>
+</html>

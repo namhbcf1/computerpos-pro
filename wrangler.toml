@@ -1,0 +1,30 @@
+# ComputerPOS Pro Frontend - Cloudflare Pages Configuration
+# Full Server-Side Rendering (No JavaScript Required)
+
+name = "computerpos-frontend"
+compatibility_date = "2025-07-19"
+compatibility_flags = ["nodejs_compat"]
+
+# Pages configuration for SSR
+pages_build_output_dir = "./dist"
+
+# Environment variables
+[vars]
+API_URL = "https://computerpos-api.bangachieu2.workers.dev"
+NODE_ENV = "production"
+
+# Production environment
+[env.production]
+name = "computerpos-frontend"
+
+[env.production.vars]
+API_URL = "https://computerpos-api.bangachieu2.workers.dev"
+NODE_ENV = "production"
+
+# Preview environment
+[env.preview]
+name = "computerpos-frontend-preview"
+
+[env.preview.vars]
+API_URL = "https://computerpos-api.bangachieu2.workers.dev"
+NODE_ENV = "preview"

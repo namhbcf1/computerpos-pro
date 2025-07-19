@@ -7,16 +7,20 @@ import tailwind from '@astrojs/tailwind';
 import react from '@astrojs/react';
 
 export default defineConfig({
-  // Hybrid rendering: Static by default, SSR for auth pages
-  output: 'hybrid',
+  // FULL SERVER-SIDE RENDERING - No JavaScript Required
+  output: 'server',
 
   // Site configuration
   site: 'https://pos-frontend.pages.dev',
 
-  // Cloudflare adapter for SSR support
+  // Cloudflare adapter for full SSR
   adapter: cloudflare({
     mode: 'advanced',
-    functionPerRoute: false
+    functionPerRoute: false,
+    runtime: {
+      mode: 'local',
+      type: 'pages'
+    }
   }),
 
   // Integrations
