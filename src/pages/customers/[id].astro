@@ -1,7 +1,13 @@
 ---
-export const prerender = false;
+export async function getStaticPaths() {
+  // Generate some sample customer IDs for static generation
+  return [
+    { params: { id: '1' } },
+    { params: { id: '2' } },
+    { params: { id: '3' } },
+  ];
+}
 
-// This is a dynamic route that will be handled by the server
 const { id } = Astro.params;
 ---
 

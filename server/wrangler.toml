@@ -1,54 +1,41 @@
-name = "computerpos-backend"
-main = "src/test-api.js"
-compatibility_date = "2023-11-15"
-node_compat = true
+# ComputerPOS Pro Backend - Wrangler v4.25.0 Configuration
+name = "pos-backend"
+main = "src/complete-api.js"
+compatibility_date = "2025-07-19"
+compatibility_flags = ["nodejs_compat"]
+account_id = "5b62d10947844251d23e0eac532531dd"
 
-# Use local database for development
-[[ d1_databases ]]
+# D1 Database binding
+[[d1_databases]]
 binding = "DB"
 database_name = "pos-local-db"
 database_id = "d42528cd-d0a6-4246-9386-791b9b7506bf"
 
-# Set up KV for local storage and caching
-[[kv_namespaces]]
-binding = "POS_CACHE"
-id = "YOUR_KV_NAMESPACE_ID" # Replace with your KV namespace ID
-
-# Queue for asynchronous processing
-[[queues.producers]]
-queue = "pos-tasks"
-binding = "POS_QUEUE"
-
-# Add R2 for file storage
-[[r2_buckets]]
-binding = "POS_STORAGE"
-bucket_name = "pos-storage"
-
-# Environment variables
-[vars]
-NODE_ENV = "production"
-FRONTEND_URL = "https://pos-frontend-e1q.pages.dev"
-LOG_LEVEL = "info"
-ENABLE_OFFLINE_MODE = true
-
-# Configure logging
-[miniflare]
-log_level = "info"
-kv_persist = true
-cache = true
-r2_persist = true
-
-# Production settings
+# Production environment
 [env.production]
-vars = { NODE_ENV = "production", LOG_LEVEL = "warn", ENABLE_OFFLINE_MODE = true }
-routes = [
-  { pattern = "pos-backend.bangachieu2.workers.dev", custom_domain = true }
-]
+name = "pos-backend-production"
 
-# Development settings
+[[env.production.d1_databases]]
+binding = "DB"
+database_name = "pos-local-db"
+database_id = "d42528cd-d0a6-4246-9386-791b9b7506bf"
+
+[env.production.vars]
+ENVIRONMENT = "production"
+APP_NAME = "ComputerPOS Pro API"
+APP_VERSION = "2.0.0"
+FRONTEND_URL = "https://pos-frontend.pages.dev"
+NODE_ENV = "production"
+LOG_LEVEL = "info"
+
+# Development environment
 [env.development]
-vars = { NODE_ENV = "development", LOG_LEVEL = "debug", ENABLE_OFFLINE_MODE = true }
+name = "pos-backend-development"
 
-# Configure triggers
-[triggers]
-crons = ["0 0 * * *"] # Run daily at midnight 
+[env.development.vars]
+ENVIRONMENT = "development"
+APP_NAME = "ComputerPOS Pro API (Dev)"
+APP_VERSION = "2.0.0-dev"
+FRONTEND_URL = "http://localhost:4321"
+NODE_ENV = "development"
+LOG_LEVEL = "debug"
