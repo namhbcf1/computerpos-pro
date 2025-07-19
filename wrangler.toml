@@ -1,41 +1,107 @@
+# ComputerPOS Pro - Cloudflare Configuration
+# Optimized for Astro + Cloudflare Pages deployment
+
 name = "computerpos-api"
 main = "server/src/worker.js"
-compatibility_date = "2024-01-15"
+compatibility_date = "2024-01-01"
 compatibility_flags = ["nodejs_compat"]
 account_id = "5b62d10947844251d23e0eac532531dd"
 
+# Production environment
 [env.production]
-vars = { ENVIRONMENT = "production" }
+vars = {
+  ENVIRONMENT = "production",
+  APP_NAME = "ComputerPOS Pro",
+  APP_VERSION = "2.0.0",
+  APP_URL = "https://computerpos.pro"
+}
 
-# KV Storage for caching
+# Database configuration (Cloudflare D1)
+# Run: wrangler d1 create computerpos-pro-db
+[[env.production.d1_databases]]
+binding = "DB"
+database_name = "computerpos-pro-db"
+database_id = "REPLACE_WITH_D1_DATABASE_ID_FROM_WRANGLER_OUTPUT"
+
+# KV Storage for caching and analytics
+# Run: wrangler kv:namespace create "CACHE_KV"
 [[env.production.kv_namespaces]]
-binding = "CACHE"
-id = "your-kv-namespace-id"
-preview_id = "your-kv-preview-id"
+binding = "CACHE_KV"
+id = "REPLACE_WITH_CACHE_KV_ID_FROM_WRANGLER_OUTPUT"
+preview_id = "REPLACE_WITH_CACHE_KV_PREVIEW_ID_FROM_WRANGLER_OUTPUT"
+
+# Run: wrangler kv:namespace create "ANALYTICS_KV"
+[[env.production.kv_namespaces]]
+binding = "ANALYTICS_KV"
+id = "REPLACE_WITH_ANALYTICS_KV_ID_FROM_WRANGLER_OUTPUT"
+preview_id = "REPLACE_WITH_ANALYTICS_KV_PREVIEW_ID_FROM_WRANGLER_OUTPUT"
+
+# Run: wrangler kv:namespace create "RATE_LIMIT_KV"
+[[env.production.kv_namespaces]]
+binding = "RATE_LIMIT_KV"
+id = "REPLACE_WITH_RATE_LIMIT_KV_ID_FROM_WRANGLER_OUTPUT"
+preview_id = "REPLACE_WITH_RATE_LIMIT_KV_PREVIEW_ID_FROM_WRANGLER_OUTPUT"
 
 # R2 Storage for assets
+# Run: wrangler r2 bucket create computerpos-pro-assets
 [[env.production.r2_buckets]]
-binding = "ASSETS"
-bucket_name = "computerpos-assets"
-preview_bucket_name = "computerpos-assets-preview"
+binding = "ASSETS_BUCKET"
+bucket_name = "computerpos-pro-assets"
 
-# Analytics
-[env.production.analytics]
-dataset = "computerpos_analytics"
+# AI configuration (Cloudflare AI)
+[env.production.ai]
+binding = "AI"
 
 # Development environment
 [env.development]
-vars = { ENVIRONMENT = "development" }
+vars = {
+  ENVIRONMENT = "development",
+  APP_NAME = "ComputerPOS Pro (Dev)",
+  APP_VERSION = "2.0.0-dev",
+  APP_URL = "http://localhost:3000"
+}
 
+# Run: wrangler d1 create computerpos-pro-dev-db
 [[env.development.d1_databases]]
 binding = "DB"
-database_name = "kho1-development"
-database_id = "your-dev-database-id"
+database_name = "computerpos-pro-dev-db"
+database_id = "REPLACE_WITH_DEV_D1_DATABASE_ID_FROM_WRANGLER_OUTPUT"
 
+# Run: wrangler kv:namespace create "CACHE_KV_DEV"
 [[env.development.kv_namespaces]]
-binding = "CACHE"
-id = "your-dev-kv-namespace-id"
+binding = "CACHE_KV"
+id = "REPLACE_WITH_DEV_CACHE_KV_ID_FROM_WRANGLER_OUTPUT"
+preview_id = "REPLACE_WITH_DEV_CACHE_KV_PREVIEW_ID_FROM_WRANGLER_OUTPUT"
 
-[[env.development.r2_buckets]]
-binding = "ASSETS"
-bucket_name = "computerpos-assets-dev"
+# Pages configuration for Cloudflare Pages
+[pages]
+build_output_dir = "dist"
+compatibility_date = "2024-01-01"
+project_name = "pos-frontend"
+
+# Security and performance headers
+[[pages.headers]]
+for = "/*"
+[pages.headers.values]
+X-Frame-Options = "DENY"
+X-Content-Type-Options = "nosniff"
+X-XSS-Protection = "1; mode=block"
+Referrer-Policy = "strict-origin-when-cross-origin"
+Cache-Control = "public, max-age=3600"
+
+# Static assets caching
+[[pages.headers]]
+for = "/assets/*"
+[pages.headers.values]
+Cache-Control = "public, max-age=31536000, immutable"
+
+# Redirects for better UX
+[[pages.redirects]]
+from = "/dashboard"
+to = "/pos/dashboard"
+status = 301
+
+[[pages.redirects]]
+from = "/login"
+to = "/pos/login"
+status = 301

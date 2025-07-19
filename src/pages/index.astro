@@ -1,441 +1,267 @@
 ---
-import DashboardLayout from '../layouts/DashboardLayout.astro';
-import Card from '../components/ui/Card.astro';
-import Button from '../components/ui/Button.astro';
-import Badge from '../components/ui/Badge.astro';
-import Table from '../components/ui/Table.astro';
+// ComputerPOS Pro - Homepage Static với SEO tối ưu
+// Server-side rendering cho instant loading
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Server-side data fetching (mock data for demo)
+const stats = {
+  totalProducts: 2847,
+  todayOrders: 156,
+  todayRevenue: 34200000,
+  lowStockItems: 7
+};
+
+const recentOrders = [
+  {
+    id: 'DH001',
+    customer: 'Nguyễn Văn A',
+    products: 'RTX 4070, i7-13700K, 32GB RAM',
+    total: 32500000,
+    status: 'completed'
+  },
+  {
+    id: 'DH002', 
+    customer: 'Trần Thị B',
+    products: 'PC Gaming Build Complete',
+    total: 45200000,
+    status: 'processing'
+  },
+  {
+    id: 'DH003',
+    customer: 'Lê Văn C', 
+    products: 'Mainboard Z790, DDR5 RAM',
+    total: 8900000,
+    status: 'paid'
+  }
+];
+
+const formatVND = (amount) => {
+  return new Intl.NumberFormat('vi-VN', {
+    style: 'currency',
+    currency: 'VND'
+  }).format(amount);
+};
 ---
 
-<DashboardLayout title="Dashboard - ComputerPOS Pro">
-  <!-- Page Header -->
-  <div class="flex justify-between items-center mb-8">
-    <div>
-      <h1 class="text-2xl font-bold text-white mb-2">Dashboard</h1>
-      <p class="text-gray-300">
-        Chào mừng trở lại! Hôm nay bạn đã bán được <span class="text-indigo-300 font-medium">156 đơn hàng</span>
-      </p>
+<BaseLayout title="ComputerPOS Pro - Phần Mềm Quản Lý Bán Máy Tính & Linh Kiện Hàng Đầu Việt Nam">
+
+<!-- SEO-optimized header với structured data -->
+<header class="bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 text-white">
+  <!-- Navigation -->
+  <nav class="container mx-auto px-6 py-4">
+    <div class="flex justify-between items-center">
+      <div class="flex items-center space-x-4">
+        <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-xl font-bold">ComputerPOS Pro</h1>
+          <p class="text-sm text-blue-200">Phần mềm quản lý bán máy tính</p>
+        </div>
+      </div>
+      
+      <!-- Navigation Menu -->
+      <div class="hidden md:flex items-center space-x-6">
+        <a href="/pos" class="hover:text-blue-300 transition-colors">Bán hàng</a>
+        <a href="/products" class="hover:text-blue-300 transition-colors">Sản phẩm</a>
+        <a href="/customers" class="hover:text-blue-300 transition-colors">Khách hàng</a>
+        <a href="/reports" class="hover:text-blue-300 transition-colors">Báo cáo</a>
+        <a href="/pos" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg transition-colors">
+          Đăng nhập
+        </a>
+      </div>
+      
+      <!-- Mobile menu button -->
+      <button class="md:hidden" data-mobile-menu-button>
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
     </div>
-    <div class="flex items-center space-x-3">
-      <Button href="/reports" variant="ghost" size="md" outlined>
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-        </svg>
-        <span>Xuất báo cáo</span>
-      </Button>
-      <Button href="/pos" variant="gradient" size="md" elevated>
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-        </svg>
-        <span>Bán hàng</span>
-      </Button>
+    
+    <!-- Mobile menu -->
+    <div class="hidden md:hidden mt-4 pb-4" data-mobile-menu>
+      <div class="flex flex-col space-y-3">
+        <a href="/pos" class="hover:text-blue-300 transition-colors">Bán hàng</a>
+        <a href="/products" class="hover:text-blue-300 transition-colors">Sản phẩm</a>
+        <a href="/customers" class="hover:text-blue-300 transition-colors">Khách hàng</a>
+        <a href="/reports" class="hover:text-blue-300 transition-colors">Báo cáo</a>
+        <a href="/pos" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg transition-colors text-center">
+          Đăng nhập
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <div class="container mx-auto px-6 py-16 text-center">
+    <h1 class="text-4xl md:text-6xl font-bold mb-6">
+      Phần Mềm Quản Lý 
+      <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">
+        Cửa Hàng Máy Tính
+      </span>
+      Hàng Đầu Việt Nam
+    </h1>
+    <p class="text-xl text-blue-100 mb-8 max-w-3xl mx-auto">
+      ComputerPOS Pro giúp bạn quản lý bán hàng, tồn kho, khách hàng và báo cáo một cách hiệu quả. 
+      Được thiết kế đặc biệt cho cửa hàng máy tính và linh kiện tại Việt Nam.
+    </p>
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <a href="/pos" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-colors">
+        Bắt đầu bán hàng
+      </a>
+      <a href="#features" class="border border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-white px-8 py-4 rounded-lg text-lg font-semibold transition-colors">
+        Tìm hiểu thêm
+      </a>
     </div>
   </div>
+</header>
 
-  <!-- Stats Cards -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-    <Card variant="glass" hover animate class="relative overflow-hidden">
-      <div class="absolute top-0 right-0 w-20 h-20 -mt-10 -mr-10 bg-gradient-to-br from-indigo-600/30 to-purple-600/30 rounded-full blur-xl"></div>
-      <div class="flex items-start">
-        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg mr-4">
-          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<!-- Features Section -->
+<section id="features" class="py-20 bg-gray-50">
+  <div class="container mx-auto px-6">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        Tính Năng Nổi Bật
+      </h2>
+      <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+        Được thiết kế đặc biệt cho cửa hàng máy tính với đầy đủ tính năng cần thiết
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Feature 1: POS System -->
+      <div class="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow">
+        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
+          <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
           </svg>
         </div>
-        <div>
-          <h3 class="text-2xl font-bold text-white mb-1">₫34.2M</h3>
-          <p class="text-gray-300 text-sm">Doanh thu hôm nay</p>
-          <div class="flex items-center text-green-400 text-xs mt-2">
-            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
-            </svg>
-            <span>+12.5% so với hôm qua</span>
-          </div>
-        </div>
+        <h3 class="text-xl font-bold text-gray-900 mb-4">Hệ Thống Bán Hàng</h3>
+        <p class="text-gray-600 mb-4">
+          Giao diện bán hàng trực quan, nhanh chóng. Hỗ trợ mã vạch, tính tiền tự động, in hóa đơn.
+        </p>
+        <ul class="text-sm text-gray-500 space-y-2">
+          <li>✓ Quét mã vạch nhanh chóng</li>
+          <li>✓ Tính tiền và thuế tự động</li>
+          <li>✓ In hóa đơn VAT</li>
+          <li>✓ Nhiều phương thức thanh toán</li>
+        </ul>
       </div>
-    </Card>
 
-    <Card variant="glass" hover animate class="relative overflow-hidden">
-      <div class="absolute top-0 right-0 w-20 h-20 -mt-10 -mr-10 bg-gradient-to-br from-green-600/30 to-emerald-600/30 rounded-full blur-xl"></div>
-      <div class="flex items-start">
-        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg mr-4">
-          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
-          </svg>
-        </div>
-        <div>
-          <h3 class="text-2xl font-bold text-white mb-1">156</h3>
-          <p class="text-gray-300 text-sm">Đơn hàng hôm nay</p>
-          <div class="flex items-center text-green-400 text-xs mt-2">
-            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
-            </svg>
-            <span>+8.3% so với hôm qua</span>
-          </div>
-        </div>
-      </div>
-    </Card>
-
-    <Card variant="glass" hover animate class="relative overflow-hidden">
-      <div class="absolute top-0 right-0 w-20 h-20 -mt-10 -mr-10 bg-gradient-to-br from-amber-600/30 to-orange-600/30 rounded-full blur-xl"></div>
-      <div class="flex items-start">
-        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg mr-4">
-          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <!-- Feature 2: Inventory Management -->
+      <div class="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow">
+        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-6">
+          <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
           </svg>
         </div>
-        <div>
-          <h3 class="text-2xl font-bold text-white mb-1">2,847</h3>
-          <p class="text-gray-300 text-sm">Tổng sản phẩm</p>
-          <div class="flex items-center text-blue-400 text-xs mt-2">
-            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-            <span>+24 sản phẩm mới</span>
-          </div>
-        </div>
+        <h3 class="text-xl font-bold text-gray-900 mb-4">Quản Lý Kho Hàng</h3>
+        <p class="text-gray-600 mb-4">
+          Theo dõi tồn kho real-time, cảnh báo hết hàng, quản lý nhập xuất kho chuyên nghiệp.
+        </p>
+        <ul class="text-sm text-gray-500 space-y-2">
+          <li>✓ Theo dõi tồn kho real-time</li>
+          <li>✓ Cảnh báo sắp hết hàng</li>
+          <li>✓ Quản lý serial number</li>
+          <li>✓ Báo cáo xuất nhập kho</li>
+        </ul>
       </div>
-    </Card>
 
-    <Card variant="glass" hover animate class="relative overflow-hidden">
-      <div class="absolute top-0 right-0 w-20 h-20 -mt-10 -mr-10 bg-gradient-to-br from-rose-600/30 to-red-600/30 rounded-full blur-xl"></div>
-      <div class="flex items-start">
-        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-rose-500 to-red-600 flex items-center justify-center shadow-lg mr-4">
-          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+      <!-- Feature 3: Customer Management -->
+      <div class="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow">
+        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-6">
+          <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
           </svg>
         </div>
-        <div>
-          <h3 class="text-2xl font-bold text-white mb-1">7</h3>
-          <p class="text-gray-300 text-sm">Sắp hết hàng</p>
-          <div class="flex items-center text-red-400 text-xs mt-2">
-            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
-            </svg>
-            <span>Cần nhập hàng</span>
-          </div>
-        </div>
+        <h3 class="text-xl font-bold text-gray-900 mb-4">Quản Lý Khách Hàng</h3>
+        <p class="text-gray-600 mb-4">
+          Lưu trữ thông tin khách hàng, lịch sử mua hàng, chương trình khuyến mãi và bảo hành.
+        </p>
+        <ul class="text-sm text-gray-500 space-y-2">
+          <li>✓ Database khách hàng đầy đủ</li>
+          <li>✓ Lịch sử mua hàng chi tiết</li>
+          <li>✓ Chương trình loyalty</li>
+          <li>✓ Quản lý bảo hành</li>
+        </ul>
       </div>
-    </Card>
-  </div>
 
-  <!-- Charts Section -->
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-    <Card variant="glass" hover class="chart-card p-6">
-      <h3 class="text-xl font-bold text-white mb-6 flex items-center">
-        <svg class="w-5 h-5 mr-2 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
-        </svg>
-        Doanh thu 7 ngày qua
-      </h3>
-      <div class="h-80 flex items-center justify-center relative">
-        <canvas id="salesChart"></canvas>
-        <div id="salesChart-loading" class="absolute inset-0 flex items-center justify-center bg-gray-800/50 rounded-lg">
-          <div class="flex items-center space-x-2 text-white">
-            <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            <span>Đang tải biểu đồ...</span>
-          </div>
+      <!-- Feature 4: Reports & Analytics -->
+      <div class="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow">
+        <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-6">
+          <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+          </svg>
         </div>
+        <h3 class="text-xl font-bold text-gray-900 mb-4">Báo Cáo & Thống Kê</h3>
+        <p class="text-gray-600 mb-4">
+          Báo cáo doanh thu, lợi nhuận, sản phẩm bán chạy, phân tích xu hướng kinh doanh.
+        </p>
+        <ul class="text-sm text-gray-500 space-y-2">
+          <li>✓ Báo cáo doanh thu chi tiết</li>
+          <li>✓ Phân tích lợi nhuận</li>
+          <li>✓ Top sản phẩm bán chạy</li>
+          <li>✓ Xu hướng kinh doanh</li>
+        </ul>
       </div>
-    </Card>
 
-    <Card variant="glass" hover class="chart-card p-6">
-      <h3 class="text-xl font-bold text-white mb-6 flex items-center">
-        <svg class="w-5 h-5 mr-2 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path>
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path>
-        </svg>
-        Tồn kho theo danh mục
-      </h3>
-      <div class="h-80 flex items-center justify-center relative">
-        <canvas id="inventoryChart"></canvas>
-        <div id="inventoryChart-loading" class="absolute inset-0 flex items-center justify-center bg-gray-800/50 rounded-lg">
-          <div class="flex items-center space-x-2 text-white">
-            <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            <span>Đang tải biểu đồ...</span>
-          </div>
+      <!-- Feature 5: PC Building -->
+      <div class="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow">
+        <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-6">
+          <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+          </svg>
         </div>
+        <h3 class="text-xl font-bold text-gray-900 mb-4">Hỗ Trợ Build PC</h3>
+        <p class="text-gray-600 mb-4">
+          Kiểm tra tương thích linh kiện, tính toán công suất, gợi ý cấu hình tối ưu cho khách hàng.
+        </p>
+        <ul class="text-sm text-gray-500 space-y-2">
+          <li>✓ Kiểm tra tương thích linh kiện</li>
+          <li>✓ Tính toán công suất PSU</li>
+          <li>✓ Gợi ý cấu hình tối ưu</li>
+          <li>✓ Báo giá build PC</li>
+        </ul>
       </div>
-    </Card>
-  </div>
 
-  <!-- Orders Table Section -->
-  <Card variant="glass" class="p-6 mb-8">
-    <div class="flex justify-between items-center mb-6">
-      <h3 class="text-xl font-bold text-white flex items-center">
-        <svg class="w-5 h-5 mr-2 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
-        </svg>
-        Đơn hàng gần đây
-      </h3>
-      <Button href="/orders" variant="glass" size="sm">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-        </svg>
-        <span>Xem tất cả</span>
-      </Button>
+      <!-- Feature 6: Vietnamese Compliance -->
+      <div class="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow">
+        <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mb-6">
+          <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold text-gray-900 mb-4">Tuân Thủ Pháp Luật VN</h3>
+        <p class="text-gray-600 mb-4">
+          Hóa đơn điện tử, báo cáo thuế, tuân thủ 100% quy định kinh doanh tại Việt Nam.
+        </p>
+        <ul class="text-sm text-gray-500 space-y-2">
+          <li>✓ Hóa đơn điện tử hợp lệ</li>
+          <li>✓ Báo cáo thuế tự động</li>
+          <li>✓ Tuân thủ Thông tư 78/2021</li>
+          <li>✓ Kết nối Tổng cục Thuế</li>
+        </ul>
+      </div>
     </div>
-    
-    <Table variant="glass" hover bordered>
-      <tr slot="header">
-        <th class="py-3 px-4">Mã đơn</th>
-        <th class="py-3 px-4">Khách hàng</th>
-        <th class="py-3 px-4">Sản phẩm</th>
-        <th class="py-3 px-4">Tổng tiền</th>
-        <th class="py-3 px-4">Trạng thái</th>
-        <th class="py-3 px-4">Thao tác</th>
-      </tr>
-      <tr slot="rows">
-        <td class="py-3 px-4 font-medium text-indigo-300">#DH001</td>
-        <td class="py-3 px-4 text-white">Nguyễn Văn A</td>
-        <td class="py-3 px-4 text-gray-300">RTX 4070, i7-13700K, 32GB RAM</td>
-        <td class="py-3 px-4 font-semibold text-emerald-300">₫32.500.000</td>
-        <td class="py-3 px-4"><Badge variant="success" pill>Hoàn thành</Badge></td>
-        <td class="py-3 px-4">
-          <Button variant="info" size="xs" onclick="viewOrderDetail('#DH001')">Chi tiết</Button>
-        </td>
-      </tr>
-      <tr slot="rows">
-        <td class="py-3 px-4 font-medium text-indigo-300">#DH002</td>
-        <td class="py-3 px-4 text-white">Trần Thị B</td>
-        <td class="py-3 px-4 text-gray-300">PC Gaming Build Complete</td>
-        <td class="py-3 px-4 font-semibold text-emerald-300">₫45.200.000</td>
-        <td class="py-3 px-4"><Badge variant="warning" pill>Đang xử lý</Badge></td>
-        <td class="py-3 px-4">
-          <Button variant="warning" size="xs" onclick="updateOrderStatus('#DH002')">Cập nhật</Button>
-        </td>
-      </tr>
-      <tr slot="rows">
-        <td class="py-3 px-4 font-medium text-indigo-300">#DH003</td>
-        <td class="py-3 px-4 text-white">Lê Văn C</td>
-        <td class="py-3 px-4 text-gray-300">Mainboard Z790, DDR5 RAM</td>
-        <td class="py-3 px-4 font-semibold text-emerald-300">₫8.900.000</td>
-        <td class="py-3 px-4"><Badge variant="primary" pill>Đã thanh toán</Badge></td>
-        <td class="py-3 px-4">
-          <Button variant="success" size="xs" onclick="processDelivery('#DH003')">Giao hàng</Button>
-        </td>
-      </tr>
-    </Table>
-  </Card>
-
-  <!-- Quick Actions -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-    <Card variant="glass" hover class="text-center p-6">
-      <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-500/20">
-        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-        </svg>
-      </div>
-      <h4 class="text-lg font-bold text-white mb-2">Thêm Sản Phẩm</h4>
-      <p class="text-gray-300 text-sm mb-4">Thêm sản phẩm mới vào kho</p>
-      <Button href="/products/add" variant="primary" fullWidth>Thêm ngay</Button>
-    </Card>
-
-    <Card variant="glass" hover class="text-center p-6">
-      <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-green-500/20">
-        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-        </svg>
-      </div>
-      <h4 class="text-lg font-bold text-white mb-2">Khách Hàng Mới</h4>
-      <p class="text-gray-300 text-sm mb-4">Thêm khách hàng mới</p>
-      <Button href="/customers/add" variant="success" fullWidth>Thêm ngay</Button>
-    </Card>
-
-    <Card variant="glass" hover class="text-center p-6">
-      <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-fuchsia-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-purple-500/20">
-        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-        </svg>
-      </div>
-      <h4 class="text-lg font-bold text-white mb-2">Báo Cáo</h4>
-      <p class="text-gray-300 text-sm mb-4">Xem báo cáo chi tiết</p>
-      <Button href="/reports" variant="gradient" fullWidth>Xem ngay</Button>
-    </Card>
   </div>
-</DashboardLayout>
+</section>
 
+<!-- Progressive Enhancement Script -->
 <script>
-  // Import Chart.js dynamically
-  import('https://cdn.jsdelivr.net/npm/chart.js@4.5.0/+esm').then((Chart) => {
-    // Set defaults for all charts
-    Chart.defaults.color = '#94a3b8';
-    Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.1)';
-    Chart.defaults.font.family = "'Be Vietnam Pro', sans-serif";
+  // Mobile menu toggle
+  document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenuButton = document.querySelector('[data-mobile-menu-button]');
+    const mobileMenu = document.querySelector('[data-mobile-menu]');
     
-    // Helper function for gradient backgrounds
-    function createGradient(ctx, startColor, endColor) {
-      const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-      gradient.addColorStop(0, startColor);
-      gradient.addColorStop(1, endColor);
-      return gradient;
-    }
-    
-    // Sales chart
-    const salesCtx = document.getElementById('salesChart');
-    if (salesCtx) {
-      // Hide loading indicator
-      const salesLoading = document.getElementById('salesChart-loading');
-      if (salesLoading) {
-        salesLoading.style.display = 'none';
-      }
-
-      const ctx = salesCtx.getContext('2d');
-      const gradient = createGradient(ctx, 'rgba(99, 102, 241, 0.5)', 'rgba(99, 102, 241, 0)');
-
-      new Chart.Chart(salesCtx, {
-        type: 'line',
-        data: {
-          labels: ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'],
-          datasets: [{
-            label: 'Doanh thu (triệu đồng)',
-            data: [28, 32, 25, 42, 38, 45, 34],
-            borderColor: 'rgb(99, 102, 241)',
-            backgroundColor: gradient,
-            borderWidth: 2,
-            fill: true,
-            tension: 0.4,
-            pointBackgroundColor: 'rgb(99, 102, 241)',
-            pointBorderColor: '#fff',
-            pointRadius: 4,
-            pointHoverRadius: 6
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              display: false
-            },
-            tooltip: {
-              backgroundColor: 'rgba(17, 24, 39, 0.9)',
-              titleColor: '#fff',
-              bodyColor: '#e2e8f0',
-              borderColor: 'rgba(255, 255, 255, 0.1)',
-              borderWidth: 1,
-              padding: 10,
-              boxPadding: 5,
-              usePointStyle: true,
-              callbacks: {
-                labelPointStyle: function() {
-                  return {
-                    pointStyle: 'rectRounded',
-                    rotation: 0
-                  };
-                }
-              }
-            }
-          },
-          scales: {
-            x: {
-              grid: {
-                display: false
-              }
-            },
-            y: {
-              beginAtZero: true,
-              grid: {
-                color: 'rgba(255, 255, 255, 0.05)'
-              },
-              ticks: {
-                callback: function(value) {
-                  return value + ' tr';
-                }
-              }
-            }
-          }
-        }
+    if (mobileMenuButton && mobileMenu) {
+      mobileMenuButton.addEventListener('click', function() {
+        mobileMenu.classList.toggle('hidden');
       });
     }
-    
-    // Inventory chart
-    const inventoryCtx = document.getElementById('inventoryChart');
-    if (inventoryCtx) {
-      // Hide loading indicator
-      const inventoryLoading = document.getElementById('inventoryChart-loading');
-      if (inventoryLoading) {
-        inventoryLoading.style.display = 'none';
-      }
-
-      new Chart.Chart(inventoryCtx, {
-        type: 'doughnut',
-        data: {
-          labels: ['CPU', 'GPU', 'Mainboard', 'RAM', 'Storage', 'Khác'],
-          datasets: [{
-            data: [25, 30, 15, 18, 12, 10],
-            backgroundColor: [
-              'rgba(99, 102, 241, 0.8)',
-              'rgba(16, 185, 129, 0.8)',
-              'rgba(245, 158, 11, 0.8)',
-              'rgba(14, 165, 233, 0.8)',
-              'rgba(168, 85, 247, 0.8)',
-              'rgba(236, 72, 153, 0.8)'
-            ],
-            borderColor: 'rgba(17, 24, 39, 0.8)',
-            borderWidth: 2,
-            hoverOffset: 5
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          cutout: '65%',
-          plugins: {
-            legend: {
-              position: 'right',
-              labels: {
-                boxWidth: 15,
-                padding: 15,
-                usePointStyle: true,
-                pointStyle: 'circle'
-              }
-            },
-            tooltip: {
-              backgroundColor: 'rgba(17, 24, 39, 0.9)',
-              titleColor: '#fff',
-              bodyColor: '#e2e8f0',
-              borderColor: 'rgba(255, 255, 255, 0.1)',
-              borderWidth: 1,
-              padding: 10,
-              boxPadding: 5,
-              usePointStyle: true
-            }
-          }
-        }
-      });
-    }
-  }).catch(e => console.error('Failed to load Chart.js', e));
-
-  // Dashboard button handlers
-  function viewOrderDetail(orderId) {
-    window.location.href = `/orders/detail/${orderId.replace('#', '')}`;
-  }
-
-  function updateOrderStatus(orderId) {
-    if (confirm(`Cập nhật trạng thái đơn hàng ${orderId}?`)) {
-      // Simulate API call
-      alert('Đã cập nhật trạng thái đơn hàng!');
-      // In real app, would update the UI
-    }
-  }
-
-  function processDelivery(orderId) {
-    if (confirm(`Xác nhận giao hàng đơn hàng ${orderId}?`)) {
-      // Simulate API call
-      alert('Đã xác nhận giao hàng!');
-      // In real app, would update the UI
-    }
-  }
-
-  // Make functions global
-  window.viewOrderDetail = viewOrderDetail;
-  window.updateOrderStatus = updateOrderStatus;
-  window.processDelivery = processDelivery;
+  });
 </script>
+</BaseLayout>
