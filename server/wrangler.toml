@@ -1,9 +1,10 @@
-# ComputerPOS Pro Backend - Wrangler v4.25.0 Configuration
-name = "pos-backend"
-main = "src/complete-api.js"
-compatibility_date = "2025-07-19"
-compatibility_flags = ["nodejs_compat"]
+name = "computerpos-api"
 account_id = "5b62d10947844251d23e0eac532531dd"
+compatibility_date = "2025-07-19"
+main = "src/complete-api.js"
+compatibility_flags = ["nodejs_compat"]
+usage_model = "bundled"
+workers_dev = true
 
 # D1 Database binding
 [[d1_databases]]
@@ -11,31 +12,10 @@ binding = "DB"
 database_name = "pos-local-db"
 database_id = "d42528cd-d0a6-4246-9386-791b9b7506bf"
 
-# Production environment
 [env.production]
-name = "pos-backend-production"
+name = "computerpos-api"
 
 [[env.production.d1_databases]]
 binding = "DB"
 database_name = "pos-local-db"
 database_id = "d42528cd-d0a6-4246-9386-791b9b7506bf"
-
-[env.production.vars]
-ENVIRONMENT = "production"
-APP_NAME = "ComputerPOS Pro API"
-APP_VERSION = "2.0.0"
-FRONTEND_URL = "https://pos-frontend.pages.dev"
-NODE_ENV = "production"
-LOG_LEVEL = "info"
-
-# Development environment
-[env.development]
-name = "pos-backend-development"
-
-[env.development.vars]
-ENVIRONMENT = "development"
-APP_NAME = "ComputerPOS Pro API (Dev)"
-APP_VERSION = "2.0.0-dev"
-FRONTEND_URL = "http://localhost:4321"
-NODE_ENV = "development"
-LOG_LEVEL = "debug"

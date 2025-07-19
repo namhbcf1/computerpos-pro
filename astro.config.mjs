@@ -1,16 +1,23 @@
-// ComputerPOS Pro - Astro Configuration
-// Optimized for Cloudflare Pages deployment
+// ComputerPOS Pro - Astro Configuration with Authentication Support
+// Optimized for Cloudflare Pages deployment with SSR
 
 import { defineConfig } from 'astro/config';
+import cloudflare from '@astrojs/cloudflare';
 import tailwind from '@astrojs/tailwind';
 import react from '@astrojs/react';
 
 export default defineConfig({
-  // Static site generation for Cloudflare Pages
-  output: 'static',
+  // Hybrid rendering: Static by default, SSR for auth pages
+  output: 'hybrid',
 
   // Site configuration
   site: 'https://pos-frontend.pages.dev',
+
+  // Cloudflare adapter for SSR support
+  adapter: cloudflare({
+    mode: 'advanced',
+    functionPerRoute: false
+  }),
 
   // Integrations
   integrations: [
@@ -21,7 +28,8 @@ export default defineConfig({
   // Vite configuration
   vite: {
     define: {
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production')
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production'),
+      'process.env.API_URL': JSON.stringify('https://computerpos-api.bangachieu2.workers.dev')
     }
   }
 });

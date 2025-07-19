@@ -19,6 +19,15 @@ export function formatCurrency(amount: number, options: Intl.NumberFormatOptions
 }
 
 /**
+ * Alias for formatCurrency - commonly used in templates
+ * @param amount - The amount to format
+ * @returns Formatted VND currency string
+ */
+export function formatVND(amount: number): string {
+  return formatCurrency(amount);
+}
+
+/**
  * Format a number as a simple number with thousand separators
  * @param value - The number to format
  * @returns Formatted number string
